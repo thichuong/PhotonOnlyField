@@ -500,41 +500,25 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
 
       {/* Floating HUD Header */}
       <div className="absolute top-4 left-4 right-4 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
-        <div className="flex items-center gap-3 bg-slate-900/85 backdrop-blur-md px-4 py-2 rounded-xl border border-slate-700/60 pointer-events-auto shadow-lg">
+        <div className="flex items-center gap-3 bg-slate-900/90 backdrop-blur-md px-4 py-2 rounded-xl border border-cyan-500/40 pointer-events-auto shadow-lg shadow-cyan-950/40">
           <div className="flex items-center gap-2">
-            <span
-              className={`w-3 h-3 rounded-full animate-ping ${
-                settings.mode === 'qft-field'
-                  ? 'bg-cyan-400'
-                  : settings.mode === 'classical-wave'
-                  ? 'bg-purple-400'
-                  : 'bg-amber-400'
-              }`}
-            />
-            <span className="text-xs uppercase tracking-wider font-semibold text-slate-300">
-              {settings.mode === 'qft-field'
-                ? 'Trường Lượng Tử (QFT Mode)'
-                : settings.mode === 'classical-wave'
-                ? 'Sóng Điện Từ (Maxwell Mode)'
-                : 'Hạt Cơ Học (Newton Corpuscular)'}
+            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse shadow-sm shadow-cyan-400" />
+            <span className="text-xs uppercase tracking-wider font-bold text-cyan-300 font-mono">
+              Trường Lượng Tử (QFT)
             </span>
           </div>
 
           <div className="h-4 w-px bg-slate-700 mx-1" />
 
-          <span className="text-xs text-slate-400">
-            {settings.mode === 'qft-field'
-              ? 'Photon = Dao động trường'
-              : settings.mode === 'classical-wave'
-              ? 'Sóng E & B liên tục'
-              : 'Viên bi bắn theo đường đạn'}
+          <span className="text-xs text-slate-300 font-medium">
+            <span className="text-cyan-400 font-bold">Photon: Only Field</span> — Gói sóng kích thích của Trường
           </span>
         </div>
 
         {/* Top-Right Quick Stats */}
-        <div className="flex items-center gap-2 bg-slate-900/85 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700/60 pointer-events-auto text-xs text-slate-300">
+        <div className="flex items-center gap-2 bg-slate-900/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700/60 pointer-events-auto text-xs text-slate-300 shadow-md">
           <Sparkles className="w-4 h-4 text-cyan-400" />
-          <span>Năng lượng điểm (x=0):</span>
+          <span>Mật độ năng lượng điểm (x=0):</span>
           <span className="font-mono text-cyan-300 font-bold">
             {inspectedEnergy.toFixed(2)} ℏω
           </span>

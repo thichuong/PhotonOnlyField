@@ -1,176 +1,210 @@
-import { useState } from 'react';
+import React from 'react';
 import { TIMELINE_MILESTONES } from '../../data/timelineData';
-import type { SimulationMode } from '../../types/physics';
 import { MathFormula } from '../common/MathFormula';
-import { Calendar, User, BookOpen, ArrowRight, Sparkles, CheckCircle2 } from 'lucide-react';
+import { MiniParticleCanvas } from '../canvas/MiniParticleCanvas';
+import { MiniWaveCanvas } from '../canvas/MiniWaveCanvas';
+import {
+  Calendar,
+  User,
+  Sparkles,
+  ArrowDown,
+  Atom,
+  Quote,
+  CheckCircle,
+} from 'lucide-react';
 
-interface TimelineSectionProps {
-  onSelectPreset: (mode: SimulationMode) => void;
-  currentMode: SimulationMode;
-}
-
-export const TimelineSection: React.FC<TimelineSectionProps> = ({
-  onSelectPreset,
-  currentMode,
-}) => {
-  const [selectedId, setSelectedId] = useState<string>(TIMELINE_MILESTONES[2].id); // Mặc định chọn Maxwell hoặc Dirac
-
-  const activeMilestone = TIMELINE_MILESTONES.find((m) => m.id === selectedId) || TIMELINE_MILESTONES[0];
-
+export const TimelineSection: React.FC = () => {
   return (
-    <section className="my-16 flex flex-col gap-8">
+    <section className="my-16 flex flex-col gap-10">
       {/* Section Header */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3 max-w-3xl">
         <div className="flex items-center gap-2 text-cyan-400 text-xs font-semibold uppercase tracking-widest">
           <Calendar className="w-4 h-4" />
-          <span>Tiến trình lịch sử tư tưởng khoa học</span>
+          <span>Tiến trình lịch sử tư tưởng khoa học (300 năm tiến hóa)</span>
         </div>
-        <h2 className="text-3xl font-extrabold text-white tracking-tight">
-          Từ "Viên bi hạt" tới "Trường lượng tử": Ánh sáng là gì?
+        <h2 className="text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
+          Hành trình nhận thức: Ánh sáng thực sự là gì?
         </h2>
-        <p className="text-slate-400 max-w-3xl text-sm leading-relaxed">
-          Nhân loại đã mất hơn 300 năm, qua nhiều cuộc tranh luận nảy lửa giữa các bộ óc vĩ đại nhất, để nhận ra: Ánh sáng không phải là hạt chuyển động trong không gian rỗng, mà bản thân không gian được dệt nên từ các trường lượng tử dao động.
+        <p className="text-slate-400 text-sm lg:text-base leading-relaxed">
+          Cuộn xuống dọc theo dòng thời gian để xem các nhà khoa học vĩ đại đã từng bước phá vỡ định kiến về "hạt cô lập" ra sao, dẫn tới chân lý của Thuyết Trường Lượng Tử: <strong className="text-cyan-300">Vũ trụ chỉ có các Trường</strong>.
         </p>
+
+        <div className="flex items-center gap-2 text-xs text-slate-500 font-mono mt-1">
+          <ArrowDown className="w-4 h-4 text-cyan-400 animate-bounce" />
+          <span>Lướt xuống để xem liên tục toàn bộ tiến trình</span>
+        </div>
       </div>
 
-      {/* Horizontal Milestone Selector Bar */}
-      <div className="relative">
-        <div className="overflow-x-auto pb-4 pt-2 no-scrollbar">
-          <div className="flex items-center gap-3 min-w-max">
-            {TIMELINE_MILESTONES.map((item, index) => {
-              const isSelected = item.id === selectedId;
-              const isCurrentPreset = item.simulationPreset === currentMode;
+      {/* Vertical Timeline Container */}
+      <div className="relative border-l-2 border-slate-800 ml-4 md:ml-8 pl-6 md:pl-10 space-y-16">
+        {TIMELINE_MILESTONES.map((item, index) => {
+          // Xác định loại mô phỏng 3D mini gắn kèm tương ứng với mốc
+          const hasParticleSim = item.id === 'newton-1704';
+          const hasInterferenceSim = item.id === 'young-1801';
+          const hasPlaneWaveSim = item.id === 'maxwell-1865';
+          const isQftPinnacle = item.id === 'dirac-1927' || item.id === 'feynman-1948';
 
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setSelectedId(item.id);
-                    onSelectPreset(item.simulationPreset);
-                  }}
-                  className={`group relative flex flex-col text-left p-3.5 rounded-xl border transition-all duration-200 w-52 shrink-0 ${
-                    isSelected
-                      ? 'bg-slate-800/90 border-cyan-400 shadow-lg shadow-cyan-500/10 ring-1 ring-cyan-400/50'
-                      : 'bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-800/40 text-slate-400'
+          return (
+            <div key={item.id} className="relative group">
+              {/* Timeline Node Bullet Point */}
+              <div
+                className={`absolute -left-[35px] md:-left-[51px] top-1.5 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                  isQftPinnacle
+                    ? 'bg-cyan-500 border-cyan-300 shadow-lg shadow-cyan-500/50 text-slate-950 ring-4 ring-cyan-500/20'
+                    : 'bg-slate-900 border-cyan-500/60 text-cyan-400'
+                }`}
+              >
+                <div
+                  className={`w-2 h-2 rounded-full ${
+                    isQftPinnacle ? 'bg-slate-950' : 'bg-cyan-400'
                   }`}
-                >
-                  <div className="flex items-center justify-between w-full mb-1">
-                    <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-full bg-slate-800 text-cyan-300 border border-slate-700">
+                />
+              </div>
+
+              {/* Card Container */}
+              <div
+                className={`rounded-3xl p-6 lg:p-8 border transition-all duration-300 backdrop-blur-md relative overflow-hidden ${
+                  isQftPinnacle
+                    ? 'bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-cyan-950/30 border-cyan-500/40 shadow-2xl shadow-cyan-950/40'
+                    : 'bg-slate-900/70 border-slate-800 hover:border-slate-700'
+                }`}
+              >
+                {/* Header Meta Info */}
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="px-3 py-1 bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 rounded-xl text-xs font-mono font-bold">
                       Năm {item.year}
                     </span>
-                    <span className="text-[10px] text-slate-500">#{index + 1}</span>
+                    <span className="px-3 py-1 bg-slate-800 text-slate-300 rounded-xl text-xs font-medium">
+                      {item.era}
+                    </span>
+                    <span className="px-3 py-1 bg-purple-500/15 border border-purple-500/30 text-purple-300 rounded-xl text-xs font-medium">
+                      {item.theoryName}
+                    </span>
                   </div>
 
-                  <div className="font-semibold text-sm text-slate-200 group-hover:text-white line-clamp-1 mt-1">
-                    {item.scientist}
-                  </div>
+                  <span className="text-xs font-mono text-slate-500">
+                    Cột mốc #{index + 1}
+                  </span>
+                </div>
 
-                  <div className="text-[11px] text-slate-400 line-clamp-1 mt-0.5">
-                    {item.theoryName}
-                  </div>
-
-                  {isCurrentPreset && (
-                    <div className="mt-2.5 flex items-center gap-1 text-[10px] text-emerald-400 font-mono">
-                      <CheckCircle2 className="w-3 h-3" />
-                      <span>Đang chiếu 3D</span>
+                {/* Main Content Layout */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                  {/* Left Column: Narrative & Insights */}
+                  <div
+                    className={`${
+                      hasParticleSim || hasInterferenceSim || hasPlaneWaveSim
+                        ? 'lg:col-span-7'
+                        : 'lg:col-span-8'
+                    } flex flex-col gap-4`}
+                  >
+                    <div>
+                      <h3 className="text-2xl font-black text-white leading-tight">
+                        {item.title}
+                      </h3>
+                      <div className="flex items-center gap-2 text-slate-300 text-sm font-semibold mt-1.5">
+                        <User className="w-4 h-4 text-cyan-400" />
+                        <span>{item.scientist}</span>
+                      </div>
                     </div>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
 
-      {/* Detailed Selected Milestone Card */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-slate-900/80 border border-slate-800 rounded-3xl p-6 lg:p-8 shadow-2xl relative overflow-hidden backdrop-blur-md">
-        {/* Subtle background glow */}
-        <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                      {item.fullExplanation}
+                    </p>
 
-        {/* Left Column: Core Narrative & Theory */}
-        <div className="lg:col-span-7 flex flex-col justify-between gap-6">
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="px-3 py-1 bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 rounded-lg text-xs font-mono font-bold">
-                Năm {activeMilestone.year}
-              </span>
-              <span className="px-3 py-1 bg-slate-800 text-slate-300 rounded-lg text-xs font-medium">
-                {activeMilestone.era}
-              </span>
-              <span className="px-3 py-1 bg-purple-500/15 border border-purple-500/30 text-purple-300 rounded-lg text-xs font-medium">
-                {activeMilestone.theoryName}
-              </span>
-            </div>
+                    {item.quote && (
+                      <div className="bg-slate-950/60 border-l-2 border-cyan-400 p-3.5 rounded-r-xl text-xs text-slate-300 italic flex items-start gap-2.5">
+                        <Quote className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+                        <span>"{item.quote}"</span>
+                      </div>
+                    )}
 
-            <h3 className="text-2xl lg:text-3xl font-black text-white leading-tight">
-              {activeMilestone.title}
-            </h3>
+                    {/* Paradigm Shift Alert */}
+                    <div className="bg-slate-950/80 border border-slate-800 p-4 rounded-2xl flex flex-col gap-1.5">
+                      <div className="text-xs font-bold text-cyan-300 flex items-center gap-1.5 uppercase tracking-wide">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>Bước nhảy nhận thức (Paradigm Shift)</span>
+                      </div>
+                      <div className="text-xs text-slate-300 leading-normal">
+                        {item.paradigmShift}
+                      </div>
+                    </div>
+                  </div>
 
-            <div className="flex items-center gap-2 text-slate-300 text-sm font-medium">
-              <User className="w-4 h-4 text-cyan-400" />
-              <span>{activeMilestone.scientist}</span>
-            </div>
+                  {/* Right Column: Embedded 3D Simulation or Math Formula */}
+                  <div
+                    className={`${
+                      hasParticleSim || hasInterferenceSim || hasPlaneWaveSim
+                        ? 'lg:col-span-5'
+                        : 'lg:col-span-4'
+                    } flex flex-col gap-4 bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5`}
+                  >
+                    {/* Embedded 3D Sim if applicable */}
+                    {hasParticleSim && (
+                      <div className="flex flex-col gap-2">
+                        <div className="text-[11px] font-semibold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+                          <Atom className="w-3.5 h-3.5" />
+                          <span>Mô phỏng 3D: Các hạt Newton</span>
+                        </div>
+                        <MiniParticleCanvas />
+                      </div>
+                    )}
 
-            <p className="text-slate-300 text-sm leading-relaxed mt-2">
-              {activeMilestone.fullExplanation}
-            </p>
+                    {hasInterferenceSim && (
+                      <div className="flex flex-col gap-2">
+                        <div className="text-[11px] font-semibold text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
+                          <Atom className="w-3.5 h-3.5" />
+                          <span>Mô phỏng 3D: Sóng giao thoa hai khe</span>
+                        </div>
+                        <MiniWaveCanvas type="interference" />
+                      </div>
+                    )}
 
-            {activeMilestone.quote && (
-              <blockquote className="border-l-2 border-cyan-400 pl-4 py-1 italic text-xs text-slate-400 my-2 bg-slate-950/40 rounded-r-lg">
-                "{activeMilestone.quote}"
-              </blockquote>
-            )}
-          </div>
+                    {hasPlaneWaveSim && (
+                      <div className="flex flex-col gap-2">
+                        <div className="text-[11px] font-semibold text-purple-300 uppercase tracking-wider flex items-center gap-1.5">
+                          <Atom className="w-3.5 h-3.5" />
+                          <span>Mô phỏng 3D: Sóng trường điện từ</span>
+                        </div>
+                        <MiniWaveCanvas type="plane-wave" />
+                      </div>
+                    )}
 
-          {/* Paradigm Shift Alert */}
-          <div className="bg-slate-950/70 border border-slate-800 p-4 rounded-2xl flex flex-col gap-1.5">
-            <div className="text-xs font-bold text-cyan-300 flex items-center gap-1.5 uppercase tracking-wide">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Bước nhảy nhận thức (Paradigm Shift)</span>
-            </div>
-            <div className="text-xs text-slate-300 leading-normal">
-              {activeMilestone.paradigmShift}
-            </div>
-          </div>
-        </div>
+                    {/* For QFT / Pinnacle */}
+                    {isQftPinnacle && (
+                      <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-xl p-3.5 text-xs text-cyan-200 flex flex-col gap-2">
+                        <div className="flex items-center gap-1.5 font-bold text-cyan-300">
+                          <CheckCircle className="w-4 h-4 text-cyan-400" />
+                          <span>Kết luận đỉnh cao của vật lý</span>
+                        </div>
+                        <p className="text-[11px] text-slate-300 leading-relaxed">
+                          Quan sát mô phỏng 3D chính ở đầu trang: Toàn bộ hạt photon chỉ là gói sóng kích thích (excitation) trên mặt phẳng Trường Lượng Tử.
+                        </p>
+                      </div>
+                    )}
 
-        {/* Right Column: Experiment & Math Formula */}
-        <div className="lg:col-span-5 flex flex-col justify-between gap-6 bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5">
-          <div className="flex flex-col gap-4">
-            {/* Key Formula */}
-            <div className="flex flex-col gap-1.5">
-              <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                Công thức toán học cốt lõi
+                    {/* Core Mathematical Formula */}
+                    <div className="flex flex-col gap-1.5">
+                      <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                        Công thức toán học cốt lõi
+                      </div>
+                      <div className="bg-slate-900 border border-slate-800 rounded-xl p-3.5 text-center overflow-x-auto">
+                        <MathFormula
+                          math={item.formulaLatex}
+                          block
+                          className="text-base text-cyan-300"
+                        />
+                      </div>
+                      <div className="text-[11px] text-slate-400 leading-snug">
+                        {item.formulaMeaning}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center overflow-x-auto">
-                <MathFormula math={activeMilestone.formulaLatex} block className="text-lg text-cyan-300" />
-              </div>
-              <div className="text-[11px] text-slate-400 leading-snug mt-1">
-                {activeMilestone.formulaMeaning}
-              </div>
             </div>
-
-            {/* Key Experiment */}
-            <div className="flex flex-col gap-1.5 pt-3 border-t border-slate-800/80">
-              <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                <BookOpen className="w-3.5 h-3.5 text-purple-400" />
-                <span>Thí nghiệm bản lề</span>
-              </div>
-              <div className="text-xs text-slate-300 leading-relaxed bg-slate-900/40 p-3 rounded-xl border border-slate-800/50">
-                {activeMilestone.keyExperiment}
-              </div>
-            </div>
-          </div>
-
-          {/* Action button to sync 3D canvas */}
-          <button
-            onClick={() => onSelectPreset(activeMilestone.simulationPreset)}
-            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-cyan-500/20 active:scale-[0.98]"
-          >
-            <span>Kích hoạt mô hình "{activeMilestone.scientist}" trên Canvas 3D</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
+          );
+        })}
       </div>
     </section>
   );

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { FieldSettings, SimulationMode } from './types/physics';
+import type { FieldSettings } from './types/physics';
 import { QuantumFieldCanvas } from './components/canvas/QuantumFieldCanvas';
 import { FieldControls } from './components/controls/FieldControls';
 import { TimelineSection } from './components/timeline/TimelineSection';
@@ -33,15 +33,6 @@ export function App() {
 
   const handleSettingsChange = (newSettings: Partial<FieldSettings>) => {
     setFieldSettings((prev) => ({ ...prev, ...newSettings }));
-  };
-
-  const handleSelectPreset = (mode: SimulationMode) => {
-    setFieldSettings((prev) => ({ ...prev, mode }));
-    // Cuộn mượt lên canvas mô phỏng nếu đang ở xa
-    const visualizerEl = document.getElementById('visualizer-section');
-    if (visualizerEl) {
-      visualizerEl.scrollIntoView({ behavior: 'smooth' });
-    }
   };
 
   return (
@@ -131,12 +122,9 @@ export function App() {
           />
         </section>
 
-        {/* 2. Historical Timeline & Paradigm Shifts */}
+        {/* 2. Historical Timeline & Paradigm Shifts (Vertical Storyline) */}
         <section id="timeline-section" className="scroll-mt-24">
-          <TimelineSection
-            onSelectPreset={handleSelectPreset}
-            currentMode={fieldSettings.mode}
-          />
+          <TimelineSection />
         </section>
 
         {/* 3. Virtual Interactive Laboratories */}
