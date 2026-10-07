@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { MathFormula } from '../common/MathFormula';
 import { Plus, Minus, Zap } from 'lucide-react';
+import { useLanguage } from '../../i18n';
 
 export const FockStateLab: React.FC = () => {
+  const { t } = useLanguage();
   const [photonNumber, setPhotonNumber] = useState<number>(1); // n photon
 
   const maxPhotons = 5;
@@ -27,19 +29,19 @@ export const FockStateLab: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <span className="px-3 py-1 bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 rounded-lg text-xs font-mono font-bold">
-            Phòng Thí Nghiệm 3 (Lõi QFT)
+            {t.labs.fockState.badge}
           </span>
           <h3 className="text-xl lg:text-2xl font-black text-white mt-2">
-            Trạng Thái Fock |n⟩: Số Lượng Lượng Tử Của Trường
+            {t.labs.fockState.title}
           </h3>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl">
-            Trong Thuyết Trường Lượng Tử, mỗi tần số sóng của trường điện từ hoạt động như một dao động tử điều hòa lượng tử. Việc có "n photon" thực chất là trường đang rung ở bậc năng lượng thứ n!
+            {t.labs.fockState.description}
           </p>
         </div>
 
         <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs flex items-center gap-3">
           <div className="font-mono text-center">
-            <div className="text-[10px] text-slate-400">Toán tử Hamilton trường:</div>
+            <div className="text-[10px] text-slate-400">{t.labs.fockState.hamiltonianTitle}</div>
             <div className="text-cyan-300 font-bold text-sm mt-0.5">
               <MathFormula math="\hat{H} = \hbar\omega \left(a^\dagger a + \frac{1}{2}\right)" />
             </div>
@@ -52,9 +54,9 @@ export const FockStateLab: React.FC = () => {
         {/* Left: Harmonic Oscillator Potential Well & Energy Rungs */}
         <div className="lg:col-span-7 bg-slate-950 rounded-2xl border border-slate-800 p-6 h-[340px] relative overflow-hidden flex flex-col justify-between">
           <div className="flex items-center justify-between text-xs text-slate-400">
-            <span>Giếng thế dao động tử điều hòa V(q) = ½ω²q²</span>
+            <span>{t.labs.fockState.potentialWellTitle}</span>
             <span className="font-mono text-cyan-300 font-bold">
-              Trạng thái hiện tại: |{photonNumber}⟩
+              {t.labs.fockState.currentStateLabel} |{photonNumber}⟩
             </span>
           </div>
 
@@ -98,7 +100,7 @@ export const FockStateLab: React.FC = () => {
                       fontFamily="monospace"
                       fontWeight={isCurrent ? 'bold' : 'normal'}
                     >
-                      {lvl === 0 ? 'n=0 (Chân không)' : `n=${lvl} photon`}
+                      {lvl === 0 ? t.labs.fockState.vacuumStateLabel : `n=${lvl} ${t.labs.fockState.photonLevelLabel}`}
                     </text>
 
                     {/* Energy Value Formula Label */}
@@ -133,11 +135,11 @@ export const FockStateLab: React.FC = () => {
             <span>
               {photonNumber === 0 ? (
                 <span className="text-amber-300 font-semibold">
-                  Mức n=0: Không có photon nào, nhưng trường vẫn chứa năng lượng điểm không ½ℏω (chân không không rỗng)!
+                  {t.labs.fockState.vacuumExplanation}
                 </span>
               ) : (
                 <span className="text-cyan-300">
-                  Mức n={photonNumber}: Trường đang được kích thích bởi {photonNumber} gói lượng tử ℏω.
+                  {t.labs.fockState.excitedExplanation}
                 </span>
               )}
             </span>
@@ -149,7 +151,7 @@ export const FockStateLab: React.FC = () => {
           <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex flex-col gap-3">
             <span className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
               <Zap className="w-4 h-4 text-cyan-400" />
-              <span>Toán tử trường Dirac</span>
+              <span>{t.labs.fockState.diracOperatorsTitle}</span>
             </span>
 
             {/* Creation Operator Button a dagger */}
@@ -163,8 +165,8 @@ export const FockStateLab: React.FC = () => {
                   <Plus className="w-4 h-4" />
                 </div>
                 <div className="text-left">
-                  <div className="font-bold">Toán tử sinh (Creation): a†</div>
-                  <div className="text-[10px] text-slate-400">Thêm 1 lượng tử kích thích vào trường</div>
+                  <div className="font-bold">{t.labs.fockState.creationTitle}</div>
+                  <div className="text-[10px] text-slate-400">{t.labs.fockState.creationDesc}</div>
                 </div>
               </div>
               <span className="font-mono text-xs">a†|{photonNumber}⟩</span>
@@ -181,8 +183,8 @@ export const FockStateLab: React.FC = () => {
                   <Minus className="w-4 h-4" />
                 </div>
                 <div className="text-left">
-                  <div className="font-bold">Toán tử hủy (Annihilation): a</div>
-                  <div className="text-[10px] text-slate-400">Hấp thụ bớt 1 photon khỏi trường</div>
+                  <div className="font-bold">{t.labs.fockState.annihilationTitle}</div>
+                  <div className="text-[10px] text-slate-400">{t.labs.fockState.annihilationDesc}</div>
                 </div>
               </div>
               <span className="font-mono text-xs">a|{photonNumber}⟩</span>
@@ -192,16 +194,16 @@ export const FockStateLab: React.FC = () => {
           {/* Energy Summary Table */}
           <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs flex flex-col gap-2">
             <div className="flex justify-between items-center">
-              <span className="text-slate-400">Số lượng photon (n):</span>
+              <span className="text-slate-400">{t.labs.fockState.photonCountSummary}</span>
               <span className="font-mono font-bold text-cyan-300 text-base">{photonNumber}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-slate-400">Năng lượng điểm không (Vacuum ZPE):</span>
+              <span className="text-slate-400">{t.labs.fockState.vacuumZpeSummary}</span>
               <span className="font-mono text-slate-300">0.5 ℏω</span>
             </div>
             <div className="h-px bg-slate-800 my-1" />
             <div className="flex justify-between items-center font-bold">
-              <span className="text-slate-200">Tổng năng lượng mode trường:</span>
+              <span className="text-slate-200">{t.labs.fockState.totalFieldEnergySummary}</span>
               <span className="font-mono text-emerald-400 text-base">{totalEnergy.toFixed(1)} ℏω</span>
             </div>
           </div>

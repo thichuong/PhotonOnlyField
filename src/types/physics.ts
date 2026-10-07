@@ -19,7 +19,7 @@ export interface TimelineMilestone {
   title: string;
   subtitle: string;
   theoryName: string;
-  era: 'Cổ điển' | 'Chuyển giao' | 'Lượng tử Hiện đại';
+  era: string;
   avatarUrl?: string;
   formulaLatex: string;
   formulaMeaning: string;

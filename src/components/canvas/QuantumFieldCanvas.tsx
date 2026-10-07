@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import type { FieldSettings } from '../../types/physics';
 import { Play, Pause, RotateCcw, Plus, Sparkles, Info } from 'lucide-react';
+import { useLanguage } from '../../i18n';
 
 interface QuantumFieldCanvasProps {
   settings: FieldSettings;
@@ -25,6 +26,7 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
   onSettingsChange,
   className = '',
 }) => {
+  const { t } = useLanguage();
   const mountRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [photonList, setPhotonList] = useState<PhotonPacket[]>([]);
@@ -504,21 +506,21 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse shadow-sm shadow-cyan-400" />
             <span className="text-xs uppercase tracking-wider font-bold text-cyan-300 font-mono">
-              Trường Lượng Tử (QFT)
+              {t.canvas.hudBadge}
             </span>
           </div>
 
           <div className="h-4 w-px bg-slate-700 mx-1" />
 
           <span className="text-xs text-slate-300 font-medium">
-            <span className="text-cyan-400 font-bold">Photon: Only Field</span> — Gói sóng kích thích của Trường
+            {t.canvas.hudSub}
           </span>
         </div>
 
         {/* Top-Right Quick Stats */}
         <div className="flex items-center gap-2 bg-slate-900/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700/60 pointer-events-auto text-xs text-slate-300 shadow-md">
           <Sparkles className="w-4 h-4 text-cyan-400" />
-          <span>Mật độ năng lượng điểm (x=0):</span>
+          <span>{t.canvas.pointEnergyDensity}</span>
           <span className="font-mono text-cyan-300 font-bold">
             {inspectedEnergy.toFixed(2)} ℏω
           </span>
@@ -532,29 +534,29 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
           <button
             onClick={() => setIsPlaying(!isPlaying)}
             className="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors flex items-center gap-1.5 text-xs font-medium"
-            title={isPlaying ? 'Tạm dừng' : 'Tiếp tục'}
+            title={isPlaying ? t.canvas.pause : t.canvas.play}
           >
             {isPlaying ? <Pause className="w-4 h-4 text-amber-400" /> : <Play className="w-4 h-4 text-emerald-400" />}
-            <span>{isPlaying ? 'Tạm dừng' : 'Chạy'}</span>
+            <span>{isPlaying ? t.canvas.pause : t.canvas.play}</span>
           </button>
 
           <button
             onClick={handleResetCamera}
             className="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors flex items-center gap-1 text-xs font-medium"
-            title="Đặt lại góc nhìn camera"
+            title={t.canvas.resetViewTitle}
           >
             <RotateCcw className="w-4 h-4 text-slate-400" />
-            <span>Góc nhìn</span>
+            <span>{t.canvas.resetView}</span>
           </button>
 
           {settings.mode === 'qft-field' && (
             <button
               onClick={handleInjectPhoton}
               className="px-3.5 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold transition-all shadow-md shadow-cyan-500/20 flex items-center gap-1.5 text-xs animate-pulse"
-              title="Kích thích trường tạo một photon mới"
+              title={t.canvas.injectPhotonTitle}
             >
               <Plus className="w-4 h-4" />
-              <span>Phát 1 Photon (a†|0⟩)</span>
+              <span>{t.canvas.injectPhoton}</span>
             </button>
           )}
         </div>
@@ -562,7 +564,7 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
         {/* Interactive Tip Banner */}
         <div className="hidden md:flex items-center gap-2 text-xs text-slate-400 bg-slate-900/70 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-slate-800">
           <Info className="w-3.5 h-3.5 text-cyan-400" />
-          <span>Kéo chuột để xoay 360° | Cuộn chuột để zoom | Nhấp đúp vào mặt lưới để tạo sóng</span>
+          <span>{t.canvas.orbitHint}</span>
         </div>
 
         {/* Right Toggle Controls */}
@@ -579,9 +581,9 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
                   ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
                   : 'bg-slate-800 text-slate-400 hover:text-slate-200'
               }`}
-              title="Bật/Tắt dao động chân không lượng tử"
+              title={t.canvas.vacuumNoiseTitle}
             >
-              Nhiễu chân không: {settings.vacuumFluctuations ? 'BẬT' : 'TẮT'}
+              {t.canvas.vacuumNoise} {settings.vacuumFluctuations ? t.controls.vacuumOn : t.controls.vacuumOff}
             </button>
           )}
 
@@ -596,9 +598,9 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
                 ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
                 : 'bg-slate-800 text-slate-400 hover:text-slate-200'
             }`}
-            title="Bật/Tắt hiển thị lưới dây"
+            title={t.canvas.wireframeTitle}
           >
-            Lưới wireframe
+            {t.canvas.wireframe}
           </button>
         </div>
       </div>

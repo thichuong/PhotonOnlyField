@@ -1,6 +1,7 @@
 import type { TimelineMilestone } from '../types/physics';
+import type { Language } from '../i18n/types';
 
-export const TIMELINE_MILESTONES: TimelineMilestone[] = [
+export const TIMELINE_MILESTONES_VI: TimelineMilestone[] = [
   {
     id: 'newton-1704',
     year: 1704,
@@ -114,3 +115,124 @@ export const TIMELINE_MILESTONES: TimelineMilestone[] = [
     quote: 'Bạn không bao giờ thấy hạt bay đi. Bạn chỉ thấy trường lượng tử chuyển động và các tương tác năng lượng cục bộ.'
   }
 ];
+
+export const TIMELINE_MILESTONES_EN: TimelineMilestone[] = [
+  {
+    id: 'newton-1704',
+    year: 1704,
+    scientist: 'Sir Isaac Newton',
+    title: 'Light as High-Speed Material Corpuscles',
+    subtitle: 'Corpuscular Theory of Light',
+    theoryName: 'Classical Mechanics',
+    era: 'Classical',
+    formulaLatex: '\\vec{p} = m \\vec{v}',
+    formulaMeaning: 'Light consists of localized corpuscles carrying mass and momentum travelling along straight paths in vacuum.',
+    paradigmShift: 'Early ballistic model: light as miniature cannonballs emitted from luminous sources.',
+    keyExperiment: 'Dispersion of light through prisms (Opticks 1704). Newton explained refraction by attractive forces between particles and the medium.',
+    simulationPreset: 'classical-particle',
+    fullExplanation: 'Newton proposed that light is composed of minute particles (corpuscles). These corpuscles obeyed mechanical laws, travelling straight through empty space and reflecting like elastic spheres off boundaries. While intuitive, this ballistic model was entirely helpless in explaining diffraction and interference fringes.',
+    quote: 'Are not the rays of light very small bodies emitted from shining substances?'
+  },
+  {
+    id: 'young-1801',
+    year: 1801,
+    scientist: 'Thomas Young',
+    title: 'Light Interferes Like Water Ripples',
+    subtitle: 'The Double-Slit Experiment',
+    theoryName: 'Wave Optics',
+    era: 'Classical',
+    formulaLatex: '\\Delta d = d \\sin \\theta = m \\lambda',
+    formulaMeaning: 'Path difference is an integer multiple of wavelength, generating constructive interference (bright bands) and destructive minima (dark bands).',
+    paradigmShift: 'Solid particles cannot cancel each other out to create darkness! Light undeniably possesses wave characteristics.',
+    keyExperiment: 'Shining light through two narrow parallel slits produces an alternating pattern of bright and dark fringes on a distant screen.',
+    simulationPreset: 'classical-wave',
+    fullExplanation: "Young's double-slit experiment dealt a decisive blow to Newtonian corpuscular theory. If light were a hail of bullets, two slits would produce only two bright stripes. Instead, a sprawling interference pattern appeared. Two wave peaks add constructively to produce brightness; a peak meeting a trough cancels completely into total darkness.",
+    quote: 'Light added to light can produce darkness.'
+  },
+  {
+    id: 'maxwell-1865',
+    year: 1865,
+    scientist: 'James Clerk Maxwell',
+    title: 'Light is an Electromagnetic Field Oscillation',
+    subtitle: "Maxwell's Equations & Electrodynamic Unification",
+    theoryName: 'Classical Electrodynamics',
+    era: 'Classical',
+    formulaLatex: '\\nabla^2 \\vec{E} = \\frac{1}{c^2} \\frac{\\partial^2 \\vec{E}}{\\partial t^2}',
+    formulaMeaning: 'Electromagnetic wave equation: coupled undulations of electric field E and magnetic field B propagate across space at light speed c.',
+    paradigmShift: 'The concept of "FIELD" is born. Empty space is not a void, but permeated by continuous electromagnetic fields.',
+    keyExperiment: 'Computing electromagnetic wave speed from electric and magnetic constants (c = 1/√(ε₀μ₀)), matching optical measurements of light speed.',
+    simulationPreset: 'classical-wave',
+    fullExplanation: 'Maxwell triggered a profound revolution: light requires no mechanical medium (like strings or water) to vibrate. Space itself contains a fundamental physical continuum called the Electromagnetic Field. A changing electric field induces a magnetic field, and a changing magnetic field induces an electric field, creating a self-propagating ripple across the cosmos.',
+    quote: 'We can scarcely avoid the conclusion that light consists in the transverse undulations of the same medium which is the cause of electric and magnetic phenomena.'
+  },
+  {
+    id: 'planck-1900',
+    year: 1900,
+    scientist: 'Max Planck',
+    title: 'Radiant Energy Exchanges in Discrete Quanta',
+    subtitle: 'Resolving the Ultraviolet Catastrophe',
+    theoryName: 'Early Quantum Theory',
+    era: 'Transition Era',
+    formulaLatex: 'E = h\\nu = \\hbar \\omega',
+    formulaMeaning: 'The energy exchanged by a wave mode of frequency ν is always an integer multiple of the fundamental quantum packet hν.',
+    paradigmShift: 'Energy is not a continuously divisible fluid, but is emitted and absorbed only in discrete packets ("quanta").',
+    keyExperiment: 'Measuring blackbody radiation emission spectra across different cavity temperatures.',
+    simulationPreset: 'qft-field',
+    fullExplanation: 'Classical physics predicted blackbodies would radiate infinite energy at high frequencies (the ultraviolet catastrophe). To resolve this paradox, Planck introduced a daring postulate: wall oscillators exchange energy solely in discrete bundles E = hν. He regarded it merely as a mathematical contrivance, unaware of its revolutionary nature.',
+    quote: 'It was an act of despair... I was ready to sacrifice any of my previous convictions about physics.'
+  },
+  {
+    id: 'einstein-1905',
+    year: 1905,
+    scientist: 'Albert Einstein',
+    title: 'Light Itself Consists of Localized Energy Packets',
+    subtitle: 'The Photoelectric Effect & The Light Quantum Concept',
+    theoryName: 'Light Quanta Theory',
+    era: 'Transition Era',
+    formulaLatex: 'K_{\\max} = h\\nu - \\Phi',
+    formulaMeaning: 'A single light quantum delivers its entire energy hν to an electron; if hν > work function Φ, the electron is instantly dislodged.',
+    paradigmShift: 'Not only is energy exchange quantized: radiation beams themselves consist of localized energy packets (Lichtquanten).',
+    keyExperiment: 'Shining light onto metal cathodes: electrons eject instantly if light frequency is high enough, regardless of how faint the intensity is.',
+    simulationPreset: 'qft-field',
+    fullExplanation: 'Einstein realized: if light were a continuous spread wave, reducing intensity would spread energy paper-thin across the wavefront, requiring hours for an electron to accumulate enough energy to escape. Yet electrons eject instantly! Light interacts as concentrated, localized bundles of energy.',
+    quote: 'Energy is not distributed continuously over increasing spaces, but consists of a finite number of energy quanta localized at points.'
+  },
+  {
+    id: 'dirac-1927',
+    year: 1927,
+    scientist: 'Paul Dirac',
+    title: 'Radiation Quantization: Photons are Field Excitations',
+    subtitle: 'Birth of Quantum Field Theory (QFT)',
+    theoryName: 'Second Quantization',
+    era: 'Modern Quantum',
+    formulaLatex: '|n\\rangle = \\frac{(a^\\dagger)^n}{\\sqrt{n!}} |0\\rangle, \\quad [a, a^\\dagger] = 1',
+    formulaMeaning: 'Photons are not autonomous corpuscles. A state of n photons is simply the n-th vibrational excitation mode of the field!',
+    paradigmShift: 'THE SUPREME TRUTH OF QFT: THERE ARE ONLY FIELDS. Particles do not exist as rigid entities; there are only quantized field excitations.',
+    keyExperiment: 'Atomic spontaneous emission can only be explained when the electromagnetic field is quantized (even in a vacuum, fields fluctuate).',
+    simulationPreset: 'qft-field',
+    fullExplanation: "Dirac resolved the wave-particle dichotomy permanently: Maxwell's electromagnetic field permeates all of spacetime. But this field is quantized as an infinite array of quantum harmonic oscillators. The creation operator a† 'creating a photon' actually feeds one more quantum of excitation ℏω into the field mode. The vacuum |0⟩ is not empty void, but holds zero-point energy ½ℏω!",
+    quote: 'Every mode of the electromagnetic field is mathematically equivalent to a quantum harmonic oscillator.'
+  },
+  {
+    id: 'feynman-1948',
+    year: 1948,
+    scientist: 'Richard Feynman, J. Schwinger, S. Tomonaga',
+    title: 'Quantum Electrodynamics (QED) & The Pinnacle of QFT',
+    subtitle: 'Particle-Field Interactions Mediated by Virtual Field Quanta',
+    theoryName: 'QED - Quantum Electrodynamics',
+    era: 'Modern Quantum',
+    formulaLatex: '\\mathcal{L}_{\\text{QED}} = \\bar{\\psi}(i\\gamma^\\mu D_\\mu - m)\\psi - \\frac{1}{4}F_{\\mu\\nu}F^{\\mu\\nu}',
+    formulaMeaning: 'Lagrangian governing the electron-positron Dirac field interacting with the electromagnetic photon gauge field.',
+    paradigmShift: 'All electromagnetic forces (magnetism, sunlight, chemical bonds, light-matter scattering) are ripple exchanges across quantum fields.',
+    keyExperiment: 'The Lamb shift and electron anomalous magnetic moment (g-factor) calculated to 12 decimal places—the most accurate theory in physics history.',
+    simulationPreset: 'qft-field',
+    fullExplanation: 'QED is the most successful and rigorously verified theory in human history. Under QED, two electrons repel not because hard spheres bump into each other, but because their electron fields disturb the photon field, exchanging field ripples (virtual photons). Reality is a continuous, interconnected tapestry of fluctuating quantum fields.',
+    quote: 'You never see a particle flying. You only observe the motion of quantum fields and local energy transfers.'
+  }
+];
+
+export function getTimelineMilestones(lang: Language = 'vi'): TimelineMilestone[] {
+  return lang === 'en' ? TIMELINE_MILESTONES_EN : TIMELINE_MILESTONES_VI;
+}
+
+export const TIMELINE_MILESTONES = TIMELINE_MILESTONES_VI;

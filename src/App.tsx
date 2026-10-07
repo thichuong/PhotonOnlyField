@@ -7,6 +7,8 @@ import { DoubleSlitLab } from './components/experiments/DoubleSlitLab';
 import { PhotoelectricLab } from './components/experiments/PhotoelectricLab';
 import { FockStateLab } from './components/experiments/FockStateLab';
 import { QFTDeepDive } from './components/explainer/QFTDeepDive';
+import { LanguageProvider, useLanguage } from './i18n';
+import { LanguageSwitcher } from './components/common/LanguageSwitcher';
 import {
   Sparkles,
   Waves,
@@ -16,7 +18,8 @@ import {
   Atom,
 } from 'lucide-react';
 
-export function App() {
+function MainApp() {
+  const { t } = useLanguage();
   const [fieldSettings, setFieldSettings] = useState<FieldSettings>({
     mode: 'qft-field',
     vacuumFluctuations: true,
@@ -39,52 +42,56 @@ export function App() {
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
       {/* Navigation Bar */}
       <header className="sticky top-0 z-50 bg-slate-950/85 backdrop-blur-md border-b border-slate-800/80 px-4 lg:px-8 py-3.5">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 shrink-0">
               <Atom className="w-5 h-5 text-slate-950" />
             </div>
             <div>
               <h1 className="font-black text-base lg:text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-cyan-400 bg-clip-text text-transparent">
-                Photon: Only Field
+                {t.nav.title}
               </h1>
               <p className="text-[10px] text-slate-400 font-mono -mt-0.5">
-                Bản Chất Trường Lượng Tử (QFT)
+                {t.nav.tagline}
               </p>
             </div>
           </div>
 
-          {/* Quick Nav Links */}
-          <nav className="hidden md:flex items-center gap-1 text-xs text-slate-400 font-medium bg-slate-900/60 p-1 rounded-xl border border-slate-800">
-            <a
-              href="#visualizer-section"
-              className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5"
-            >
-              <Waves className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Mô Phỏng 3D</span>
-            </a>
-            <a
-              href="#timeline-section"
-              className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5"
-            >
-              <Calendar className="w-3.5 h-3.5 text-purple-400" />
-              <span>Dòng Thời Gian</span>
-            </a>
-            <a
-              href="#labs-section"
-              className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5"
-            >
-              <FlaskConical className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Phòng Thí Nghiệm</span>
-            </a>
-            <a
-              href="#qft-deep-dive"
-              className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5"
-            >
-              <BookOpen className="w-3.5 h-3.5 text-amber-400" />
-              <span>Bản Chất QFT</span>
-            </a>
-          </nav>
+          {/* Quick Nav Links & Language Switcher */}
+          <div className="flex items-center gap-2.5">
+            <nav className="hidden md:flex items-center gap-1 text-xs text-slate-400 font-medium bg-slate-900/60 p-1 rounded-xl border border-slate-800">
+              <a
+                href="#visualizer-section"
+                className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5"
+              >
+                <Waves className="w-3.5 h-3.5 text-cyan-400" />
+                <span>{t.nav.sim3D}</span>
+              </a>
+              <a
+                href="#timeline-section"
+                className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5"
+              >
+                <Calendar className="w-3.5 h-3.5 text-purple-400" />
+                <span>{t.nav.timeline}</span>
+              </a>
+              <a
+                href="#labs-section"
+                className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5"
+              >
+                <FlaskConical className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{t.nav.labs}</span>
+              </a>
+              <a
+                href="#qft-deep-dive"
+                className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5"
+              >
+                <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+                <span>{t.nav.qftDeepDive}</span>
+              </a>
+            </nav>
+
+            <LanguageSwitcher />
+          </div>
         </div>
       </header>
 
@@ -94,19 +101,18 @@ export function App() {
         <div className="flex flex-col items-center text-center gap-4 py-4 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-mono">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Khám phá vật lý lượng tử hiện đại</span>
+            <span>{t.hero.badge}</span>
           </div>
 
           <h2 className="text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
-            Photon không phải hạt bi bay đi.<br />
+            {t.hero.mainTitleLine1}<br />
             <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-purple-400 bg-clip-text text-transparent">
-              Vũ trụ chỉ có các Trường.
+              {t.hero.mainTitleLine2}
             </span>
           </h2>
 
           <p className="text-slate-400 text-sm lg:text-base leading-relaxed">
-            Trong Thuyết Trường Lượng Tử (Quantum Field Theory - QFT), không gian ngập tràn Trường Điện Từ.
-            Photon thực chất là một gói sóng dao động (quantum excitation) của trường này. Hãy quan sát và tương tác để cảm nhận vẻ đẹp của thực tại.
+            {t.hero.description}
           </p>
         </div>
 
@@ -133,10 +139,10 @@ export function App() {
             <div>
               <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold uppercase tracking-widest">
                 <FlaskConical className="w-4 h-4" />
-                <span>Thí nghiệm kiểm chứng</span>
+                <span>{t.labs.headerBadge}</span>
               </div>
               <h2 className="text-3xl font-extrabold text-white tracking-tight mt-1">
-                Phòng Thí Nghiệm Tương Tác Ảo
+                {t.labs.sectionTitle}
               </h2>
             </div>
 
@@ -150,7 +156,7 @@ export function App() {
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                1. Khe Kép Photon Đơn Lẻ
+                {t.labs.tabDoubleSlit}
               </button>
               <button
                 onClick={() => setActiveLabTab('photoelectric')}
@@ -160,7 +166,7 @@ export function App() {
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                2. Hiệu Ứng Quang Điện
+                {t.labs.tabPhotoelectric}
               </button>
               <button
                 onClick={() => setActiveLabTab('fock-state')}
@@ -170,7 +176,7 @@ export function App() {
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                3. Trạng Thái Fock |n⟩
+                {t.labs.tabFockState}
               </button>
             </div>
           </div>
@@ -192,16 +198,24 @@ export function App() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Atom className="w-4 h-4 text-cyan-400" />
-            <span className="text-slate-400 font-semibold">Photon: Only Field</span>
-            <span>— Trực quan hóa Thuyết Trường Lượng Tử</span>
+            <span className="text-slate-400 font-semibold">{t.footer.title}</span>
+            <span>— {t.footer.sub}</span>
           </div>
 
           <div className="italic text-slate-400">
-            "There are no particles, there are only fields." — Art Hobson, American Journal of Physics
+            {t.footer.hobsonQuote}
           </div>
         </div>
       </footer>
     </div>
+  );
+}
+
+export function App() {
+  return (
+    <LanguageProvider>
+      <MainApp />
+    </LanguageProvider>
   );
 }
 

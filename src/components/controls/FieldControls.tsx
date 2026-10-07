@@ -2,6 +2,7 @@ import React from 'react';
 import type { FieldSettings } from '../../types/physics';
 import { MathFormula } from '../common/MathFormula';
 import { Zap, Activity, Waves, Sparkles, Palette, ShieldCheck, Eye } from 'lucide-react';
+import { useLanguage } from '../../i18n';
 
 interface FieldControlsProps {
   settings: FieldSettings;
@@ -9,6 +10,7 @@ interface FieldControlsProps {
 }
 
 export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange }) => {
+  const { t } = useLanguage();
   return (
     <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl backdrop-blur-md flex flex-col gap-5">
       {/* Paradigm Core Banner - Photon: Only Field */}
@@ -20,14 +22,14 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-sm font-bold text-white tracking-wide">
-                Bản Chất Hiện Đại: Thuyết Trường Lượng Tử (QFT)
+                {t.controls.bannerTitle}
               </h3>
               <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[10px] rounded-full font-mono font-semibold">
-                PHOTON: ONLY FIELD
+                {t.controls.bannerBadge}
               </span>
             </div>
             <p className="text-xs text-slate-300 mt-1 leading-relaxed max-w-2xl">
-              Không có "viên bi photon" nào bay đi trong chân không. Toàn bộ vũ trụ là một mạng lưới các <strong>Trường Lượng Tử</strong> liên tục. Mỗi photon bạn nhìn thấy thực chất là một gói năng lượng kích thích dao động (<span className="text-cyan-300 font-mono">excitation state |n⟩</span>) của trường điện từ.
+              {t.controls.bannerDescription}
             </p>
           </div>
         </div>
@@ -42,7 +44,7 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
             }`}
           >
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Dao động chân không: {settings.vacuumFluctuations ? 'BẬT' : 'TẮT'}</span>
+            <span>{t.controls.vacuumFluctuations}: {settings.vacuumFluctuations ? t.controls.vacuumOn : t.controls.vacuumOff}</span>
           </button>
         </div>
       </div>
@@ -54,7 +56,7 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
           <div className="flex justify-between text-xs">
             <span className="text-slate-400 flex items-center gap-1">
               <Activity className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Tần số kích thích (ν)</span>
+              <span>{t.controls.excitationFreq}</span>
             </span>
             <span className="font-mono text-cyan-300 font-bold">{settings.waveFrequency.toFixed(1)} GHz</span>
           </div>
@@ -68,8 +70,8 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
             className="w-full accent-cyan-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
           />
           <div className="flex justify-between text-[10px] text-slate-500">
-            <span>Sóng dài (Năng lượng thấp)</span>
-            <span>Sóng ngắn (Năng lượng cao)</span>
+            <span>{t.controls.lowEnergyWave}</span>
+            <span>{t.controls.highEnergyWave}</span>
           </div>
         </div>
 
@@ -78,7 +80,7 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
           <div className="flex justify-between text-xs">
             <span className="text-slate-400 flex items-center gap-1">
               <Waves className="w-3.5 h-3.5 text-purple-400" />
-              <span>Biên độ dao động trường (A)</span>
+              <span>{t.controls.fieldAmplitude}</span>
             </span>
             <span className="font-mono text-purple-300 font-bold">{settings.amplitude.toFixed(1)} a.u.</span>
           </div>
@@ -92,8 +94,8 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
             className="w-full accent-purple-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
           />
           <div className="flex justify-between text-[10px] text-slate-500">
-            <span>Gợn nhẹ</span>
-            <span>Kích thích mạnh</span>
+            <span>{t.controls.gentleRipple}</span>
+            <span>{t.controls.strongExcitation}</span>
           </div>
         </div>
 
@@ -102,7 +104,7 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
           <div className="flex justify-between text-xs">
             <span className="text-slate-400 flex items-center gap-1">
               <Palette className="w-3.5 h-3.5 text-amber-400" />
-              <span>Giao diện trường</span>
+              <span>{t.controls.fieldAppearance}</span>
             </span>
             <button
               onClick={() => onChange({ showWireframe: !settings.showWireframe })}
@@ -113,7 +115,7 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
               }`}
             >
               <Eye className="w-3 h-3" />
-              <span>Lưới 3D</span>
+              <span>{t.controls.wireframe3D}</span>
             </button>
           </div>
           <div className="grid grid-cols-3 gap-1.5">
@@ -125,7 +127,7 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
                   : 'bg-slate-800/80 border-slate-700 text-slate-400 hover:text-slate-200'
               }`}
             >
-              Cyan Neon
+              {t.controls.neonCyan}
             </button>
             <button
               onClick={() => onChange({ colorScheme: 'electric-violet' })}
@@ -135,7 +137,7 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
                   : 'bg-slate-800/80 border-slate-700 text-slate-400 hover:text-slate-200'
               }`}
             >
-              Tử Ngoại
+              {t.controls.ultraviolet}
             </button>
             <button
               onClick={() => onChange({ colorScheme: 'energy-amber' })}
@@ -145,7 +147,7 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
                   : 'bg-slate-800/80 border-slate-700 text-slate-400 hover:text-slate-200'
               }`}
             >
-              Hổ Phách
+              {t.controls.amberEnergy}
             </button>
           </div>
         </div>
@@ -156,7 +158,7 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
         <div className="flex items-center gap-2">
           <Zap className="w-4 h-4 text-cyan-400 shrink-0" />
           <span className="text-slate-300">
-            Năng lượng của 1 gói sóng lượng tử (1 Photon excitation):
+            {t.controls.photonEnergyFormula}
           </span>
         </div>
         <div className="flex items-center gap-2 font-mono text-cyan-300">

@@ -1,0 +1,217 @@
+export type Language = 'vi' | 'en';
+
+export interface MilestoneTranslation {
+  title: string;
+  subtitle: string;
+  theoryName: string;
+  era: string;
+  formulaMeaning: string;
+  paradigmShift: string;
+  keyExperiment: string;
+  fullExplanation: string;
+  quote?: string;
+}
+
+export interface Translations {
+  nav: {
+    title: string;
+    tagline: string;
+    sim3D: string;
+    timeline: string;
+    labs: string;
+    qftDeepDive: string;
+    switchLang: string;
+  };
+  hero: {
+    badge: string;
+    mainTitleLine1: string;
+    mainTitleLine2: string;
+    description: string;
+  };
+  canvas: {
+    hudBadge: string;
+    hudSub: string;
+    pointEnergyDensity: string;
+    pause: string;
+    play: string;
+    resetView: string;
+    resetViewTitle: string;
+    injectPhoton: string;
+    injectPhotonTitle: string;
+    orbitHint: string;
+    vacuumNoise: string;
+    wireframe: string;
+    vacuumNoiseTitle: string;
+    wireframeTitle: string;
+  };
+  controls: {
+    bannerTitle: string;
+    bannerBadge: string;
+    bannerDescription: string;
+    vacuumFluctuations: string;
+    vacuumOn: string;
+    vacuumOff: string;
+    excitationFreq: string;
+    lowEnergyWave: string;
+    highEnergyWave: string;
+    fieldAmplitude: string;
+    gentleRipple: string;
+    strongExcitation: string;
+    fieldAppearance: string;
+    wireframe3D: string;
+    neonCyan: string;
+    ultraviolet: string;
+    amberEnergy: string;
+    photonEnergyFormula: string;
+  };
+  timeline: {
+    headerBadge: string;
+    sectionTitle: string;
+    sectionDescription: string;
+    scrollHint: string;
+    yearPrefix: string;
+    milestoneIndex: string;
+    paradigmShiftLabel: string;
+    simNewtonTitle: string;
+    simDoubleSlitTitle: string;
+    simMaxwellTitle: string;
+    qftPinnacleTitle: string;
+    qftPinnacleDesc: string;
+    coreFormulaLabel: string;
+  };
+  labs: {
+    headerBadge: string;
+    sectionTitle: string;
+    tabDoubleSlit: string;
+    tabPhotoelectric: string;
+    tabFockState: string;
+    doubleSlit: {
+      badge: string;
+      title: string;
+      description: string;
+      photonsInteracted: string;
+      detectorScreen: string;
+      probabilityDensity: string;
+      emptyHint: string;
+      pauseFire: string;
+      continuousFire: string;
+      fireSingle: string;
+      firingRate: string;
+      rateFast: string;
+      rateSingle: string;
+      slitDistanceLabel: string;
+      qftInsightTitle: string;
+      qftInsightBody: string;
+      clearTooltip: string;
+    };
+    photoelectric: {
+      badge: string;
+      title: string;
+      description: string;
+      formulaTitle: string;
+      vacuumTube: string;
+      wavelengthLabel: string;
+      lightSource: string;
+      workFunctionPrefix: string;
+      noElectronsEjected: string;
+      ejectedStatus: string;
+      insufficientStatus: string;
+      selectMetalLabel: string;
+      lightWavelengthLabel: string;
+      uvShortWave: string;
+      redLongWave: string;
+      intensityLabel: string;
+      photonsPerWave: string;
+      intensityHint: string;
+      energyPerPhoton: string;
+      workFunction: string;
+      maxKineticEnergy: string;
+      metals: {
+        cesium: string;
+        potassium: string;
+        sodium: string;
+        zinc: string;
+        copper: string;
+      };
+      colors: {
+        red: string;
+        orange: string;
+        yellow: string;
+        green: string;
+        cyan: string;
+        purple: string;
+        uv: string;
+      };
+    };
+    fockState: {
+      badge: string;
+      title: string;
+      description: string;
+      hamiltonianTitle: string;
+      potentialWellTitle: string;
+      currentStateLabel: string;
+      vacuumStateLabel: string;
+      photonLevelLabel: string;
+      vacuumExplanation: string;
+      excitedExplanation: string;
+      diracOperatorsTitle: string;
+      creationTitle: string;
+      creationDesc: string;
+      annihilationTitle: string;
+      annihilationDesc: string;
+      photonCountSummary: string;
+      vacuumZpeSummary: string;
+      totalFieldEnergySummary: string;
+    };
+  };
+  qftDeepDive: {
+    headerBadge: string;
+    mainTitle: string;
+    description: string;
+    lakeAnalogyBadge: string;
+    lakeAnalogyTitle: string;
+    lakeAnalogyIntro: string;
+    lakePoint1Title: string;
+    lakePoint1Text: string;
+    lakePoint2Title: string;
+    lakePoint2Text: string;
+    lakePoint3Title: string;
+    lakePoint3Text: string;
+    detectorQuestionBadge: string;
+    detectorQuestionTitle: string;
+    detectorQuestionIntro: string;
+    detectorRuleText: string;
+    detectorConclusion: string;
+    tableTitle: string;
+    thCriteria: string;
+    thNewton: string;
+    thMaxwell: string;
+    thQft: string;
+    row1Criteria: string;
+    row1Newton: string;
+    row1Maxwell: string;
+    row1Qft: string;
+    row2Criteria: string;
+    row2Newton: string;
+    row2Maxwell: string;
+    row2Qft: string;
+    row3Criteria: string;
+    row3Newton: string;
+    row3Maxwell: string;
+    row3Qft: string;
+    row4Criteria: string;
+    row4Newton: string;
+    row4Maxwell: string;
+    row4Qft: string;
+    row5Criteria: string;
+    row5Newton: string;
+    row5Maxwell: string;
+    row5Qft: string;
+  };
+  footer: {
+    title: string;
+    sub: string;
+    hobsonQuote: string;
+  };
+}
+

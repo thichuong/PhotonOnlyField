@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { MathFormula } from '../common/MathFormula';
 import { Play, Pause, RotateCcw, Zap, Sparkles } from 'lucide-react';
+import { useLanguage } from '../../i18n';
 
 interface HitPoint {
   x: number;
@@ -9,6 +10,7 @@ interface HitPoint {
 }
 
 export const DoubleSlitLab: React.FC = () => {
+  const { t } = useLanguage();
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [photonHits, setPhotonHits] = useState<HitPoint[]>([]);
   const [totalPhotons, setTotalPhotons] = useState<number>(0);
@@ -148,13 +150,13 @@ export const DoubleSlitLab: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <span className="px-3 py-1 bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 rounded-lg text-xs font-mono font-bold">
-            Phòng Thí Nghiệm 1
+            {t.labs.doubleSlit.badge}
           </span>
           <h3 className="text-xl lg:text-2xl font-black text-white mt-2">
-            Thí nghiệm Hai Khe: Bắn Từng Photon Đơn Lẻ
+            {t.labs.doubleSlit.title}
           </h3>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl">
-            Nếu ánh sáng là hạt bi cổ điển, khi bắn từng hạt một, chúng chỉ có thể chui qua khe trái hoặc khe phải tạo 2 vệt đơn giản. Nhưng trường sóng lượng tử sẽ tự giao thoa!
+            {t.labs.doubleSlit.description}
           </p>
         </div>
 
@@ -162,7 +164,7 @@ export const DoubleSlitLab: React.FC = () => {
         <div className="bg-slate-950 px-4 py-2.5 rounded-xl border border-slate-800 flex items-center gap-3">
           <Sparkles className="w-4 h-4 text-cyan-400" />
           <div className="flex flex-col">
-            <span className="text-[10px] text-slate-400 uppercase font-mono">Số photon đã tương tác:</span>
+            <span className="text-[10px] text-slate-400 uppercase font-mono">{t.labs.doubleSlit.photonsInteracted}</span>
             <span className="font-mono text-lg font-bold text-cyan-300">{totalPhotons.toLocaleString()}</span>
           </div>
         </div>
@@ -179,16 +181,16 @@ export const DoubleSlitLab: React.FC = () => {
 
         {/* Screen overlay labels */}
         <div className="absolute top-3 left-4 text-[11px] font-mono text-slate-400 bg-slate-900/80 px-2.5 py-1 rounded-md border border-slate-800">
-          Màn chắn hứng photon (Detector Screen)
+          {t.labs.doubleSlit.detectorScreen}
         </div>
 
         <div className="absolute bottom-3 right-4 text-[10px] font-mono text-purple-400 bg-slate-900/80 px-2.5 py-1 rounded-md border border-slate-800">
-          Biểu đồ mật độ xác suất |ψ|²
+          {t.labs.doubleSlit.probabilityDensity}
         </div>
 
         {totalPhotons === 0 && (
           <div className="absolute text-center text-xs text-slate-500 pointer-events-none">
-            Nhấn "Bắn liên tục" hoặc "Bắn 1 Photon" để bắt đầu quan sát sự tích tụ vân giao thoa
+            {t.labs.doubleSlit.emptyHint}
           </div>
         )}
       </div>
@@ -205,7 +207,7 @@ export const DoubleSlitLab: React.FC = () => {
             }`}
           >
             {isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-            <span>{isRunning ? 'Tạm dừng bắn' : 'Bắn liên tục'}</span>
+            <span>{isRunning ? t.labs.doubleSlit.pauseFire : t.labs.doubleSlit.continuousFire}</span>
           </button>
 
           <button
@@ -214,7 +216,7 @@ export const DoubleSlitLab: React.FC = () => {
             className="px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors flex items-center gap-1.5 disabled:opacity-40"
           >
             <Zap className="w-4 h-4 text-cyan-400" />
-            <span>Bắn 1 Photon đơn lẻ</span>
+            <span>{t.labs.doubleSlit.fireSingle}</span>
           </button>
 
           <button
@@ -222,13 +224,13 @@ export const DoubleSlitLab: React.FC = () => {
             className="px-3 py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-medium border border-slate-700"
             title="Tốc độ bắn"
           >
-            Tốc độ: {firingMode === 'stream' ? 'Chùm nhanh' : 'Từng hạt'}
+            {t.labs.doubleSlit.firingRate} {firingMode === 'stream' ? t.labs.doubleSlit.rateFast : t.labs.doubleSlit.rateSingle}
           </button>
 
           <button
             onClick={handleReset}
             className="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors"
-            title="Xóa màn hình"
+            title={t.labs.doubleSlit.clearTooltip}
           >
             <RotateCcw className="w-4 h-4" />
           </button>
@@ -236,7 +238,7 @@ export const DoubleSlitLab: React.FC = () => {
 
         <div className="md:col-span-6 bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 text-xs text-slate-300 flex flex-col gap-2">
           <div className="flex items-center justify-between text-[11px]">
-            <span className="text-slate-400">Khoảng cách 2 khe (d):</span>
+            <span className="text-slate-400">{t.labs.doubleSlit.slitDistanceLabel}</span>
             <span className="font-mono text-cyan-300">{slitDistance} μm</span>
             <input
               type="range"
@@ -253,10 +255,11 @@ export const DoubleSlitLab: React.FC = () => {
           </div>
           <div className="font-semibold text-cyan-300 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Giải thích theo Thuyết Trường Lượng Tử (QFT):</span>
+            <span>{t.labs.doubleSlit.qftInsightTitle}</span>
           </div>
           <p className="text-[11px] leading-relaxed text-slate-400">
-            Mỗi photon khi phóng đi là một <span className="text-cyan-200 font-semibold">gói dao động trường lan truyền qua CẢ HAI KHE</span>. Trường sóng này tự giao thoa với chính nó trong không gian. Nhưng khi chạm màn chắn nguyên tử, gói năng lượng trao đổi tại một tọa độ cục bộ xác định theo biên độ xác suất <MathFormula math="P(x) \propto |\psi(x)|^2" />.
+            {t.labs.doubleSlit.qftInsightBody}{' '}
+            <MathFormula math="P(x) \propto |\psi(x)|^2" />.
           </p>
         </div>
       </div>

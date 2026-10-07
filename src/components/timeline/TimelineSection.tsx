@@ -1,8 +1,9 @@
 import React from 'react';
-import { TIMELINE_MILESTONES } from '../../data/timelineData';
+import { getTimelineMilestones } from '../../data/timelineData';
 import { MathFormula } from '../common/MathFormula';
 import { MiniParticleCanvas } from '../canvas/MiniParticleCanvas';
 import { MiniWaveCanvas } from '../canvas/MiniWaveCanvas';
+import { useLanguage } from '../../i18n';
 import {
   Calendar,
   User,
@@ -14,30 +15,33 @@ import {
 } from 'lucide-react';
 
 export const TimelineSection: React.FC = () => {
+  const { language, t } = useLanguage();
+  const milestones = getTimelineMilestones(language);
+
   return (
     <section className="my-16 flex flex-col gap-10">
       {/* Section Header */}
       <div className="flex flex-col gap-3 max-w-3xl">
         <div className="flex items-center gap-2 text-cyan-400 text-xs font-semibold uppercase tracking-widest">
           <Calendar className="w-4 h-4" />
-          <span>Tiến trình lịch sử tư tưởng khoa học (300 năm tiến hóa)</span>
+          <span>{t.timeline.headerBadge}</span>
         </div>
         <h2 className="text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
-          Hành trình nhận thức: Ánh sáng thực sự là gì?
+          {t.timeline.sectionTitle}
         </h2>
         <p className="text-slate-400 text-sm lg:text-base leading-relaxed">
-          Cuộn xuống dọc theo dòng thời gian để xem các nhà khoa học vĩ đại đã từng bước phá vỡ định kiến về "hạt cô lập" ra sao, dẫn tới chân lý của Thuyết Trường Lượng Tử: <strong className="text-cyan-300">Vũ trụ chỉ có các Trường</strong>.
+          {t.timeline.sectionDescription}
         </p>
 
         <div className="flex items-center gap-2 text-xs text-slate-500 font-mono mt-1">
           <ArrowDown className="w-4 h-4 text-cyan-400 animate-bounce" />
-          <span>Lướt xuống để xem liên tục toàn bộ tiến trình</span>
+          <span>{t.timeline.scrollHint}</span>
         </div>
       </div>
 
       {/* Vertical Timeline Container */}
       <div className="relative border-l-2 border-slate-800 ml-4 md:ml-8 pl-6 md:pl-10 space-y-16">
-        {TIMELINE_MILESTONES.map((item, index) => {
+        {milestones.map((item, index) => {
           // Xác định loại mô phỏng 3D mini gắn kèm tương ứng với mốc
           const hasParticleSim = item.id === 'newton-1704';
           const hasInterferenceSim = item.id === 'young-1801';
@@ -73,7 +77,7 @@ export const TimelineSection: React.FC = () => {
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="px-3 py-1 bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 rounded-xl text-xs font-mono font-bold">
-                      Năm {item.year}
+                      {t.timeline.yearPrefix} {item.year}
                     </span>
                     <span className="px-3 py-1 bg-slate-800 text-slate-300 rounded-xl text-xs font-medium">
                       {item.era}
@@ -84,7 +88,7 @@ export const TimelineSection: React.FC = () => {
                   </div>
 
                   <span className="text-xs font-mono text-slate-500">
-                    Cột mốc #{index + 1}
+                    {t.timeline.milestoneIndex}{index + 1}
                   </span>
                 </div>
 
@@ -123,7 +127,7 @@ export const TimelineSection: React.FC = () => {
                     <div className="bg-slate-950/80 border border-slate-800 p-4 rounded-2xl flex flex-col gap-1.5">
                       <div className="text-xs font-bold text-cyan-300 flex items-center gap-1.5 uppercase tracking-wide">
                         <Sparkles className="w-3.5 h-3.5" />
-                        <span>Bước nhảy nhận thức (Paradigm Shift)</span>
+                        <span>{t.timeline.paradigmShiftLabel}</span>
                       </div>
                       <div className="text-xs text-slate-300 leading-normal">
                         {item.paradigmShift}
@@ -144,7 +148,7 @@ export const TimelineSection: React.FC = () => {
                       <div className="flex flex-col gap-2">
                         <div className="text-[11px] font-semibold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
                           <Atom className="w-3.5 h-3.5" />
-                          <span>Mô phỏng 3D: Các hạt Newton</span>
+                          <span>{t.timeline.simNewtonTitle}</span>
                         </div>
                         <MiniParticleCanvas />
                       </div>
@@ -154,7 +158,7 @@ export const TimelineSection: React.FC = () => {
                       <div className="flex flex-col gap-2">
                         <div className="text-[11px] font-semibold text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
                           <Atom className="w-3.5 h-3.5" />
-                          <span>Mô phỏng 3D: Sóng giao thoa hai khe</span>
+                          <span>{t.timeline.simDoubleSlitTitle}</span>
                         </div>
                         <MiniWaveCanvas type="interference" />
                       </div>
@@ -164,7 +168,7 @@ export const TimelineSection: React.FC = () => {
                       <div className="flex flex-col gap-2">
                         <div className="text-[11px] font-semibold text-purple-300 uppercase tracking-wider flex items-center gap-1.5">
                           <Atom className="w-3.5 h-3.5" />
-                          <span>Mô phỏng 3D: Sóng trường điện từ</span>
+                          <span>{t.timeline.simMaxwellTitle}</span>
                         </div>
                         <MiniWaveCanvas type="plane-wave" />
                       </div>
@@ -175,10 +179,10 @@ export const TimelineSection: React.FC = () => {
                       <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-xl p-3.5 text-xs text-cyan-200 flex flex-col gap-2">
                         <div className="flex items-center gap-1.5 font-bold text-cyan-300">
                           <CheckCircle className="w-4 h-4 text-cyan-400" />
-                          <span>Kết luận đỉnh cao của vật lý</span>
+                          <span>{t.timeline.qftPinnacleTitle}</span>
                         </div>
                         <p className="text-[11px] text-slate-300 leading-relaxed">
-                          Quan sát mô phỏng 3D chính ở đầu trang: Toàn bộ hạt photon chỉ là gói sóng kích thích (excitation) trên mặt phẳng Trường Lượng Tử.
+                          {t.timeline.qftPinnacleDesc}
                         </p>
                       </div>
                     )}
@@ -186,7 +190,7 @@ export const TimelineSection: React.FC = () => {
                     {/* Core Mathematical Formula */}
                     <div className="flex flex-col gap-1.5">
                       <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                        Công thức toán học cốt lõi
+                        {t.timeline.coreFormulaLabel}
                       </div>
                       <div className="bg-slate-900 border border-slate-800 rounded-xl p-3.5 text-center overflow-x-auto">
                         <MathFormula
