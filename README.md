@@ -4,6 +4,8 @@
 
 Ứng dụng web tương tác trực quan hóa bản chất của **Photon dưới lăng kính Thuyết Trường Lượng Tử (Quantum Field Theory - QFT)**: *Photon không phải là một hạt bi bay trong chân không, mà là lượng tử kích thích (quantum excitation) của Trường Điện Từ.*
 
+🌐 **Trải nghiệm trực tuyến**: [photon-only-field.pages.dev](https://photon-only-field.pages.dev)
+
 ---
 
 ## 🌟 Tính Năng Nổi Bật
@@ -64,3 +66,23 @@ npm test
 npm run build
 ```
 Thư mục xuất xưởng: `dist/`
+
+### 4. Triển khai lên Cloudflare Pages (CLI)
+Ứng dụng được triển khai trực tiếp lên **Cloudflare Pages**:
+
+* **Demo Trực Tuyến**: [https://photon-only-field.pages.dev](https://photon-only-field.pages.dev)
+
+* **Lệnh deploy (tự động build & deploy)**:
+  ```bash
+  npm run deploy
+  ```
+
+* **Deploy thủ công bằng Wrangler CLI**:
+  ```bash
+  # Đăng nhập lần đầu nếu cần
+  npx wrangler login
+
+  # Triển khai bản build lên Cloudflare Pages
+  npx wrangler pages deploy dist --project-name=photon-only-field
+  ```
+

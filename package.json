@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name=photon-only-field",
     "test": "node --experimental-strip-types --test src/test/physics.test.ts",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "npm run build && wrangler dev"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
@@ -24,12 +25,14 @@
     "three": "^0.186.1"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.63.0",
     "@types/node": "^24.13.2",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
     "oxlint": "^1.71.0",
     "typescript": "~6.0.2",
-    "vite": "^8.1.1"
+    "vite": "^8.1.1",
+    "wrangler": "^4.148.0"
   }
 }
