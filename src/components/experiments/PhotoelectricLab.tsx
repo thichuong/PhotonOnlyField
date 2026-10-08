@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { MathFormula } from '../common/MathFormula';
 import { Sun, AlertCircle, CheckCircle } from 'lucide-react';
 import { useLanguage } from '../../i18n';
 
@@ -57,12 +56,12 @@ export const PhotoelectricLab: React.FC = () => {
           </p>
         </div>
 
-        <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs flex items-center gap-3">
-          <div className="font-mono text-center">
-            <div className="text-[10px] text-slate-400">{t.labs.photoelectric.formulaTitle}</div>
-            <div className="text-cyan-300 font-bold text-sm mt-0.5">
-              <MathFormula math="K_{\max} = h\nu - \Phi" />
-            </div>
+        <div className="bg-slate-950 px-4 py-2.5 rounded-xl border border-slate-800 text-xs flex flex-col justify-center">
+          <div className="text-[10px] text-cyan-400 font-bold uppercase tracking-wider">
+            {t.labs.photoelectric.formulaTitle}
+          </div>
+          <div className="text-slate-300 text-xs mt-0.5 font-medium">
+            Động năng electron = Năng lượng lượng tử (hν) − Thế rào liên kết (Φ)
           </div>
         </div>
       </div>

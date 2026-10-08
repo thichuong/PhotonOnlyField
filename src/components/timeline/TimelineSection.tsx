@@ -187,20 +187,20 @@ export const TimelineSection: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Core Mathematical Formula */}
-                    <div className="flex flex-col gap-1.5">
-                      <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                    {/* Core Physical Principle & Mathematical Notation */}
+                    <div className="flex flex-col gap-2 bg-slate-900/80 border border-slate-800 rounded-xl p-3.5">
+                      <div className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider">
                         {t.timeline.coreFormulaLabel}
                       </div>
-                      <div className="bg-slate-900 border border-slate-800 rounded-xl p-3.5 text-center overflow-x-auto">
+                      <div className="text-xs text-slate-200 leading-relaxed font-medium">
+                        {item.formulaMeaning}
+                      </div>
+                      <div className="mt-1 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                        <span className="text-[10px] text-slate-500 uppercase">Biểu thức toán học:</span>
                         <MathFormula
                           math={item.formulaLatex}
-                          block
-                          className="text-base text-cyan-300"
+                          className="text-xs text-cyan-300"
                         />
-                      </div>
-                      <div className="text-[11px] text-slate-400 leading-snug">
-                        {item.formulaMeaning}
                       </div>
                     </div>
                   </div>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { MathFormula } from '../common/MathFormula';
 import { Play, Pause, RotateCcw, Zap, Sparkles } from 'lucide-react';
 import { useLanguage } from '../../i18n';
 
@@ -257,9 +256,8 @@ export const DoubleSlitLab: React.FC = () => {
             <Sparkles className="w-3.5 h-3.5" />
             <span>{t.labs.doubleSlit.qftInsightTitle}</span>
           </div>
-          <p className="text-[11px] leading-relaxed text-slate-400">
-            {t.labs.doubleSlit.qftInsightBody}{' '}
-            <MathFormula math="P(x) \propto |\psi(x)|^2" />.
+          <p className="text-[11px] leading-relaxed text-slate-300">
+            {t.labs.doubleSlit.qftInsightBody}
           </p>
         </div>
       </div>

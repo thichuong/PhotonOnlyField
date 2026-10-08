@@ -49,6 +49,14 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
         </div>
       </div>
 
+      {/* Vacuum Fluctuation Physical Context */}
+      {settings.vacuumFluctuations && (
+        <div className="bg-cyan-950/40 border border-cyan-500/30 rounded-xl p-3 md:p-3.5 text-xs md:text-sm text-cyan-100/90 leading-relaxed flex items-start sm:items-center gap-2.5 shadow-sm">
+          <Activity className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5 sm:mt-0" />
+          <span>{t.controls.vacuumFluctuationsExplainer}</span>
+        </div>
+      )}
+
       {/* Numerical Sliders & Parameters */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-1">
         {/* Frequency & Energy */}
