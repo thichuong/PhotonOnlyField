@@ -21,6 +21,20 @@ interface PhotonPacket {
   createdAt: number;
 }
 
+interface ClickImpact {
+  x: number;
+  y: number;
+  time: number;
+  amplitude: number;
+}
+
+interface RippleMarker {
+  mesh: THREE.Mesh;
+  startTime: number;
+  duration: number;
+  maxScale: number;
+}
+
 export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
   settings,
   onSettingsChange,
@@ -28,12 +42,33 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
 }) => {
   const { t } = useLanguage();
   const mountRef = useRef<HTMLDivElement>(null);
+  const energyDisplayRef = useRef<HTMLSpanElement>(null);
+
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [photonList, setPhotonList] = useState<PhotonPacket[]>([]);
-  const [clickImpacts, setClickImpacts] = useState<Array<{ x: number; y: number; time: number; amplitude: number }>>([]);
-  const [inspectedEnergy, setInspectedEnergy] = useState<number>(0);
 
-  // References to preserve Three.js state across renders
+  // Refs for high-performance animation loop (avoiding loop teardown & re-renders)
+  const isPlayingRef = useRef<boolean>(true);
+  const settingsRef = useRef<FieldSettings>(settings);
+  const photonListRef = useRef<PhotonPacket[]>([]);
+  const clickImpactsRef = useRef<ClickImpact[]>([]);
+  const basePositionsRef = useRef<Float32Array | null>(null);
+  const rippleMarkersRef = useRef<RippleMarker[]>([]);
+
+  // Synchronize state and props to refs
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+  }, [isPlaying]);
+
+  useEffect(() => {
+    settingsRef.current = settings;
+  }, [settings]);
+
+  useEffect(() => {
+    photonListRef.current = photonList;
+  }, [photonList]);
+
+  // Three.js instances
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -43,6 +78,7 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
 
   // Camera Orbit state
   const isDraggingRef = useRef<boolean>(false);
+  const dragDistanceRef = useRef<number>(0);
   const prevMousePos = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const cameraAngle = useRef<{ theta: number; phi: number; radius: number }>({
     theta: Math.PI / 4,
@@ -56,42 +92,91 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
 
   // Inject a photon wave packet
   const handleInjectPhoton = useCallback(() => {
+    const curSettings = settingsRef.current;
     const newPacket: PhotonPacket = {
       id: Date.now() + Math.random(),
       x: -16,
       y: (Math.random() - 0.5) * 6,
-      energy: settings.photonEnergy || 1.5,
-      speed: 7.0 * settings.speed,
-      wavelength: 2.2 / (settings.waveFrequency || 1.2),
+      energy: curSettings.photonEnergy || 1.5,
+      speed: 7.0 * curSettings.speed,
+      wavelength: 2.2 / (curSettings.waveFrequency || 1.2),
       width: 3.2,
       createdAt: elapsedTimeRef.current,
     };
-    setPhotonList((prev) => [...prev.slice(-6), newPacket]); // giữ tối đa 7 photon đồng thời
-  }, [settings.photonEnergy, settings.speed, settings.waveFrequency]);
+    setPhotonList((prev) => {
+      const updated = [...prev.slice(-6), newPacket];
+      photonListRef.current = updated;
+      return updated;
+    });
+  }, []);
 
-  // Click on field to perturb
-  const handleFieldClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!mountRef.current || !cameraRef.current || !sceneRef.current) return;
+  // Trigger field excitation at exact local grid coordinates (x, y)
+  const triggerFieldExcitation = useCallback((localX: number, localY: number) => {
+    const curSettings = settingsRef.current;
+    const now = elapsedTimeRef.current;
+
+    // Record impact for wave equation
+    const newImpact: ClickImpact = {
+      x: localX,
+      y: localY,
+      time: now,
+      amplitude: 2.2 * curSettings.amplitude,
+    };
+    clickImpactsRef.current = [...clickImpactsRef.current.slice(-5), newImpact];
+
+    // Visual ripple ring feedback on grid
+    if (planeMeshRef.current) {
+      const ringGeo = new THREE.RingGeometry(0.15, 0.4, 32);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: curSettings.colorScheme === 'energy-amber' ? 0xfbbf24 : 0x38bdf8,
+        transparent: true,
+        opacity: 0.95,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+      });
+      const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+      ringMesh.position.set(localX, localY, 0.08); // Float slightly above the plane
+      planeMeshRef.current.add(ringMesh);
+
+      rippleMarkersRef.current.push({
+        mesh: ringMesh,
+        startTime: now,
+        duration: 1.2,
+        maxScale: 10,
+      });
+    }
+  }, []);
+
+  // Handle double-click on field to perturb with 100% precision
+  const handleFieldDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!mountRef.current || !cameraRef.current || !planeMeshRef.current) return;
+
+    // Ignore if user was dragging camera
+    if (dragDistanceRef.current > 6) return;
+
     const rect = mountRef.current.getBoundingClientRect();
     const mouseX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     const mouseY = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
     const raycaster = new THREE.Raycaster();
     raycaster.setFromCamera(new THREE.Vector2(mouseX, mouseY), cameraRef.current);
-    
-    // Intersect with ground plane
-    const groundPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
-    const intersectPoint = new THREE.Vector3();
-    if (raycaster.ray.intersectPlane(groundPlane, intersectPoint)) {
-      setClickImpacts((prev) => [
-        ...prev.slice(-4),
-        {
-          x: intersectPoint.x,
-          y: intersectPoint.y,
-          time: elapsedTimeRef.current,
-          amplitude: 1.8 * settings.amplitude,
-        },
-      ]);
+
+    const mesh = planeMeshRef.current;
+    mesh.updateMatrixWorld();
+
+    // Transform ray into local space of the plane mesh
+    const inverseMatrix = mesh.matrixWorld.clone().invert();
+    const localRay = raycaster.ray.clone().applyMatrix4(inverseMatrix);
+
+    // In PlaneGeometry's local space, the unperturbed grid lies exactly on z = 0 with normal (0, 0, 1)
+    const localPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+    const localIntersect = new THREE.Vector3();
+
+    if (localRay.intersectPlane(localPlane, localIntersect)) {
+      const halfSize = 16; // Grid 32x32 spans -16 to +16
+      if (Math.abs(localIntersect.x) <= halfSize && Math.abs(localIntersect.y) <= halfSize) {
+        triggerFieldExcitation(localIntersect.x, localIntersect.y);
+      }
     }
   };
 
@@ -105,7 +190,6 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x030712);
-    // Subtle fog that maintains depth without washing out the mesh
     scene.fog = new THREE.FogExp2(0x030712, 0.005);
     sceneRef.current = scene;
 
@@ -123,7 +207,7 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
 
     mountNode.appendChild(renderer.domElement);
 
-    // Multi-point dynamic lighting
+    // Lighting
     const ambientLight = new THREE.AmbientLight(0xe0f2fe, 1.4);
     scene.add(ambientLight);
 
@@ -139,21 +223,27 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
     pointLight.position.set(0, 12, 8);
     scene.add(pointLight);
 
-    // Subtle spatial reference grid
+    // Reference Grid
     const gridHelper = new THREE.GridHelper(36, 36, 0x0ea5e9, 0x1e293b);
     gridHelper.position.y = -5.5;
     scene.add(gridHelper);
 
-    // Setup Mesh Field Grid (Plane with subdivisions)
+    // Mesh Field Grid (Plane with subdivisions)
     const gridSize = 32;
     const segments = 90;
     const geometry = new THREE.PlaneGeometry(gridSize, gridSize, segments, segments);
-    
-    // Store original positions for math calculations
+
+    // Cache unperturbed base vertex positions (x, y) for ultra-fast loop
     const posAttribute = geometry.attributes.position;
     const count = posAttribute.count;
-    const colors = new Float32Array(count * 3);
+    const baseCoords = new Float32Array(count * 2);
+    for (let i = 0; i < count; i++) {
+      baseCoords[i * 2] = posAttribute.getX(i);
+      baseCoords[i * 2 + 1] = posAttribute.getY(i);
+    }
+    basePositionsRef.current = baseCoords;
 
+    const colors = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
       colors[i * 3] = 0.05;     // R
       colors[i * 3 + 1] = 0.7;  // G
@@ -161,11 +251,10 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
     }
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-    // Low metalness ensures vibrant vertex color diffusion
     const material = new THREE.MeshStandardMaterial({
       color: 0xffffff,
       vertexColors: true,
-      wireframe: settings.showWireframe,
+      wireframe: settingsRef.current.showWireframe,
       roughness: 0.35,
       metalness: 0.05,
       flatShading: true,
@@ -173,7 +262,7 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
     });
 
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.rotation.x = -Math.PI / 2.3; // Angle toward viewer
+    mesh.rotation.x = -Math.PI / 2.3; // Tilt toward camera
     scene.add(mesh);
     planeMeshRef.current = mesh;
 
@@ -200,21 +289,21 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
     }
     classicalBallsRef.current = balls;
 
-    // Start with 1 photon in QFT mode
-    setPhotonList([
-      {
-        id: 1,
-        x: -12,
-        y: 0,
-        energy: 1.5,
-        speed: 6.0,
-        wavelength: 2.0,
-        width: 3.5,
-        createdAt: 0,
-      },
-    ]);
+    // Initial photon packet in QFT mode
+    const initialPacket: PhotonPacket = {
+      id: 1,
+      x: -12,
+      y: 0,
+      energy: 1.5,
+      speed: 6.0,
+      wavelength: 2.0,
+      width: 3.5,
+      createdAt: 0,
+    };
+    setPhotonList([initialPacket]);
+    photonListRef.current = [initialPacket];
 
-    // Handle Window & Container Resize with ResizeObserver
+    // Responsive container resize observer
     const handleResize = () => {
       if (!mountNode || !renderer || !camera) return;
       const w = mountNode.clientWidth || 800;
@@ -228,28 +317,28 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
       handleResize();
     });
     resizeObserver.observe(mountNode);
-    window.addEventListener('resize', handleResize);
 
     return () => {
       resizeObserver.disconnect();
-      window.removeEventListener('resize', handleResize);
       renderer.dispose();
       geometry.dispose();
       material.dispose();
+      sphereGeo.dispose();
+      sphereMat.dispose();
       if (mountNode && renderer.domElement) {
         mountNode.removeChild(renderer.domElement);
       }
     };
-  }, [settings.showWireframe]);
+  }, []);
 
-  // Update wireframe property when changed
+  // Update wireframe property without recreating geometry or scene
   useEffect(() => {
     if (planeMeshRef.current) {
       (planeMeshRef.current.material as THREE.MeshStandardMaterial).wireframe = settings.showWireframe;
     }
   }, [settings.showWireframe]);
 
-  // Main Render Loop
+  // Main High-Performance Render Loop
   useEffect(() => {
     let animationFrameId: number;
 
@@ -266,13 +355,14 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
-      if (!isPlaying) {
+      if (!isPlayingRef.current) {
         if (rendererRef.current && sceneRef.current && cameraRef.current) {
           rendererRef.current.render(sceneRef.current, cameraRef.current);
         }
         return;
       }
 
+      const curSettings = settingsRef.current;
       const now = performance.now();
       const delta = Math.min((now - lastTimeRef.current) / 1000, 0.1);
       lastTimeRef.current = now;
@@ -281,9 +371,9 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
 
       updateCameraPos();
 
-      const isNewtonMode = settings.mode === 'classical-particle';
-      const isMaxwellMode = settings.mode === 'classical-wave';
-      const isQftMode = settings.mode === 'qft-field';
+      const isNewtonMode = curSettings.mode === 'classical-particle';
+      const isMaxwellMode = curSettings.mode === 'classical-wave';
+      const isQftMode = curSettings.mode === 'qft-field';
 
       // Visibility toggles
       if (particleGroupRef.current) {
@@ -296,30 +386,57 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
       // Classical Newton ball animation
       if (isNewtonMode && classicalBallsRef.current.length > 0) {
         classicalBallsRef.current.forEach((ball, idx) => {
-          ball.position.x += 0.15 * settings.speed;
+          ball.position.x += 0.15 * curSettings.speed;
           if (ball.position.x > 16) {
             ball.position.x = -16;
-            ball.position.y = (Math.sin(idx * 1.5 + time) * 6);
+            ball.position.y = Math.sin(idx * 1.5 + time) * 6;
           }
         });
       }
 
+      // Update ripple markers
+      const activeMarkers: RippleMarker[] = [];
+      const markers = rippleMarkersRef.current;
+      for (let m = 0; m < markers.length; m++) {
+        const marker = markers[m];
+        const age = time - marker.startTime;
+        if (age < marker.duration) {
+          const progress = age / marker.duration;
+          const currentScale = 1 + progress * marker.maxScale;
+          marker.mesh.scale.set(currentScale, currentScale, 1);
+          (marker.mesh.material as THREE.MeshBasicMaterial).opacity = (1 - progress) * 0.9;
+          activeMarkers.push(marker);
+        } else {
+          // Dispose expired marker
+          if (planeMeshRef.current) {
+            planeMeshRef.current.remove(marker.mesh);
+          }
+          marker.mesh.geometry.dispose();
+          (marker.mesh.material as THREE.Material).dispose();
+        }
+      }
+      rippleMarkersRef.current = activeMarkers;
+
       // Wave Field Mesh Update (Maxwell or QFT mode)
-      if (planeMeshRef.current && (!isNewtonMode)) {
-        const geometry = planeMeshRef.current.geometry;
+      if (planeMeshRef.current && !isNewtonMode && basePositionsRef.current) {
+        const mesh = planeMeshRef.current;
+        const geometry = mesh.geometry;
         const pos = geometry.attributes.position;
         const col = geometry.attributes.color;
         const count = pos.count;
+        const posArray = pos.array as Float32Array;
+        const colArray = col.array as Float32Array;
+        const baseCoords = basePositionsRef.current;
 
-        // Base frequency and wave speed
-        const omega = (settings.waveFrequency || 1.2) * 3.5 * settings.speed;
+        // Base frequency and wave parameters
+        const omega = (curSettings.waveFrequency || 1.2) * 3.5 * curSettings.speed;
         const kWave = 0.8;
-        const baseAmp = settings.amplitude * 1.2;
+        const baseAmp = curSettings.amplitude * 1.2;
 
         let totalCenterEnergy = 0;
 
-        // If no photon wavepackets currently visible in QFT mode, provide recurring loop packet
-        let activePackets = photonList;
+        // Pre-filter active wavepackets
+        let activePackets = photonListRef.current;
         if (isQftMode && activePackets.length === 0) {
           const loopT = (time * 1.5) % 6.5;
           activePackets = [
@@ -327,115 +444,176 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
               id: 0,
               x: -16,
               y: 0,
-              energy: settings.photonEnergy || 1.5,
-              speed: 6.0 * settings.speed,
-              wavelength: 2.2 / (settings.waveFrequency || 1.2),
+              energy: curSettings.photonEnergy || 1.5,
+              speed: 6.0 * curSettings.speed,
+              wavelength: 2.2 / (curSettings.waveFrequency || 1.2),
               width: 3.2,
               createdAt: time - loopT,
             },
           ];
         }
 
+        // Pre-filter valid packets within visible bounds
+        const validPackets: Array<{
+          currentX: number;
+          y: number;
+          speed: number;
+          wavelength: number;
+          width: number;
+          amplitudeFactor: number;
+          dt: number;
+        }> = [];
+
+        if (isQftMode) {
+          for (let p = 0; p < activePackets.length; p++) {
+            const packet = activePackets[p];
+            const dt = time - packet.createdAt;
+            const currentX = packet.x + dt * packet.speed;
+            if (currentX > -22 && currentX < 22) {
+              validPackets.push({
+                currentX,
+                y: packet.y,
+                speed: packet.speed,
+                wavelength: packet.wavelength,
+                width: packet.width,
+                amplitudeFactor: baseAmp * 2.6 * packet.energy,
+                dt,
+              });
+            }
+          }
+        }
+
+        // Pre-filter active click impacts to eliminate dead impacts before vertex loop
+        const activeImpacts: Array<{
+          x: number;
+          y: number;
+          dt: number;
+          waveRadius: number;
+          decayedAmp: number;
+        }> = [];
+
+        if (isQftMode) {
+          const rawImpacts = clickImpactsRef.current;
+          for (let k = 0; k < rawImpacts.length; k++) {
+            const imp = rawImpacts[k];
+            const dt = time - imp.time;
+            if (dt > 0 && dt < 4.5) {
+              activeImpacts.push({
+                x: imp.x,
+                y: imp.y,
+                dt,
+                waveRadius: dt * 6.5,
+                decayedAmp: imp.amplitude * Math.exp(-dt * 0.8),
+              });
+            }
+          }
+        }
+
+        const hasVacuum = isQftMode && curSettings.vacuumFluctuations;
+        const colorScheme = curSettings.colorScheme;
+        const invNormZFactor = 1 / (baseAmp * 2.2 + 0.1);
+
+        // Highly-optimized hot loop across all vertices using direct typed arrays
         for (let i = 0; i < count; i++) {
-          const x = pos.getX(i);
-          const y = pos.getY(i);
+          const x = baseCoords[i * 2];
+          const y = baseCoords[i * 2 + 1];
           let z = 0;
 
           if (isMaxwellMode) {
-            // Maxwell: Infinite continuous sinusoidal electromagnetic wave
             z = baseAmp * Math.sin(kWave * x - omega * time);
-            // Add slight harmonic
             z += (baseAmp * 0.3) * Math.sin(kWave * 1.8 * x - omega * 1.8 * time + y * 0.3);
           } else if (isQftMode) {
-            // QFT: Field Vacuum Fluctuations (Zero-Point Energy / quantum noise)
-            if (settings.vacuumFluctuations) {
+            // Vacuum fluctuations
+            if (hasVacuum) {
               const vacNoise1 = Math.sin(x * 1.6 + time * 4.2) * Math.cos(y * 1.8 - time * 3.7);
               const vacNoise2 = Math.sin(x * 3.1 - time * 5.9 + y * 2.7) * 0.45;
               const vacNoise3 = Math.cos(x * 0.7 + y * 1.3 + time * 2.1) * 0.3;
-              z += (vacNoise1 + vacNoise2 + vacNoise3) * 0.28 * settings.amplitude;
+              z += (vacNoise1 + vacNoise2 + vacNoise3) * 0.28 * curSettings.amplitude;
             }
 
-            // Click Disturbances (Field perturbations)
-            clickImpacts.forEach((impact) => {
-              const dt = time - impact.time;
-              if (dt > 0 && dt < 4.5) {
-                const dist = Math.hypot(x - impact.x, y - impact.y);
-                const waveRadius = dt * 6.5;
-                const ringDist = dist - waveRadius;
-                const ripple = Math.exp(-(ringDist * ringDist) / 2.0) * Math.cos(dist * 2.5 - dt * 10);
-                const decay = Math.exp(-dt * 0.8);
-                z += ripple * impact.amplitude * decay;
-              }
-            });
+            // Click Disturbances (Accurate localized ripples)
+            for (let k = 0; k < activeImpacts.length; k++) {
+              const imp = activeImpacts[k];
+              const dx = x - imp.x;
+              const dy = y - imp.y;
+              const dist = Math.sqrt(dx * dx + dy * dy);
+              const ringDist = dist - imp.waveRadius;
+              const ripple = Math.exp(-(ringDist * ringDist) * 0.5) * Math.cos(dist * 2.5 - imp.dt * 10);
+              z += ripple * imp.decayedAmp;
+            }
 
             // Localized Photon Wave Packets
-            activePackets.forEach((packet) => {
-              const dt = time - packet.createdAt;
-              const currentX = packet.x + dt * packet.speed;
-              
-              // Only compute if within visible field
-              if (currentX > -22 && currentX < 22) {
-                const dx = x - currentX;
-                const dy = y - packet.y;
-                const r2 = dx * dx + dy * dy;
+            for (let p = 0; p < validPackets.length; p++) {
+              const packet = validPackets[p];
+              const dx = x - packet.currentX;
+              const dy = y - packet.y;
+              const r2 = dx * dx + dy * dy;
 
-                // Gaussian envelope + Carrier frequency
-                const envelope = Math.exp(-r2 / (2 * packet.width * packet.width));
-                const carrier = Math.cos((2 * Math.PI / packet.wavelength) * dx - (packet.speed * 2.5) * dt);
-
-                z += envelope * carrier * (baseAmp * 2.6 * packet.energy);
-              }
-            });
+              const envelope = Math.exp(-r2 / (2 * packet.width * packet.width));
+              const carrier = Math.cos((2 * Math.PI / packet.wavelength) * dx - (packet.speed * 2.5) * packet.dt);
+              z += envelope * carrier * packet.amplitudeFactor;
+            }
           }
 
-          pos.setZ(i, z);
+          // Direct typed array write for z position
+          posArray[i * 3 + 2] = z;
 
-          // Calculate energy density at center for inspector
           if (Math.abs(x) < 1.0 && Math.abs(y) < 1.0) {
             totalCenterEnergy += Math.abs(z);
           }
 
-          // Dynamic Color Grading based on height z (Excitation intensity)
-          const normZ = Math.max(-1, Math.min(1, z / (baseAmp * 2.2 + 0.1)));
+          // Dynamic vertex color grading
+          const normZ = Math.max(-1, Math.min(1, z * invNormZFactor));
           const intensity = Math.abs(normZ);
+          const cIndex = i * 3;
 
-          if (settings.colorScheme === 'quantum-cyan') {
-            // Neon cyan to purple with glowing crests
+          if (colorScheme === 'quantum-cyan') {
             if (z > 0.4) {
-              // Wave crest: glowing cyan-white
-              col.setXYZ(i, 0.2 + intensity * 0.75, 0.85 + intensity * 0.15, 1.0);
+              colArray[cIndex] = 0.2 + intensity * 0.75;
+              colArray[cIndex + 1] = 0.85 + intensity * 0.15;
+              colArray[cIndex + 2] = 1.0;
             } else if (z < -0.3) {
-              // Wave trough: deep electric violet
-              col.setXYZ(i, 0.55 + intensity * 0.45, 0.15, 0.95);
+              colArray[cIndex] = 0.55 + intensity * 0.45;
+              colArray[cIndex + 1] = 0.15;
+              colArray[cIndex + 2] = 0.95;
             } else {
-              // Baseline / vacuum: bright tech cyan
-              col.setXYZ(i, 0.05 + intensity * 0.2, 0.65 + (1 - intensity) * 0.25, 0.95);
+              colArray[cIndex] = 0.05 + intensity * 0.2;
+              colArray[cIndex + 1] = 0.65 + (1 - intensity) * 0.25;
+              colArray[cIndex + 2] = 0.95;
             }
-          } else if (settings.colorScheme === 'energy-amber') {
-            // Golden amber to incandescent orange
+          } else if (colorScheme === 'energy-amber') {
             if (z > 0.4) {
-              col.setXYZ(i, 1.0, 0.9, 0.3 + intensity * 0.5);
+              colArray[cIndex] = 1.0;
+              colArray[cIndex + 1] = 0.9;
+              colArray[cIndex + 2] = 0.3 + intensity * 0.5;
             } else {
-              col.setXYZ(i, 0.95, 0.45 + (1 - intensity) * 0.35, 0.05 + intensity * 0.2);
+              colArray[cIndex] = 0.95;
+              colArray[cIndex + 1] = 0.45 + (1 - intensity) * 0.35;
+              colArray[cIndex + 2] = 0.05 + intensity * 0.2;
             }
           } else {
-            // Violet electric
             if (z > 0.4) {
-              col.setXYZ(i, 0.95, 0.6, 1.0);
+              colArray[cIndex] = 0.95;
+              colArray[cIndex + 1] = 0.6;
+              colArray[cIndex + 2] = 1.0;
             } else {
-              col.setXYZ(i, 0.65 + intensity * 0.35, 0.15 + (1 - intensity) * 0.25, 0.98);
+              colArray[cIndex] = 0.65 + intensity * 0.35;
+              colArray[cIndex + 1] = 0.15 + (1 - intensity) * 0.25;
+              colArray[cIndex + 2] = 0.98;
             }
           }
         }
 
         pos.needsUpdate = true;
         col.needsUpdate = true;
-        geometry.computeVertexNormals();
 
-        // Throttle state update to avoid re-rendering every frame (60fps -> ~10fps)
+        // Zero-lag Direct DOM Update for HUD Inspector (completely avoids React re-render overhead)
         if (time - lastEnergyUpdateRef.current > 0.1) {
           lastEnergyUpdateRef.current = time;
-          setInspectedEnergy(totalCenterEnergy / 12);
+          const energyValue = (totalCenterEnergy / 12).toFixed(2);
+          if (energyDisplayRef.current) {
+            energyDisplayRef.current.textContent = `${energyValue} ℏω`;
+          }
         }
       }
 
@@ -446,12 +624,13 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
 
     animationFrameId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [isPlaying, settings, photonList, clickImpacts]);
+  }, []);
 
   // Mouse Orbit Camera Drag Handlers
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return; // Only left click
     isDraggingRef.current = true;
+    dragDistanceRef.current = 0;
     prevMousePos.current = { x: e.clientX, y: e.clientY };
   };
 
@@ -459,6 +638,7 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
     if (!isDraggingRef.current) return;
     const deltaX = e.clientX - prevMousePos.current.x;
     const deltaY = e.clientY - prevMousePos.current.y;
+    dragDistanceRef.current += Math.abs(deltaX) + Math.abs(deltaY);
     prevMousePos.current = { x: e.clientX, y: e.clientY };
 
     cameraAngle.current.theta -= deltaX * 0.008;
@@ -495,7 +675,7 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
       onWheel={handleWheel}
-      onDoubleClick={handleFieldClick}
+      onDoubleClick={handleFieldDoubleClick}
     >
       {/* 3D WebGL Canvas Container */}
       <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
@@ -521,8 +701,8 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
         <div className="flex items-center gap-2 bg-slate-900/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700/60 pointer-events-auto text-xs text-slate-300 shadow-md">
           <Sparkles className="w-4 h-4 text-cyan-400" />
           <span>{t.canvas.pointEnergyDensity}</span>
-          <span className="font-mono text-cyan-300 font-bold">
-            {inspectedEnergy.toFixed(2)} ℏω
+          <span ref={energyDisplayRef} className="font-mono text-cyan-300 font-bold">
+            0.00 ℏω
           </span>
         </div>
       </div>
@@ -607,3 +787,4 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
     </div>
   );
 };
+
