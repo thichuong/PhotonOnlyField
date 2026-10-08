@@ -271,8 +271,8 @@ export const enTranslations: Translations = {
       whyWavepacketTitle: 'Does the photon physically split into two halves at BS₁?',
       whyWavepacketDesc: 'Definitely NOT! A photon is an indivisible quantum of energy (E = hν). What splits at BS₁ is the PROBABILITY AMPLITUDE of the wavepacket |ψ⟩ = (|d₁⟩ + i|d₂⟩)/√2. Only 50% amplitude propagates along each arm; upon reaching a detector, the wavefunction collapses instantaneously and the full quantum hν is absorbed at a single detector.',
       // Canvas elements
-      armD1Canvas: 'Arm d₁ (Path A: L₁)',
-      armD2Canvas: 'Arm d₂ (Path B: L₂ = L₁ + Δd)',
+      armD1Canvas: 'd₁',
+      armD2Canvas: 'd₂',
       mirror1: 'Mirror M₁',
       mirror2: 'Mirror M₂',
       bs2Mounted: 'BS₂ (Mounted)',
@@ -306,6 +306,7 @@ export const enTranslations: Translations = {
       // Buttons
       removeBS2Btn: 'Remove BS₂ (Wheeler Which-Path)',
       insertBS2Btn: 'Insert BS₂ (Recombination)',
+      delayedChoiceInstruction: 'Guide: Let the photon pass through BS₁, then remove/insert BS₂ to observe the change.',
     },
   },
   qftDeepDive: {

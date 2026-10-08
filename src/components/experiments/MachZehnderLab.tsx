@@ -249,9 +249,9 @@ export const MachZehnderLab: React.FC = () => {
 
       // 4. Optical Arm Labels (Clear d1 & d2 distinction)
       // Label Arm d1 (Upper)
-      ctx.font = '9.5px ui-monospace, monospace';
+      ctx.font = 'bold 11px ui-monospace, monospace';
       ctx.fillStyle = '#67e8f9';
-      ctx.fillText(tRef.current.labs.machZehnder.armD1Canvas, bs1X + 10, m1Y - 12);
+      ctx.fillText(tRef.current.labs.machZehnder.armD1Canvas, 250, m1Y - 12);
 
       // Dimension guide line for d1
       ctx.strokeStyle = 'rgba(6, 182, 212, 0.35)';
@@ -265,7 +265,7 @@ export const MachZehnderLab: React.FC = () => {
 
       // Label Arm d2 (Lower)
       ctx.fillStyle = '#fde047';
-      ctx.fillText(tRef.current.labs.machZehnder.armD2Canvas, bs1X + 10, m2Y + 22);
+      ctx.fillText(tRef.current.labs.machZehnder.armD2Canvas, 250, m2Y + 22);
 
       // Dimension guide line for d2
       ctx.strokeStyle = 'rgba(234, 179, 8, 0.35)';
@@ -343,7 +343,7 @@ export const MachZehnderLab: React.FC = () => {
         ctx.stroke();
         ctx.fillStyle = '#67e8f9';
         ctx.font = '9px monospace';
-        ctx.fillText(tRef.current.labs.machZehnder.bs2Mounted, bs2X - 16, bs2Y + 24);
+        ctx.fillText(tRef.current.labs.machZehnder.bs2Mounted, bs2X + 18, bs2Y + 24);
       } else {
         // BS2 Removed slot
         ctx.strokeStyle = '#f43f5e';
@@ -353,7 +353,7 @@ export const MachZehnderLab: React.FC = () => {
         ctx.setLineDash([]);
         ctx.fillStyle = '#fb7185';
         ctx.font = '8.5px monospace';
-        ctx.fillText(tRef.current.labs.machZehnder.bs2Removed, bs2X - 20, bs2Y + 24);
+        ctx.fillText(tRef.current.labs.machZehnder.bs2Removed, bs2X + 18, bs2Y + 24);
       }
 
       // 6. Draw Distinct Detectors D1 and D2
@@ -882,51 +882,58 @@ export const MachZehnderLab: React.FC = () => {
       {/* Controls & Wheeler Delayed-Choice Section */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
         {/* Buttons & BS2 Toggle */}
-        <div className="md:col-span-7 flex flex-wrap items-center gap-2.5">
-          <button
-            onClick={() => setIsRunning(!isRunning)}
-            className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
-              isRunning
-                ? 'bg-amber-500 hover:bg-amber-400 text-slate-950'
-                : 'bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-500/20'
-            }`}
-          >
-            {isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-            <span>{isRunning ? t.labs.machZehnder.pauseFire : t.labs.machZehnder.continuousFire}</span>
-          </button>
+        <div className="md:col-span-7 flex flex-col gap-2.5">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <button
+              onClick={() => setIsRunning(!isRunning)}
+              className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
+                isRunning
+                  ? 'bg-amber-500 hover:bg-amber-400 text-slate-950'
+                  : 'bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-500/20'
+              }`}
+            >
+              {isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+              <span>{isRunning ? t.labs.machZehnder.pauseFire : t.labs.machZehnder.continuousFire}</span>
+            </button>
 
-          <button
-            onClick={fireSinglePhoton}
-            disabled={isRunning}
-            className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors flex items-center gap-1.5 disabled:opacity-40 cursor-pointer"
-          >
-            <Zap className="w-4 h-4 text-cyan-400" />
-            <span>{t.labs.machZehnder.fireSinglePhoton}</span>
-          </button>
+            <button
+              onClick={fireSinglePhoton}
+              disabled={isRunning}
+              className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors flex items-center gap-1.5 disabled:opacity-40 cursor-pointer"
+            >
+              <Zap className="w-4 h-4 text-cyan-400" />
+              <span>{t.labs.machZehnder.fireSinglePhoton}</span>
+            </button>
 
-          {/* Toggle BS2 (Wheeler Delayed Choice trigger) */}
-          <button
-            onClick={() => {
-              setHasBS2((prev) => !prev);
-            }}
-            className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
-              hasBS2
-                ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 hover:bg-cyan-500/30'
-                : 'bg-rose-500/20 text-rose-300 border-rose-500/50 shadow-md shadow-rose-500/20 hover:bg-rose-500/30'
-            }`}
-          >
-            <Split className="w-3.5 h-3.5" />
-            <span>{hasBS2 ? t.labs.machZehnder.removeBS2Btn : t.labs.machZehnder.insertBS2Btn}</span>
-          </button>
+            {/* Toggle BS2 (Wheeler Delayed Choice trigger) */}
+            <button
+              onClick={() => {
+                setHasBS2((prev) => !prev);
+              }}
+              className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
+                hasBS2
+                  ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 hover:bg-cyan-500/30'
+                  : 'bg-rose-500/20 text-rose-300 border-rose-500/50 shadow-md shadow-rose-500/20 hover:bg-rose-500/30'
+              }`}
+            >
+              <Split className="w-3.5 h-3.5" />
+              <span>{hasBS2 ? t.labs.machZehnder.removeBS2Btn : t.labs.machZehnder.insertBS2Btn}</span>
+            </button>
 
+            <button
+              onClick={handleReset}
+              className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors cursor-pointer"
+              title={t.labs.machZehnder.clearCounts}
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
+          </div>
 
-          <button
-            onClick={handleReset}
-            className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors cursor-pointer"
-            title={t.labs.machZehnder.clearCounts}
-          >
-            <RotateCcw className="w-4 h-4" />
-          </button>
+          {/* Wheeler Delayed-Choice experimental guide */}
+          <div className="text-sm text-slate-200 font-medium flex items-center gap-2 bg-slate-950/70 px-3.5 py-2 rounded-xl border border-slate-800/90 shadow-sm">
+            <span className="text-base shrink-0">💡</span>
+            <span>{t.labs.machZehnder.delayedChoiceInstruction}</span>
+          </div>
         </div>
 
         {/* Phase Slider & Path Difference (Δd = d2 - d1) */}

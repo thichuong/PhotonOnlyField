@@ -271,8 +271,8 @@ export const viTranslations: Translations = {
       whyWavepacketTitle: 'Photon có bị chẻ đôi hạt khi qua BS₁ không?',
       whyWavepacketDesc: 'Tuyệt đối KHÔNG! Photon là một lượng tử bất khả phân chia (E = hν). Thứ phân nhánh tại BS₁ là BIÊN ĐỘ XÁC SUẤT của gói sóng |ψ⟩ = (|d₁⟩ + i|d₂⟩)/√2. Trên cả 2 nhánh chỉ là 50% biên độ sóng mờ; chỉ khi tới đầu dò, hàm sóng sụp đổ tức thời và toàn bộ năng lượng hν được hấp thụ tại duy nhất 1 đầu dò.',
       // Canvas elements
-      armD1Canvas: 'Nhánh d₁ (Đường A: L₁)',
-      armD2Canvas: 'Nhánh d₂ (Đường B: L₂ = L₁ + Δd)',
+      armD1Canvas: 'd₁',
+      armD2Canvas: 'd₂',
       mirror1: 'Gương M₁',
       mirror2: 'Gương M₂',
       bs2Mounted: 'BS₂ (Gắn)',
@@ -306,6 +306,7 @@ export const viTranslations: Translations = {
       // Buttons
       removeBS2Btn: 'Gỡ BS₂ (Wheeler Which-Path)',
       insertBS2Btn: 'Lắp lại BS₂ (Tái kết hợp)',
+      delayedChoiceInstruction: 'Hướng dẫn: Để photon chạy qua BS₁ sau đó gỡ/gắn BS₂ để xem thay đổi.',
     },
   },
   qftDeepDive: {

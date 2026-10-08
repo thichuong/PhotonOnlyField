@@ -303,6 +303,7 @@ export interface Translations {
       // Buttons
       removeBS2Btn: string;
       insertBS2Btn: string;
+      delayedChoiceInstruction: string;
     };
   };
   qftDeepDive: {
