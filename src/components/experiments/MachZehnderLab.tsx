@@ -58,6 +58,9 @@ export const MachZehnderLab: React.FC = () => {
   const phaseShiftDegRef = useRef<number>(phaseShiftDeg);
   phaseShiftDegRef.current = phaseShiftDeg;
 
+  const tRef = useRef(t);
+  tRef.current = t;
+
   const phaseRad = (phaseShiftDeg * Math.PI) / 180;
 
   // Theoretical detection probabilities
@@ -248,7 +251,7 @@ export const MachZehnderLab: React.FC = () => {
       // Label Arm d1 (Upper)
       ctx.font = '9.5px ui-monospace, monospace';
       ctx.fillStyle = '#67e8f9';
-      ctx.fillText('Nhánh d₁ (Đường A: L₁)', bs1X + 10, m1Y - 12);
+      ctx.fillText(tRef.current.labs.machZehnder.armD1Canvas, bs1X + 10, m1Y - 12);
 
       // Dimension guide line for d1
       ctx.strokeStyle = 'rgba(6, 182, 212, 0.35)';
@@ -262,7 +265,7 @@ export const MachZehnderLab: React.FC = () => {
 
       // Label Arm d2 (Lower)
       ctx.fillStyle = '#fde047';
-      ctx.fillText('Nhánh d₂ (Đường B: L₂ = L₁ + Δd)', bs1X + 10, m2Y + 22);
+      ctx.fillText(tRef.current.labs.machZehnder.armD2Canvas, bs1X + 10, m2Y + 22);
 
       // Dimension guide line for d2
       ctx.strokeStyle = 'rgba(234, 179, 8, 0.35)';
@@ -308,14 +311,14 @@ export const MachZehnderLab: React.FC = () => {
       ctx.lineTo(m1X + 13, m1Y + 13);
       ctx.stroke();
       ctx.fillStyle = '#cbd5e1';
-      ctx.fillText('Gương M₁', m1X - 20, m1Y - 18);
+      ctx.fillText(tRef.current.labs.machZehnder.mirror1, m1X - 20, m1Y - 18);
 
       // Mirror 2 (M2)
       ctx.beginPath();
       ctx.moveTo(m2X - 13, m2Y - 13);
       ctx.lineTo(m2X + 13, m2Y + 13);
       ctx.stroke();
-      ctx.fillText('Gương M₂', m2X - 20, m2Y + 25);
+      ctx.fillText(tRef.current.labs.machZehnder.mirror2, m2X - 20, m2Y + 25);
 
       // Phase Shifter on Arm d2
       ctx.fillStyle = 'rgba(234, 179, 8, 0.2)';
@@ -340,7 +343,7 @@ export const MachZehnderLab: React.FC = () => {
         ctx.stroke();
         ctx.fillStyle = '#67e8f9';
         ctx.font = '9px monospace';
-        ctx.fillText('BS₂ (Gắn)', bs2X - 16, bs2Y + 24);
+        ctx.fillText(tRef.current.labs.machZehnder.bs2Mounted, bs2X - 16, bs2Y + 24);
       } else {
         // BS2 Removed slot
         ctx.strokeStyle = '#f43f5e';
@@ -350,7 +353,7 @@ export const MachZehnderLab: React.FC = () => {
         ctx.setLineDash([]);
         ctx.fillStyle = '#fb7185';
         ctx.font = '8.5px monospace';
-        ctx.fillText('BS₂ (Tháo)', bs2X - 20, bs2Y + 24);
+        ctx.fillText(tRef.current.labs.machZehnder.bs2Removed, bs2X - 20, bs2Y + 24);
       }
 
       // 6. Draw Distinct Detectors D1 and D2
@@ -499,9 +502,9 @@ export const MachZehnderLab: React.FC = () => {
           } else {
             // Which-Path Mode (Đã gỡ BS2): Photon là hạt, CHỈ ĐI 1 NHÁNH DUY NHẤT!
             if (pulse.whichPathNoBS2 === 'd1') {
-              drawWavepacket(pAx, pAy, dirA, '#06b6d4', 1.0, 'Hạt trên d₁');
+              drawWavepacket(pAx, pAy, dirA, '#06b6d4', 1.0, tRef.current.labs.machZehnder.particleOnD1);
             } else {
-              drawWavepacket(pBx, pBy, dirB, '#eab308', 1.0, 'Hạt trên d₂');
+              drawWavepacket(pBx, pBy, dirB, '#eab308', 1.0, tRef.current.labs.machZehnder.particleOnD2);
             }
           }
         }
@@ -563,7 +566,7 @@ export const MachZehnderLab: React.FC = () => {
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
       if (lastHitTimeoutRef.current) clearTimeout(lastHitTimeoutRef.current);
     };
-  }, [lastHit, isSimulating]);
+  }, [lastHit, isSimulating, t]);
 
   const handleReset = () => {
     setCountD1(0);
@@ -608,7 +611,7 @@ export const MachZehnderLab: React.FC = () => {
             <div className={`w-3 h-3 rounded-full ${lastHit === 'D1' ? 'bg-emerald-300 animate-ping' : 'bg-emerald-500'}`} />
             <div className="flex flex-col">
               <span className="text-[10px] text-slate-400 font-mono font-medium">
-                Đầu dò D₁ (cos² Δφ/2)
+                {t.labs.machZehnder.detector1Header}
               </span>
               <div className="flex items-baseline gap-1.5">
                 <span className="font-mono text-lg font-black text-emerald-300">{countD1}</span>
@@ -616,7 +619,7 @@ export const MachZehnderLab: React.FC = () => {
                   ({totalHits > 0 ? ((countD1 / totalHits) * 100).toFixed(0) : 0}%)
                 </span>
                 <span className="text-[10px] text-emerald-500/80 font-mono">
-                  [LT: {(probD1 * 100).toFixed(0)}%]
+                  [{t.labs.machZehnder.theoryAbbr}: {(probD1 * 100).toFixed(0)}%]
                 </span>
               </div>
             </div>
@@ -633,7 +636,7 @@ export const MachZehnderLab: React.FC = () => {
             <div className={`w-3 h-3 rounded-full ${lastHit === 'D2' ? 'bg-purple-300 animate-ping' : 'bg-purple-500'}`} />
             <div className="flex flex-col">
               <span className="text-[10px] text-slate-400 font-mono font-medium">
-                Đầu dò D₂ (sin² Δφ/2)
+                {t.labs.machZehnder.detector2Header}
               </span>
               <div className="flex items-baseline gap-1.5">
                 <span className="font-mono text-lg font-black text-purple-300">{countD2}</span>
@@ -641,7 +644,7 @@ export const MachZehnderLab: React.FC = () => {
                   ({totalHits > 0 ? ((countD2 / totalHits) * 100).toFixed(0) : 0}%)
                 </span>
                 <span className="text-[10px] text-purple-400/80 font-mono">
-                  [LT: {(probD2 * 100).toFixed(0)}%]
+                  [{t.labs.machZehnder.theoryAbbr}: {(probD2 * 100).toFixed(0)}%]
                 </span>
               </div>
             </div>
@@ -654,7 +657,7 @@ export const MachZehnderLab: React.FC = () => {
         <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
           <BookOpen className="w-4 h-4 text-cyan-400" />
           <h4 className="text-sm font-bold text-white uppercase tracking-wider">
-            Lý Thuyết Giao Thoa Kế & Nghịch Lý Lựa Chọn Trễ Wheeler
+            {t.labs.machZehnder.theorySectionTitle}
           </h4>
         </div>
 
@@ -733,7 +736,7 @@ export const MachZehnderLab: React.FC = () => {
               )}
             </div>
             <div className="text-[10px] font-mono text-amber-300 bg-amber-950/85 px-2 py-1 rounded-md border border-amber-800/80 backdrop-blur-sm hidden sm:block">
-              {hasBS2 ? '|ψ⟩ Gói sóng chồng chập (Cả 2 nhánh)' : 'Hạt đơn: Chọn 1 nhánh duy nhất (50/50)'}
+              {hasBS2 ? t.labs.machZehnder.superpositionBanner : t.labs.machZehnder.whichPathBanner}
             </div>
           </div>
         </div>
@@ -747,8 +750,8 @@ export const MachZehnderLab: React.FC = () => {
                 <GitBranch className="w-4 h-4" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-white">Bảng Phân Tích Quang Lộ</h4>
-                <span className="text-[10px] font-mono text-slate-400">So sánh quang trình d₁ & d₂</span>
+                <h4 className="text-sm font-bold text-white">{t.labs.machZehnder.pathAnalysisTitle}</h4>
+                <span className="text-[10px] font-mono text-slate-400">{t.labs.machZehnder.pathAnalysisSubtitle}</span>
               </div>
             </div>
             <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-yellow-500/10 border border-yellow-500/30 text-yellow-300">
@@ -763,15 +766,15 @@ export const MachZehnderLab: React.FC = () => {
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-bold text-cyan-300 flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                  Nhánh d₁ (Đường A)
+                  {t.labs.machZehnder.armD1Title}
                 </span>
-                <span className="text-[10px] font-mono text-slate-400">Chuẩn</span>
+                <span className="text-[10px] font-mono text-slate-400">{t.labs.machZehnder.armD1Standard}</span>
               </div>
               <div className="text-[11px] font-mono text-slate-300">
-                Quang trình: <span className="text-white font-bold">L₀</span>
+                {t.labs.machZehnder.opticalPathLabel} <span className="text-white font-bold">L₀</span>
               </div>
               <div className="text-[10px] text-slate-400 leading-tight">
-                Qua gương M₁, pha chuẩn φ₁ = 0
+                {t.labs.machZehnder.armD1Detail}
               </div>
             </div>
 
@@ -780,15 +783,16 @@ export const MachZehnderLab: React.FC = () => {
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-bold text-amber-300 flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-amber-400" />
-                  Nhánh d₂ (Đường B)
+                  {t.labs.machZehnder.armD2Title}
                 </span>
                 <span className="text-[10px] font-mono text-amber-400 font-bold">+{deltaPathWavelength}λ</span>
               </div>
               <div className="text-[11px] font-mono text-slate-300">
-                Quang trình: <span className="text-white font-bold">L₀ + Δd</span>
+                {t.labs.machZehnder.opticalPathLabel} <span className="text-white font-bold">L₀ + Δd</span>
               </div>
               <div className="text-[10px] text-slate-400 leading-tight">
-                Bộ dời pha Δφ = <span className="text-yellow-300 font-bold">{phaseShiftDeg}°</span>
+                {t.labs.machZehnder.phaseShifterSetting}{' '}
+                <span className="text-yellow-300 font-bold">{phaseShiftDeg}°</span>
               </div>
             </div>
           </div>
@@ -798,7 +802,7 @@ export const MachZehnderLab: React.FC = () => {
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-slate-200 flex items-center gap-1.5">
                 <Ruler className="w-3.5 h-3.5 text-cyan-400" />
-                <span>{hasBS2 ? 'Trạng Thái Tái Can Nhiễu (Tại BS₂)' : 'Trạng Thái Which-Path (Đã gỡ BS₂)'}</span>
+                <span>{hasBS2 ? t.labs.machZehnder.stateInterference : t.labs.machZehnder.stateWhichPath}</span>
               </span>
               <span className="text-[10px] font-mono text-slate-400">
                 {hasBS2 ? 'P₁ + P₂ = 100%' : '50% / 50%'}
@@ -810,10 +814,15 @@ export const MachZehnderLab: React.FC = () => {
               <div className="flex justify-between text-[11px] font-mono mb-1">
                 <span className="text-emerald-400 font-bold flex items-center gap-1">
                   <span>D₁ (cos² Δφ/2):</span>
-                  <span className="text-slate-400 font-normal">{countD1} photon</span>
+                  <span className="text-slate-400 font-normal">
+                    {countD1} {t.labs.machZehnder.photonUnit}
+                  </span>
                 </span>
                 <span className="text-emerald-300 font-bold">
-                  {(probD1 * 100).toFixed(1)}% <span className="text-slate-400 font-normal">({totalHits > 0 ? ((countD1 / totalHits) * 100).toFixed(0) : 0}% TT)</span>
+                  {(probD1 * 100).toFixed(1)}%{' '}
+                  <span className="text-slate-400 font-normal">
+                    ({totalHits > 0 ? ((countD1 / totalHits) * 100).toFixed(0) : 0}% {t.labs.machZehnder.actualAbbr})
+                  </span>
                 </span>
               </div>
               <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
@@ -829,10 +838,15 @@ export const MachZehnderLab: React.FC = () => {
               <div className="flex justify-between text-[11px] font-mono mb-1">
                 <span className="text-purple-400 font-bold flex items-center gap-1">
                   <span>D₂ (sin² Δφ/2):</span>
-                  <span className="text-slate-400 font-normal">{countD2} photon</span>
+                  <span className="text-slate-400 font-normal">
+                    {countD2} {t.labs.machZehnder.photonUnit}
+                  </span>
                 </span>
                 <span className="text-purple-300 font-bold">
-                  {(probD2 * 100).toFixed(1)}% <span className="text-slate-400 font-normal">({totalHits > 0 ? ((countD2 / totalHits) * 100).toFixed(0) : 0}% TT)</span>
+                  {(probD2 * 100).toFixed(1)}%{' '}
+                  <span className="text-slate-400 font-normal">
+                    ({totalHits > 0 ? ((countD2 / totalHits) * 100).toFixed(0) : 0}% {t.labs.machZehnder.actualAbbr})
+                  </span>
                 </span>
               </div>
               <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
@@ -848,13 +862,17 @@ export const MachZehnderLab: React.FC = () => {
           <div className="text-[11px] text-slate-400 bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/80 leading-relaxed font-mono">
             {hasBS2 ? (
               <span>
-                💡 <span className="text-cyan-300 font-semibold">QFT:</span> Hiệu quang lộ{' '}
-                <span className="text-yellow-300">Δd = {deltaPathWavelength}λ</span> tạo độ lệch pha{' '}
-                <span className="text-yellow-300">Δφ = {phaseShiftDeg}°</span>, can nhiễu tăng cường tại D₁ và triệt tiêu tại D₂.
+                💡 <span className="text-cyan-300 font-semibold">QFT:</span>{' '}
+                {t.labs.machZehnder.qftFooterPrefix}{' '}
+                <span className="text-yellow-300">Δd = {deltaPathWavelength}λ</span>{' '}
+                {t.labs.machZehnder.qftFooterMid}{' '}
+                <span className="text-yellow-300">Δφ = {phaseShiftDeg}°</span>
+                {t.labs.machZehnder.qftFooterSuffix}
               </span>
             ) : (
               <span>
-                ⚠️ <span className="text-rose-300 font-semibold">Wheeler:</span> Gỡ BS₂ loại bỏ giao thoa. Photon chỉ đi d₁ ➔ D₁ hoặc d₂ ➔ D₂ với xác suất đồng đều 50/50.
+                ⚠️ <span className="text-rose-300 font-semibold">Wheeler:</span>{' '}
+                {t.labs.machZehnder.wheelerFooterTip}
               </span>
             )}
           </div>
@@ -898,7 +916,7 @@ export const MachZehnderLab: React.FC = () => {
             }`}
           >
             <Split className="w-3.5 h-3.5" />
-            <span>{hasBS2 ? 'Gỡ BS₂ (Wheeler Which-Path)' : 'Lắp lại BS₂ (Tái kết hợp)'}</span>
+            <span>{hasBS2 ? t.labs.machZehnder.removeBS2Btn : t.labs.machZehnder.insertBS2Btn}</span>
           </button>
 
 

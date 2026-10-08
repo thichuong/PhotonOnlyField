@@ -267,6 +267,42 @@ export interface Translations {
       howItWorksDesc: string;
       whyWavepacketTitle: string;
       whyWavepacketDesc: string;
+      // Canvas elements
+      armD1Canvas: string;
+      armD2Canvas: string;
+      mirror1: string;
+      mirror2: string;
+      bs2Mounted: string;
+      bs2Removed: string;
+      particleOnD1: string;
+      particleOnD2: string;
+      superpositionBanner: string;
+      whichPathBanner: string;
+      // Header & Cards
+      detector1Header: string;
+      detector2Header: string;
+      theoryAbbr: string;
+      actualAbbr: string;
+      theorySectionTitle: string;
+      // Path Analysis column
+      pathAnalysisTitle: string;
+      pathAnalysisSubtitle: string;
+      armD1Title: string;
+      armD1Standard: string;
+      opticalPathLabel: string;
+      armD1Detail: string;
+      armD2Title: string;
+      phaseShifterSetting: string;
+      stateInterference: string;
+      stateWhichPath: string;
+      photonUnit: string;
+      qftFooterPrefix: string;
+      qftFooterMid: string;
+      qftFooterSuffix: string;
+      wheelerFooterTip: string;
+      // Buttons
+      removeBS2Btn: string;
+      insertBS2Btn: string;
     };
   };
   qftDeepDive: {
