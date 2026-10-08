@@ -268,8 +268,8 @@ export const viTranslations: Translations = {
       phasePreset180: 'Δφ = 180° (Ngược pha: 0% vào D₁, 100% vào D₂)',
       howItWorksTitle: 'Bản Chất Can Nhiễu Pha Tại 2 Đầu Dò:',
       howItWorksDesc: 'Bộ tách chùm BS₁ chia photon thành 2 nhánh. Tại BS₂, hai sóng trường gặp lại nhau: ở đầu dò D₁, hai nhánh tới cùng pha nên cộng hưởng tăng cường (P₁ = cos²(Δφ/2)); ở đầu dò D₂, do có thêm lần phản xạ làm lệch pha π nên chúng triệt tiêu nhau (P₂ = sin²(Δφ/2)).',
-      whyWavepacketTitle: 'Photon bay theo 1 đường hay cả 2 đường?',
-      whyWavepacketDesc: 'Khi BS₂ được gắn, ta thu được giao thoa hoàn hảo — chứng minh gói sóng trường của photon bắt buộc phải đi qua CẢ HAI NHÁNH đồng thời. Chỉ khi ta gỡ BS₂ ra để rình xem nó đi đường nào, tính chất sóng mới sụp đổ thành hạt 50/50.',
+      whyWavepacketTitle: 'Photon có bị chẻ đôi hạt khi qua BS₁ không?',
+      whyWavepacketDesc: 'Tuyệt đối KHÔNG! Photon là một lượng tử bất khả phân chia (E = hν). Thứ phân nhánh tại BS₁ là BIÊN ĐỘ XÁC SUẤT của gói sóng |ψ⟩ = (|d₁⟩ + i|d₂⟩)/√2. Trên cả 2 nhánh chỉ là 50% biên độ sóng mờ; chỉ khi tới đầu dò, hàm sóng sụp đổ tức thời và toàn bộ năng lượng hν được hấp thụ tại duy nhất 1 đầu dò.',
     },
   },
   qftDeepDive: {

@@ -16,12 +16,13 @@ import {
 import { useLanguage } from '../../i18n';
 import { useInView } from '../../hooks/useInView';
 
+const PHOTON_SPEED = 0.005; // Tốc độ chậm cố định (~3.3s toàn lộ trình) giúp quan sát cực rõ
+
 interface FlyingPulse {
   id: number;
   progress: number; // 0 to 1
   speed: number;
-  targetDetector: 'D1' | 'D2';
-  whichPathNoBS2: 'd1' | 'd2';
+  whichPathNoBS2: 'd1' | 'd2'; // Nhánh được chọn khi gỡ BS2 (Which-path particle mode)
 }
 
 interface HitEffect {
@@ -69,28 +70,13 @@ export const MachZehnderLab: React.FC = () => {
   const totalHits = countD1 + countD2;
   const deltaPathWavelength = (phaseShiftDeg / 360).toFixed(2);
 
-  // Create a new photon pulse with accurate quantum outcome assignment
+  // Create a new photon pulse from Laser S
   const spawnPhoton = useCallback(() => {
-    const isCurrentBS2 = hasBS2Ref.current;
-    const currentProbD1 = probD1Ref.current;
-
-    let target: 'D1' | 'D2';
-    const chosenPath: 'd1' | 'd2' = Math.random() < 0.5 ? 'd1' : 'd2';
-
-    if (isCurrentBS2) {
-      // Interference determines target detector: cos²(Δφ/2) vs sin²(Δφ/2)
-      target = Math.random() < currentProbD1 ? 'D1' : 'D2';
-    } else {
-      // Which-path measurement: Arm d1 goes straight to D1, Arm d2 goes straight to D2
-      target = chosenPath === 'd1' ? 'D1' : 'D2';
-    }
-
     pulsesRef.current.push({
       id: Math.random(),
       progress: 0,
-      speed: 0.016,
-      targetDetector: target,
-      whichPathNoBS2: chosenPath,
+      speed: PHOTON_SPEED,
+      whichPathNoBS2: Math.random() < 0.5 ? 'd1' : 'd2',
     });
   }, []);
 
@@ -102,10 +88,10 @@ export const MachZehnderLab: React.FC = () => {
   useEffect(() => {
     if (!isRunning || !isSimulating) return;
     const interval = setInterval(() => {
-      if (pulsesRef.current.length < 15) {
+      if (pulsesRef.current.length < 5) {
         spawnPhoton();
       }
-    }, 240);
+    }, 750);
 
     return () => clearInterval(interval);
   }, [isRunning, isSimulating, spawnPhoton]);
@@ -135,36 +121,37 @@ export const MachZehnderLab: React.FC = () => {
       const d2X = 355, d2Y = 26;
       const psX = 355, psY = 154; // Phase shifter center
 
-      // 1. Advance pulses & handle hits
+      // 1. Advance pulses & handle quantum measurement collapse at detectors
       const currentBS2 = hasBS2Ref.current;
+      const currentProbD1 = probD1Ref.current;
       const activePulses: FlyingPulse[] = [];
 
       for (let i = 0; i < pulsesRef.current.length; i++) {
         const pulse = pulsesRef.current[i];
-        const prevProg = pulse.progress;
         pulse.progress += pulse.speed;
 
-        // Wheeler Delayed-Choice check at BS2 intersection (progress ~ 0.75)
-        if (prevProg < 0.75 && pulse.progress >= 0.75) {
-          if (currentBS2) {
-            pulse.targetDetector = Math.random() < probD1Ref.current ? 'D1' : 'D2';
-          } else {
-            pulse.targetDetector = pulse.whichPathNoBS2 === 'd1' ? 'D1' : 'D2';
-          }
-        }
-
-        // Arrival at detector (progress >= 1.0)
+        // Arrival at detector (progress >= 1.0) -> Wavefunction Collapse!
+        // The photon is absorbed as a single indivisible quantum (hν) at ONE detector.
         if (pulse.progress >= 1.0) {
-          if (pulse.targetDetector === 'D1') {
+          let winner: 'D1' | 'D2';
+          if (currentBS2) {
+            // Quantum interference dictates measurement probability
+            winner = Math.random() < currentProbD1 ? 'D1' : 'D2';
+          } else {
+            // Which-path: without BS2, photon arrives at the detector of its chosen path!
+            winner = pulse.whichPathNoBS2 === 'd1' ? 'D1' : 'D2';
+          }
+
+          if (winner === 'D1') {
             setCountD1((c) => c + 1);
             hitsRef.current.push({
               x: d1X,
               y: d1Y,
               color: '#10b981',
               radius: 5,
-              maxRadius: 32,
+              maxRadius: 34,
               opacity: 1,
-              label: '+1 D₁',
+              label: '+1 D₁ (hν)',
             });
             setLastHit('D1');
           } else {
@@ -174,9 +161,9 @@ export const MachZehnderLab: React.FC = () => {
               y: d2Y,
               color: '#a855f7',
               radius: 5,
-              maxRadius: 32,
+              maxRadius: 34,
               opacity: 1,
-              label: '+1 D₂',
+              label: '+1 D₂ (hν)',
             });
             setLastHit('D2');
           }
@@ -184,7 +171,7 @@ export const MachZehnderLab: React.FC = () => {
           if (lastHitTimeoutRef.current) clearTimeout(lastHitTimeoutRef.current);
           lastHitTimeoutRef.current = setTimeout(() => {
             setLastHit(null);
-          }, 320);
+          }, 550);
         } else {
           activePulses.push(pulse);
         }
@@ -195,8 +182,8 @@ export const MachZehnderLab: React.FC = () => {
       hitsRef.current = hitsRef.current
         .map((hit) => ({
           ...hit,
-          radius: hit.radius + 1.2,
-          opacity: hit.opacity - 0.04,
+          radius: hit.radius + 0.8,
+          opacity: hit.opacity - 0.022,
         }))
         .filter((hit) => hit.opacity > 0);
 
@@ -407,131 +394,146 @@ export const MachZehnderLab: React.FC = () => {
       ctx.fillText(currentBS2 ? 'sin²' : '50%', d2X - 10, d2Y + 8);
       ctx.fillText('Min', d2X + 24, d2Y + 3);
 
-      // 7. Render Quantum Field Wavepackets / Photons in Flight
+      // Helper: Render localized wavepacket with transverse ripples & state amplitude
+      const drawWavepacket = (
+        wx: number,
+        wy: number,
+        direction: 'horizontal' | 'vertical',
+        color: string,
+        opacity: number,
+        label?: string
+      ) => {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, Math.min(1, opacity));
+
+        // 1. Soft radial probability cloud
+        const grad = ctx.createRadialGradient(wx, wy, 1, wx, wy, 14);
+        grad.addColorStop(0, color);
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(wx, wy, 14, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 2. Transverse wave ripples perpendicular to propagation vector
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1.8;
+        for (let offset = -5; offset <= 5; offset += 5) {
+          ctx.beginPath();
+          if (direction === 'horizontal') {
+            ctx.moveTo(wx + offset, wy - 6);
+            ctx.lineTo(wx + offset, wy + 6);
+          } else {
+            ctx.moveTo(wx - 6, wy + offset);
+            ctx.lineTo(wx + 6, wy + offset);
+          }
+          ctx.stroke();
+        }
+
+        // 3. Central energy quantum marker
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(wx, wy, 2.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 4. Amplitude annotation
+        if (label) {
+          ctx.font = '8.5px ui-monospace, monospace';
+          ctx.fillStyle = color;
+          ctx.fillText(label, wx + 8, wy - 6);
+        }
+        ctx.restore();
+      };
+
+      // 7. Render Quantum Field Wavepackets in Flight
       pulsesRef.current.forEach((pulse) => {
         const p = pulse.progress;
 
-        // Stage 1: Laser S -> BS1 (p: 0 -> 0.25)
+        // Stage 1: Laser S -> BS1 (p: 0 -> 0.25) - 1 Localized Single Photon |1⟩
         if (p <= 0.25) {
           const t1 = p / 0.25;
           const px = sX + (bs1X - sX) * t1;
           const py = sY;
-
-          ctx.fillStyle = '#38bdf8';
-          ctx.shadowColor = '#38bdf8';
-          ctx.shadowBlur = 7;
-          ctx.beginPath();
-          ctx.arc(px, py, 4, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.shadowBlur = 0;
+          drawWavepacket(px, py, 'horizontal', '#38bdf8', 1.0, '|1⟩ (hν)');
         }
-        // Stage 2: Dual Field Arms (p: 0.25 -> 0.75)
+        // Stage 2: Dual Field Arms inside Interferometer (p: 0.25 -> 0.75)
+        // Quantum Superposition: The photon wavepacket splits into two probability amplitudes across both arms!
+        // Whether BS2 is present or not, BOTH paths propagate amplitudes simultaneously (Wheeler Delayed Choice).
         else if (p <= 0.75) {
           const t2 = (p - 0.25) / 0.5;
 
-          if (currentBS2) {
-            // Quantum Superposition across both arms
-            let pAx = bs1X, pAy = bs1Y;
-            if (t2 < 0.5) {
-              const subT = t2 / 0.5;
-              pAx = bs1X;
-              pAy = bs1Y + (m1Y - bs1Y) * subT;
-            } else {
-              const subT = (t2 - 0.5) / 0.5;
-              pAx = m1X + (bs2X - m1X) * subT;
-              pAy = m1Y;
-            }
-
-            let pBx = bs1X, pBy = bs1Y;
-            if (t2 < 0.5) {
-              const subT = t2 / 0.5;
-              pBx = bs1X + (m2X - bs1X) * subT;
-              pBy = bs1Y;
-            } else {
-              const subT = (t2 - 0.5) / 0.5;
-              pBx = m2X;
-              pBy = m2Y + (bs2Y - m2Y) * subT;
-            }
-
-            ctx.fillStyle = 'rgba(6, 182, 212, 0.9)';
-            ctx.shadowColor = '#06b6d4';
-            ctx.shadowBlur = 7;
-            ctx.beginPath();
-            ctx.arc(pAx, pAy, 3.8, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.fillStyle = 'rgba(234, 179, 8, 0.9)';
-            ctx.shadowColor = '#eab308';
-            ctx.shadowBlur = 7;
-            ctx.beginPath();
-            ctx.arc(pBx, pBy, 3.8, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
+          // Arm d1 (Path A - Upper: BS1 -> M1 -> BS2)
+          let pAx = bs1X, pAy = bs1Y;
+          let dirA: 'horizontal' | 'vertical' = 'vertical';
+          if (t2 < 0.5) {
+            const subT = t2 / 0.5;
+            pAx = bs1X;
+            pAy = bs1Y + (m1Y - bs1Y) * subT;
+            dirA = 'vertical';
           } else {
-            // Which-Path
+            const subT = (t2 - 0.5) / 0.5;
+            pAx = m1X + (bs2X - m1X) * subT;
+            pAy = m1Y;
+            dirA = 'horizontal';
+          }
+
+          // Arm d2 (Path B - Lower: BS1 -> M2 -> BS2)
+          let pBx = bs1X, pBy = bs1Y;
+          let dirB: 'horizontal' | 'vertical' = 'horizontal';
+          if (t2 < 0.5) {
+            const subT = t2 / 0.5;
+            pBx = bs1X + (m2X - bs1X) * subT;
+            pBy = bs1Y;
+            dirB = 'horizontal';
+          } else {
+            const subT = (t2 - 0.5) / 0.5;
+            pBx = m2X;
+            pBy = m2Y + (bs2Y - m2Y) * subT;
+            dirB = 'vertical';
+          }
+
+          if (currentBS2) {
+            // Quantum Superposition: Gói sóng lan truyền trên CẢ 2 NHÁNH
+            drawWavepacket(pAx, pAy, dirA, '#06b6d4', 0.65, '|ψ_A⟩ 50%');
+            drawWavepacket(pBx, pBy, dirB, '#eab308', 0.65, '|ψ_B⟩ 50%');
+          } else {
+            // Which-Path Mode (Đã gỡ BS2): Photon là hạt, CHỈ ĐI 1 NHÁNH DUY NHẤT!
             if (pulse.whichPathNoBS2 === 'd1') {
-              let pAx = bs1X, pAy = bs1Y;
-              if (t2 < 0.5) {
-                const subT = t2 / 0.5;
-                pAx = bs1X;
-                pAy = bs1Y + (m1Y - bs1Y) * subT;
-              } else {
-                const subT = (t2 - 0.5) / 0.5;
-                pAx = m1X + (bs2X - m1X) * subT;
-                pAy = m1Y;
-              }
-              ctx.fillStyle = '#06b6d4';
-              ctx.shadowColor = '#06b6d4';
-              ctx.shadowBlur = 7;
-              ctx.beginPath();
-              ctx.arc(pAx, pAy, 4, 0, Math.PI * 2);
-              ctx.fill();
-              ctx.shadowBlur = 0;
+              drawWavepacket(pAx, pAy, dirA, '#06b6d4', 1.0, 'Hạt trên d₁');
             } else {
-              let pBx = bs1X, pBy = bs1Y;
-              if (t2 < 0.5) {
-                const subT = t2 / 0.5;
-                pBx = bs1X + (m2X - bs1X) * subT;
-                pBy = bs1Y;
-              } else {
-                const subT = (t2 - 0.5) / 0.5;
-                pBx = m2X;
-                pBy = m2Y + (bs2Y - m2Y) * subT;
-              }
-              ctx.fillStyle = '#eab308';
-              ctx.shadowColor = '#eab308';
-              ctx.shadowBlur = 7;
-              ctx.beginPath();
-              ctx.arc(pBx, pBy, 4, 0, Math.PI * 2);
-              ctx.fill();
-              ctx.shadowBlur = 0;
+              drawWavepacket(pBx, pBy, dirB, '#eab308', 1.0, 'Hạt trên d₂');
             }
           }
         }
         // Stage 3: Post BS2 to Detectors D1 or D2 (p: 0.75 -> 1.0)
         else {
           const t3 = (p - 0.75) / 0.25;
+          const p1x = bs2X + (d1X - bs2X) * t3;
+          const p1y = bs2Y;
 
-          if (pulse.targetDetector === 'D1') {
-            const px = bs2X + (d1X - bs2X) * t3;
-            const py = bs2Y;
-            ctx.fillStyle = '#10b981';
-            ctx.shadowColor = '#10b981';
-            ctx.shadowBlur = 8;
-            ctx.beginPath();
-            ctx.arc(px, py, 4, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
+          const p2x = bs2X;
+          const p2y = bs2Y + (d2Y - bs2Y) * t3;
+
+          if (currentBS2) {
+            // Interference Mode: Amplitudes recombine at BS2 with constructive/destructive interference
+            const prob1 = currentProbD1;
+            const prob2 = 1 - currentProbD1;
+
+            if (prob1 > 0.02) {
+              const alpha1 = Math.max(0.18, prob1);
+              drawWavepacket(p1x, p1y, 'horizontal', '#10b981', alpha1, `cos² (${(prob1 * 100).toFixed(0)}%)`);
+            }
+            if (prob2 > 0.02) {
+              const alpha2 = Math.max(0.18, prob2);
+              drawWavepacket(p2x, p2y, 'vertical', '#a855f7', alpha2, `sin² (${(prob2 * 100).toFixed(0)}%)`);
+            }
           } else {
-            const px = bs2X;
-            const py = bs2Y + (d2Y - bs2Y) * t3;
-            ctx.fillStyle = '#a855f7';
-            ctx.shadowColor = '#a855f7';
-            ctx.shadowBlur = 8;
-            ctx.beginPath();
-            ctx.arc(px, py, 4, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
+            // Which-Path Mode (Đã gỡ BS2): Tiếp tục bay vào đầu dò của nhánh tương ứng
+            if (pulse.whichPathNoBS2 === 'd1') {
+              drawWavepacket(p1x, p1y, 'horizontal', '#10b981', 1.0, 'd₁ ➔ D₁');
+            } else {
+              drawWavepacket(p2x, p2y, 'vertical', '#a855f7', 1.0, 'd₂ ➔ D₂');
+            }
           }
         }
       });
@@ -716,18 +718,23 @@ export const MachZehnderLab: React.FC = () => {
           />
 
           {/* Overlay Banner */}
-          <div className="absolute top-2.5 left-3 text-[10px] font-mono text-slate-300 bg-slate-900/90 px-2.5 py-1 rounded-md border border-slate-800 flex items-center gap-1.5 backdrop-blur-sm pointer-events-none">
-            {hasBS2 ? (
-              <span className="text-cyan-300 flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-cyan-400" />
-                <span>{t.labs.machZehnder.hasBS2Title}</span>
-              </span>
-            ) : (
-              <span className="text-rose-300 flex items-center gap-1">
-                <Eye className="w-3 h-3 text-rose-400" />
-                <span>{t.labs.machZehnder.noBS2Title}</span>
-              </span>
-            )}
+          <div className="absolute top-2.5 left-3 flex flex-wrap items-center gap-2 pointer-events-none">
+            <div className="text-[10px] font-mono text-slate-300 bg-slate-900/90 px-2.5 py-1 rounded-md border border-slate-800 flex items-center gap-1.5 backdrop-blur-sm">
+              {hasBS2 ? (
+                <span className="text-cyan-300 flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-cyan-400" />
+                  <span>{t.labs.machZehnder.hasBS2Title}</span>
+                </span>
+              ) : (
+                <span className="text-rose-300 flex items-center gap-1">
+                  <Eye className="w-3 h-3 text-rose-400" />
+                  <span>{t.labs.machZehnder.noBS2Title}</span>
+                </span>
+              )}
+            </div>
+            <div className="text-[10px] font-mono text-amber-300 bg-amber-950/85 px-2 py-1 rounded-md border border-amber-800/80 backdrop-blur-sm hidden sm:block">
+              {hasBS2 ? '|ψ⟩ Gói sóng chồng chập (Cả 2 nhánh)' : 'Hạt đơn: Chọn 1 nhánh duy nhất (50/50)'}
+            </div>
           </div>
         </div>
 
@@ -882,8 +889,7 @@ export const MachZehnderLab: React.FC = () => {
           {/* Toggle BS2 (Wheeler Delayed Choice trigger) */}
           <button
             onClick={() => {
-              setHasBS2(!hasBS2);
-              handleReset();
+              setHasBS2((prev) => !prev);
             }}
             className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
               hasBS2
@@ -894,6 +900,7 @@ export const MachZehnderLab: React.FC = () => {
             <Split className="w-3.5 h-3.5" />
             <span>{hasBS2 ? 'Gỡ BS₂ (Wheeler Which-Path)' : 'Lắp lại BS₂ (Tái kết hợp)'}</span>
           </button>
+
 
           <button
             onClick={handleReset}

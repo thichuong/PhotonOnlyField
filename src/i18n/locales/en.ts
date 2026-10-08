@@ -268,8 +268,8 @@ export const enTranslations: Translations = {
       phasePreset180: 'Δφ = 180° (Out-of-phase: 0% to D₁, 100% to D₂)',
       howItWorksTitle: 'Nature of Phase Interference at Both Detectors:',
       howItWorksDesc: 'Beam splitter BS₁ splits the wavepacket into two paths. At BS₂, both field components recombine: At detector D₁, constructive in-phase superposition occurs (P₁ = cos²(Δφ/2)); at detector D₂, reflection introduces an extra π phase shift resulting in destructive cancellation (P₂ = sin²(Δφ/2)).',
-      whyWavepacketTitle: 'Does the photon take one path or both?',
-      whyWavepacketDesc: 'With BS₂ present, sharp interference proves the wavepacket must travel BOTH paths simultaneously. Only when BS₂ is removed to monitor which path it took does the wavepacket collapse into a classical 50/50 particle outcome.',
+      whyWavepacketTitle: 'Does the photon physically split into two halves at BS₁?',
+      whyWavepacketDesc: 'Definitely NOT! A photon is an indivisible quantum of energy (E = hν). What splits at BS₁ is the PROBABILITY AMPLITUDE of the wavepacket |ψ⟩ = (|d₁⟩ + i|d₂⟩)/√2. Only 50% amplitude propagates along each arm; upon reaching a detector, the wavefunction collapses instantaneously and the full quantum hν is absorbed at a single detector.',
     },
   },
   qftDeepDive: {
