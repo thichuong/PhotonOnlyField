@@ -49,5 +49,32 @@ describe('i18n & Language Detection Test Suite', () => {
     assert.strictEqual(typeof tzCheck, 'boolean');
     assert.strictEqual(typeof localeCheck, 'boolean');
   });
+
+  it('TC-I18N-06: Myths translations must have 4 items with non-empty fields in both languages', () => {
+    assert.strictEqual(viTranslations.myths.items.length, 4);
+    assert.strictEqual(enTranslations.myths.items.length, 4);
+
+    for (let i = 0; i < 4; i++) {
+      assert.strictEqual(viTranslations.myths.items[i].id, enTranslations.myths.items[i].id);
+      assert.ok(viTranslations.myths.items[i].myth.length > 10);
+      assert.ok(enTranslations.myths.items[i].myth.length > 10);
+      assert.ok(viTranslations.myths.items[i].reality.length > 10);
+      assert.ok(enTranslations.myths.items[i].reality.length > 10);
+      assert.ok(viTranslations.myths.items[i].analogy.length > 10);
+      assert.ok(enTranslations.myths.items[i].analogy.length > 10);
+    }
+  });
+
+  it('TC-I18N-07: Tour translations must have 4 progressive steps in both languages', () => {
+    assert.strictEqual(viTranslations.tour.steps.length, 4);
+    assert.strictEqual(enTranslations.tour.steps.length, 4);
+
+    for (let i = 0; i < 4; i++) {
+      assert.strictEqual(viTranslations.tour.steps[i].step, i + 1);
+      assert.strictEqual(enTranslations.tour.steps[i].step, i + 1);
+      assert.ok(viTranslations.tour.steps[i].title.length > 5);
+      assert.ok(enTranslations.tour.steps[i].title.length > 5);
+    }
+  });
 });
 

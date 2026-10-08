@@ -61,7 +61,7 @@ export const PhotoelectricLab: React.FC = () => {
             {t.labs.photoelectric.formulaTitle}
           </div>
           <div className="text-slate-300 text-xs mt-0.5 font-medium">
-            Động năng electron = Năng lượng lượng tử (hν) − Thế rào liên kết (Φ)
+            {t.labs.photoelectric.formulaDetail}
           </div>
         </div>
       </div>

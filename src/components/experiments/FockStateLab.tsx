@@ -43,7 +43,7 @@ export const FockStateLab: React.FC = () => {
             {t.labs.fockState.hamiltonianTitle}
           </div>
           <div className="text-slate-300 text-xs mt-0.5 font-medium">
-            Năng lượng mode = Dao động chân không (½ℏω) + n Lượng tử kích thích (nℏω)
+            {t.labs.fockState.energyDetail}
           </div>
         </div>
       </div>

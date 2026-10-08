@@ -8,6 +8,7 @@ export const viTranslations: Translations = {
     timeline: 'Dòng Thời Gian',
     labs: 'Phòng Thí Nghiệm',
     qftDeepDive: 'Bản Chất QFT',
+    myths: 'Giải Mã Hiểu Lầm',
     switchLang: 'Đổi ngôn ngữ',
   },
   hero: {
@@ -16,6 +17,8 @@ export const viTranslations: Translations = {
     mainTitleLine2: 'Vũ trụ chỉ có các Trường.',
     description:
       'Trong Thuyết Trường Lượng Tử (Quantum Field Theory - QFT), không gian ngập tràn Trường Điện Từ. Photon thực chất là một gói sóng dao động (quantum excitation) của trường này. Hãy quan sát và tương tác để cảm nhận vẻ đẹp của thực tại.',
+    startTourBtn: 'Khám phá 3 phút (Dành cho người mới)',
+    readMythsBtn: 'Giải mã 4 hiểu lầm kinh điển',
   },
   canvas: {
     hudBadge: 'Trường Lượng Tử (QFT)',
@@ -106,6 +109,7 @@ export const viTranslations: Translations = {
       description:
         'Hiện tượng quang điện là sự ghép cặp tương tác giữa trường bức xạ và trường electron trong mạng kim loại. Năng lượng chỉ được trao đổi theo từng lượng tử rời rạc xác định bởi tần số của mode trường.',
       formulaTitle: 'Công thức Einstein:',
+      formulaDetail: 'Động năng electron = Năng lượng lượng tử (hν) − Thế rào liên kết (Φ)',
       vacuumTube: 'Ống chân không quang điện',
       wavelengthLabel: 'Bước sóng:',
       lightSource: 'Nguồn sáng',
@@ -146,7 +150,8 @@ export const viTranslations: Translations = {
       description:
         'Trong Thuyết Trường Lượng Tử, mỗi mode dao động của trường điện từ có các bậc năng lượng gián đoạn. Trạng thái Fock |n⟩ biểu thị mode trường đang tích lũy n lượng tử năng lượng.',
       hamiltonianTitle: 'Toán tử Hamilton trường:',
-      potentialWellTitle: 'Giếng thế dao động tử điều hòa V(q) = ½ω²q²',
+      energyDetail: 'Năng lượng mode = Dao động chân không (½ℏω) + n Lượng tử kích thích (nℏω)',
+      potentialWellTitle: 'Giếng thế dao động tử điều hòa V(q) = ½ω²q²:',
       currentStateLabel: 'Trạng thái hiện tại:',
       vacuumStateLabel: 'n=0 (Chân không)',
       photonLevelLabel: 'lượng tử',
@@ -231,6 +236,108 @@ export const viTranslations: Translations = {
     row5Newton: 'Bất lực trước ngưỡng tần số',
     row5Maxwell: 'Thất bại (Dự đoán sai về vai trò của biên độ)',
     row5Qft: 'Chính xác (Trao đổi năng lượng theo lượng tử hν)',
+  },
+  myths: {
+    headerBadge: 'Phá Tan Định Kiến',
+    sectionTitle: 'Giải Mã 4 Hiểu Lầm Kinh Điển Về Photon',
+    sectionDescription:
+      'Vật lý đại chúng và sách giáo khoa cũ thường dùng những hình ảnh ẩn dụ cơ học khiến chúng ta hiểu sai bản chất thực sự của ánh sáng. Dưới lăng kính Thuyết Trường Lượng Tử (QFT), mọi thứ trở nên sáng tỏ và thống nhất.',
+    mythBadge: 'Hiểu lầm phổ biến',
+    realityBadge: 'Bản chất thực sự (QFT)',
+    analogyBadge: 'Ẩn dụ đời sống dễ hiểu',
+    items: [
+      {
+        id: 'duality-shapeshifting',
+        myth: 'Ánh sáng biến hình qua lại: lúc bay là sóng, khi chạm vào vật thì biến thành hạt bi?',
+        reality:
+          'Không hề có sự biến hình nào! Ánh sáng luôn luôn là sóng dao động của Trường Điện Từ trong suốt quá trình truyền đi. Tính "hạt" chỉ xuất hiện ở thời điểm tương tác, bởi vì trường trao đổi năng lượng với các nguyên tử theo từng gói tối thiểu không thể chia nhỏ (hν).',
+        analogy:
+          'Tưởng tượng một cơn sóng thần tràn vào bờ cát: sóng lan tỏa khắp mặt biển, nhưng khi gặp chiếc xô đựng nước trên bờ, nó chỉ có thể làm tràn đầy từng xô nguyên vẹn chứ không thể múc nửa giọt năng lượng.',
+        qftTruth:
+          'Bản chất: Trường là liên tục; tương tác lượng tử là gián đoạn cục bộ.',
+      },
+      {
+        id: 'massless-gravity',
+        myth: 'Photon không có khối lượng (m=0), tại sao lại bị bẻ cong bởi lực hấp dẫn của lỗ đen?',
+        reality:
+          'Lực hấp dẫn trong thuyết tương đối của Einstein không hút "khối lượng nghỉ", mà uốn cong chính cấu trúc Không - Thời Gian! Mọi vật thể có năng lượng E đều tạo ra và chịu ảnh hưởng của trường hấp dẫn qua hệ thức E = pc. Photon di chuyển theo đường thẳng ngắn nhất (đường trắc địa) trong không gian bị bẻ cong.',
+        analogy:
+          'Giống như bạn lăn một viên bi lăn trên tấm bạt cao su bị quả tạ làm trũng xuống: bản thân viên bi không cần bị ai kéo, nó chỉ đơn giản lăn theo độ nghiêng tự nhiên của mặt bạt.',
+        qftTruth:
+          'Trọng lực tương tác với Tenxơ Năng lượng - Động lượng T^μν, không phụ thuộc vào việc hạt có khối lượng nghỉ hay không.',
+      },
+      {
+        id: 'vacuum-emptiness',
+        myth: 'Chân không là một khoảng không gian hoàn toàn trống rỗng, không có vật chất và năng lượng?',
+        reality:
+          'Trong vật lý hiện đại, không gian không bao giờ trống rỗng! Chân không chỉ là trạng thái có mức năng lượng thấp nhất (|0⟩) của các trường lượng tử. Do nguyên lý bất định Heisenberg, trường luôn sôi sục những dao động điểm không (Zero-Point Energy) không thể triệt tiêu.',
+        analogy:
+          'Giống như mặt hồ nước vào ngày lặng gió: nhìn từ xa thì phẳng lặng, nhưng nhìn thật gần thì mặt nước luôn có các phân tử rung động lăn tăn liên tục, không bao giờ bất động tuyệt đối.',
+        qftTruth:
+          'Mức năng lượng chân không E₀ = ½ℏω là bất biến nội tại của trường lượng tử.',
+      },
+      {
+        id: 'photon-at-rest',
+        myth: 'Có thể làm cho photon đứng yên hoặc bắt nó nhốt vào một chiếc hộp không?',
+        reality:
+          'Photon trong chân không bắt buộc phải chuyển động với đúng vận tốc ánh sáng c (≈ 300.000 km/s). Nếu photon dừng lại, năng lượng E = pc của nó sẽ về 0 và nó hoàn toàn biến mất! Khi ta nói ánh sáng bị "chậm lại" trong thủy tinh hay nước, đó thực chất là sóng trường điện từ liên tục bị hấp thụ và tái phát xạ bởi các electron trong môi trường.',
+        analogy:
+          'Giống như một nốt nhạc: âm thanh chỉ tồn tại khi không khí đang rung động và truyền đi. Bạn không thể "bắt một nốt nhạc đứng yên" trong không khí mà nốt nhạc đó vẫn còn kêu.',
+        qftTruth:
+          'Photon là hạt chuẩn boson có spin 1, khối lượng nghỉ bằng 0, chỉ tồn tại khi trường dao động lan truyền.',
+      },
+    ],
+  },
+  tour: {
+    tourBadge: 'Lộ Trình Trải Nghiệm',
+    tourTitle: 'Khám Phá 3 Phút: Bản Chất Photon Dưới Góc Nhìn QFT',
+    closeBtn: 'Đóng',
+    prevBtn: 'Quay lại',
+    nextBtn: 'Bước tiếp theo',
+    finishBtn: 'Hoàn tất khám phá',
+    stepIndicator: 'Bước',
+    steps: [
+      {
+        step: 1,
+        badge: '1. Định kiến cũ',
+        title: 'Ảo Tưởng Về Hạt Bi Cơ Học (Newton 1704)',
+        description:
+          'Chúng ta thường được dạy rằng ánh sáng gồm các "hạt bi" cứng tí hon bay vèo vèo qua không gian trống rỗng. Hãy quan sát trên màn hình: nếu ánh sáng là hạt cơ học, chúng di chuyển độc lập theo quỹ đạo đạn đạo.',
+        takeaway:
+          'Hạn chế: Mô hình này hoàn toàn bất lực khi giải thích tại sao ánh sáng có thể tự triệt tiêu lẫn nhau để tạo thành bóng tối trong giao thoa!',
+        actionHint: 'Đã tự động kích hoạt mô phỏng: Chế độ hạt cổ điển Newton',
+      },
+      {
+        step: 2,
+        badge: '2. Nền tảng thực tế',
+        title: 'Chân Không Không Rỗng: Vũ Trụ Ngập Tràn Trường',
+        description:
+          'Bây giờ hãy nhìn lại không gian: nó không hề rỗng! Không gian ngập tràn Trường Điện Từ. Ngay cả khi không có nguồn sáng nào bật, trường vẫn sôi sục các dao động lượng tử mức 0 (Zero-Point Energy).',
+        takeaway:
+          'Chân lý: Chân không không phải là hư vô; chân không là trạng thái đáy của trường đang rung động.',
+        actionHint: 'Đã kích hoạt mô phỏng: Trường QFT với Dao động chân không nội tại',
+      },
+      {
+        step: 3,
+        badge: '3. Bản chất Photon',
+        title: 'Photon: Gói Sóng Kích Thích Của Trường',
+        description:
+          'Khi một nguyên tử phát ra ánh sáng, nó không bắn ra một hòn bi! Nó truyền thêm một lượng tử năng lượng ℏω vào trường. Một gói sóng cục bộ (wavepacket) lập tức trồi lên và lan truyền trên mặt lưới.',
+        takeaway:
+          'Chân lý: "Photon" chính là tên gọi của một gợn sóng dao động có năng lượng xác định trên nền trường!',
+        actionHint: 'Đã kích thích trường: Phát một gói sóng photon lan truyền trên lưới 3D',
+      },
+      {
+        step: 4,
+        badge: '4. Giải mã đốm chấm',
+        title: 'Tại Sao Máy Đo Chỉ Bấm "Tạch" Một Điểm?',
+        description:
+          'Nếu photon là sóng lan tỏa, tại sao cảm biến máy ảnh lại ghi nhận từng chấm li ti? Bởi vì nguyên tử cảm biến là lượng tử: nó chỉ có thể hấp thụ trọn vẹn toàn bộ gói năng lượng tại một vị trí xác định duy nhất!',
+        takeaway:
+          'Đỉnh cao nhận thức: Tính liên tục là của quá trình truyền sóng; tính gián đoạn hạt là của quá trình tương tác trao đổi năng lượng.',
+        actionHint: 'Bạn đã hoàn tất hành trình! Hãy tự do tương tác với mô phỏng 3D và các phòng thí nghiệm.',
+      },
+    ],
   },
   footer: {
     title: 'Photon: Only Field',

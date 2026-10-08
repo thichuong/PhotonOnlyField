@@ -8,6 +8,7 @@ export const enTranslations: Translations = {
     timeline: 'Timeline',
     labs: 'Virtual Labs',
     qftDeepDive: 'QFT Deep Dive',
+    myths: 'Myth Busters',
     switchLang: 'Switch language',
   },
   hero: {
@@ -16,6 +17,8 @@ export const enTranslations: Translations = {
     mainTitleLine2: 'There are only Fields in the universe.',
     description:
       'In Quantum Field Theory (QFT), space is permeated by continuous quantum fields. A photon is not an isolated tiny sphere; it is a quantized excitation mode of the Electromagnetic Field. Observe, tweak, and discover the true nature of quantum reality.',
+    startTourBtn: '3-Min Interactive Tour (Beginner Guide)',
+    readMythsBtn: 'Debunk 4 Classic Myths',
   },
   canvas: {
     hudBadge: 'Quantum Field (QFT)',
@@ -106,6 +109,7 @@ export const enTranslations: Translations = {
       description:
         'The photoelectric effect manifests coupling between radiation fields and electron fields in the metal lattice. Energy exchange occurs exclusively in discrete quanta determined by the mode frequency.',
       formulaTitle: 'Einstein photoelectric equation:',
+      formulaDetail: 'Electron kinetic energy = Quantum photon energy (hν) − Binding work function (Φ)',
       vacuumTube: 'Photoelectric Vacuum Tube',
       wavelengthLabel: 'Wavelength:',
       lightSource: 'Light Source',
@@ -146,6 +150,7 @@ export const enTranslations: Translations = {
       description:
         'In Quantum Field Theory, each field mode possesses quantized energy rungs. The Fock state |n⟩ designates that a mode holds exactly n discrete quanta of excitation energy.',
       hamiltonianTitle: 'Field Hamiltonian Operator:',
+      energyDetail: 'Field mode energy = Vacuum fluctuations (½ℏω) + n Quantum excitations (nℏω)',
       potentialWellTitle: 'Harmonic Oscillator Well V(q) = ½ω²q²',
       currentStateLabel: 'Current state:',
       vacuumStateLabel: 'n=0 (Vacuum Ground State)',
@@ -231,6 +236,108 @@ export const enTranslations: Translations = {
     row5Newton: 'Helpless before frequency threshold',
     row5Maxwell: 'Fails (wrongly predicts amplitude dependence)',
     row5Qft: 'Flawless (Discrete quantum energy exchange hν)',
+  },
+  myths: {
+    headerBadge: 'Debunking Misconceptions',
+    sectionTitle: '4 Classic Myths About Photons Decoded',
+    sectionDescription:
+      'Popular science and old textbooks often rely on mechanical metaphors that distort the true nature of light. Under the lens of Quantum Field Theory (QFT), everything becomes unified and clear.',
+    mythBadge: 'Common Misconception',
+    realityBadge: 'Physical Reality (QFT)',
+    analogyBadge: 'Everyday Analogy',
+    items: [
+      {
+        id: 'duality-shapeshifting',
+        myth: 'Light shape-shifts: behaves as a wave while traveling, then turns into a billiard ball upon impact?',
+        reality:
+          'There is no shape-shifting! Light is ALWAYS a continuous wave of the Electromagnetic Field throughout its propagation. The appearance of "particles" arises exclusively at the moment of interaction, because the field exchanges energy with atoms in indivisible minimum packets (hν).',
+        analogy:
+          'Imagine an ocean tsunami surging ashore: the wave spreads over vast distances, but if it hits standardized buckets on the shore, each bucket can only be filled completely as a single unit.',
+        qftTruth:
+          'Fundamental nature: Fields are spatially continuous; quantum interactions are strictly localized.',
+      },
+      {
+        id: 'massless-gravity',
+        myth: 'A photon has zero rest mass (m=0), so why is it bent by black hole gravity?',
+        reality:
+          'Gravity in General Relativity does not attract "rest mass"; it curves the very geometry of Spacetime! All energy and momentum bend spacetime according to Einstein equations (E = pc). Photons simply follow the straightest possible geodesic trajectory through curved spacetime.',
+        analogy:
+          'Think of rolling a marble across a stretched trampoline indented by a heavy weight: the marble is not pulled by magic, it simply follows the natural curvature of the surface.',
+        qftTruth:
+          'Gravity couples to the Energy-Momentum Tensor T^μν, regardless of whether a particle possesses rest mass.',
+      },
+      {
+        id: 'vacuum-emptiness',
+        myth: 'The quantum vacuum is an absolute empty void containing zero matter and zero energy?',
+        reality:
+          'In modern physics, space is never empty! The vacuum is simply the lowest possible energy state (|0⟩) of fundamental quantum fields. Due to the Heisenberg uncertainty principle, quantum fields continually boil with irreducible Zero-Point Energy (ZPE).',
+        analogy:
+          'Consider a calm lake on a windless day: from afar it looks flat, but at the molecular level, water molecules are constantly vibrating and undulating.',
+        qftTruth:
+          'Zero-Point Energy E₀ = ½ℏω is an immutable intrinsic feature of quantum fields.',
+      },
+      {
+        id: 'photon-at-rest',
+        myth: 'Can a photon ever be brought to a complete stop or trapped at rest in a box?',
+        reality:
+          'In a vacuum, photons must travel at the invariant speed of light c (≈ 300,000 km/s). If a photon were at rest, its energy E = pc would vanish, and it would cease to exist! When light "slows down" in water or glass, it is actually continuous absorption and re-emission of EM excitations by atomic electrons.',
+        analogy:
+          'Like a musical note: sound only exists while air is vibrating and propagating. You cannot "hold a musical note motionless in mid-air" while still having sound.',
+        qftTruth:
+          'Photons are massless spin-1 gauge bosons whose existence is synonymous with field mode propagation.',
+      },
+    ],
+  },
+  tour: {
+    tourBadge: 'Guided Walkthrough',
+    tourTitle: '3-Minute Guided Tour: Understanding Photons via QFT',
+    closeBtn: 'Close',
+    prevBtn: 'Back',
+    nextBtn: 'Next Step',
+    finishBtn: 'Finish Tour',
+    stepIndicator: 'Step',
+    steps: [
+      {
+        step: 1,
+        badge: '1. Old Misconception',
+        title: 'The Illusion of Mechanical Pellets (Newton 1704)',
+        description:
+          'We are frequently taught that light is made of tiny solid pellets flying through empty void. Look at the 3D canvas: in classical particle mode, bullets fly along ballistic trajectories independently.',
+        takeaway:
+          'The Flaw: Hard mechanical pellets can never cancel each other out to create complete darkness in interference patterns!',
+        actionHint: 'Auto-switched simulation: Classical Newton particle mode',
+      },
+      {
+        step: 2,
+        badge: '2. The Foundation',
+        title: 'The Vacuum Is Not Empty: Space Is Full of Fields',
+        description:
+          'Now look at spacetime: it is never empty! Space is permeated by the continuous Electromagnetic Field. Even with zero photons, the field boils with intrinsic zero-point fluctuations.',
+        takeaway:
+          'Core Truth: The vacuum is not nothingness; it is the ground state of an active physical field.',
+        actionHint: 'Auto-switched simulation: QFT Field mode with quantum vacuum fluctuations',
+      },
+      {
+        step: 3,
+        badge: '3. What is a Photon?',
+        title: 'The Photon: A Localized Wave Packet Excitation',
+        description:
+          'When an atom emits light, it does not launch a tiny sphere! It injects a quantum of energy ℏω into the electromagnetic field. A localized wavepacket emerges and ripples across the grid.',
+        takeaway:
+          'Core Truth: "Photon" is simply the name we give to a localized energetic wavepacket rippling on the field!',
+        actionHint: 'Field excited: A localized photon wavepacket is injected onto the 3D field grid',
+      },
+      {
+        step: 4,
+        badge: '4. The Detection Mystery',
+        title: 'Why Does a Detector Register a Single Point Click?',
+        description:
+          'If the photon is a spreading field wave, why does a digital camera record a sharp localized dot? Because detector atoms are quantum entities: each atom can only absorb the entire energy packet hν all at once at its exact location!',
+        takeaway:
+          'Deep Realization: Continuity belongs to wave propagation; discreteness belongs to localized quantum energy exchange.',
+        actionHint: 'You have completed the walkthrough! Feel free to explore the 3D controls and interactive labs.',
+      },
+    ],
   },
   footer: {
     title: 'Photon: Only Field',

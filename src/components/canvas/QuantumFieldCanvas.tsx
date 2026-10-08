@@ -8,6 +8,7 @@ interface QuantumFieldCanvasProps {
   settings: FieldSettings;
   onSettingsChange?: (newSettings: Partial<FieldSettings>) => void;
   className?: string;
+  triggerInjectPhoton?: number;
 }
 
 interface PhotonPacket {
@@ -39,6 +40,7 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
   settings,
   onSettingsChange,
   className = '',
+  triggerInjectPhoton,
 }) => {
   const { t } = useLanguage();
   const mountRef = useRef<HTMLDivElement>(null);
@@ -109,6 +111,13 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
       return updated;
     });
   }, []);
+
+  // Watch for external photon injection trigger (e.g. from Guided Tour)
+  useEffect(() => {
+    if (triggerInjectPhoton && triggerInjectPhoton > 0) {
+      handleInjectPhoton();
+    }
+  }, [triggerInjectPhoton, handleInjectPhoton]);
 
   // Trigger field excitation at exact local grid coordinates (x, y)
   const triggerFieldExcitation = useCallback((localX: number, localY: number) => {

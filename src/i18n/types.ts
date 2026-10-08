@@ -20,6 +20,7 @@ export interface Translations {
     timeline: string;
     labs: string;
     qftDeepDive: string;
+    myths: string;
     switchLang: string;
   };
   hero: {
@@ -27,6 +28,8 @@ export interface Translations {
     mainTitleLine1: string;
     mainTitleLine2: string;
     description: string;
+    startTourBtn: string;
+    readMythsBtn: string;
   };
   canvas: {
     hudBadge: string;
@@ -110,6 +113,7 @@ export interface Translations {
       title: string;
       description: string;
       formulaTitle: string;
+      formulaDetail: string;
       vacuumTube: string;
       wavelengthLabel: string;
       lightSource: string;
@@ -149,6 +153,7 @@ export interface Translations {
       title: string;
       description: string;
       hamiltonianTitle: string;
+      energyDetail: string;
       potentialWellTitle: string;
       currentStateLabel: string;
       vacuumStateLabel: string;
@@ -220,6 +225,38 @@ export interface Translations {
     row5Newton: string;
     row5Maxwell: string;
     row5Qft: string;
+  };
+  myths: {
+    headerBadge: string;
+    sectionTitle: string;
+    sectionDescription: string;
+    mythBadge: string;
+    realityBadge: string;
+    analogyBadge: string;
+    items: Array<{
+      id: string;
+      myth: string;
+      reality: string;
+      analogy: string;
+      qftTruth: string;
+    }>;
+  };
+  tour: {
+    tourBadge: string;
+    tourTitle: string;
+    closeBtn: string;
+    prevBtn: string;
+    nextBtn: string;
+    finishBtn: string;
+    stepIndicator: string;
+    steps: Array<{
+      step: number;
+      badge: string;
+      title: string;
+      description: string;
+      takeaway: string;
+      actionHint: string;
+    }>;
   };
   footer: {
     title: string;

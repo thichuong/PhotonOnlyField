@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import type { FieldSettings } from './types/physics';
 import { QuantumFieldCanvas } from './components/canvas/QuantumFieldCanvas';
 import { FieldControls } from './components/controls/FieldControls';
@@ -7,6 +7,8 @@ import { DoubleSlitLab } from './components/experiments/DoubleSlitLab';
 import { PhotoelectricLab } from './components/experiments/PhotoelectricLab';
 import { FockStateLab } from './components/experiments/FockStateLab';
 import { QFTDeepDive } from './components/explainer/QFTDeepDive';
+import { MisconceptionsSection } from './components/explainer/MisconceptionsSection';
+import { StoryModeTour } from './components/tour/StoryModeTour';
 import { LanguageProvider, useLanguage } from './i18n';
 import { LanguageSwitcher } from './components/common/LanguageSwitcher';
 import {
@@ -16,6 +18,8 @@ import {
   FlaskConical,
   BookOpen,
   Atom,
+  HelpCircle,
+  Compass,
 } from 'lucide-react';
 
 function MainApp() {
@@ -33,10 +37,47 @@ function MainApp() {
   });
 
   const [activeLabTab, setActiveLabTab] = useState<'double-slit' | 'photoelectric' | 'fock-state'>('double-slit');
+  const [isTourOpen, setIsTourOpen] = useState<boolean>(false);
+  const [photonInjectTrigger, setPhotonInjectTrigger] = useState<number>(0);
 
   const handleSettingsChange = (newSettings: Partial<FieldSettings>) => {
     setFieldSettings((prev) => ({ ...prev, ...newSettings }));
   };
+
+  const handleTourStep = useCallback((stepIndex: number) => {
+    if (stepIndex === 0) {
+      // Step 1: Classical Newton Particles
+      setFieldSettings((prev) => ({
+        ...prev,
+        mode: 'classical-particle',
+        vacuumFluctuations: false,
+      }));
+    } else if (stepIndex === 1) {
+      // Step 2: Active Quantum Vacuum
+      setFieldSettings((prev) => ({
+        ...prev,
+        mode: 'qft-field',
+        vacuumFluctuations: true,
+        waveFrequency: 1.2,
+        amplitude: 1.0,
+      }));
+    } else if (stepIndex === 2) {
+      // Step 3: Inject Photon Excitation Packet
+      setFieldSettings((prev) => ({
+        ...prev,
+        mode: 'qft-field',
+        vacuumFluctuations: true,
+      }));
+      setPhotonInjectTrigger(Date.now());
+    } else if (stepIndex === 3) {
+      // Step 4: Detection & Localized Interaction
+      setFieldSettings((prev) => ({
+        ...prev,
+        mode: 'qft-field',
+        vacuumFluctuations: true,
+      }));
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
@@ -68,6 +109,13 @@ function MainApp() {
                 <span>{t.nav.sim3D}</span>
               </a>
               <a
+                href="#myths-section"
+                className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5"
+              >
+                <HelpCircle className="w-3.5 h-3.5 text-rose-400" />
+                <span>{t.nav.myths}</span>
+              </a>
+              <a
                 href="#timeline-section"
                 className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5"
               >
@@ -90,6 +138,15 @@ function MainApp() {
               </a>
             </nav>
 
+            <button
+              type="button"
+              onClick={() => setIsTourOpen(true)}
+              className="hidden lg:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-cyan-400 text-slate-950 hover:bg-cyan-300 text-xs font-bold transition-all cursor-pointer shadow-sm"
+            >
+              <Compass className="w-3.5 h-3.5 text-slate-950" />
+              <span>Tour 3'</span>
+            </button>
+
             <LanguageSwitcher />
           </div>
         </div>
@@ -98,7 +155,7 @@ function MainApp() {
       {/* Main Page Content */}
       <main className="flex-1 max-w-7xl mx-auto px-4 lg:px-8 py-8 w-full flex flex-col gap-14">
         {/* Hero Section */}
-        <div className="flex flex-col items-center text-center gap-4 py-4 max-w-3xl mx-auto">
+        <div className="flex flex-col items-center text-center gap-5 py-4 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-mono">
             <Sparkles className="w-3.5 h-3.5" />
             <span>{t.hero.badge}</span>
@@ -114,6 +171,25 @@ function MainApp() {
           <p className="text-slate-400 text-sm lg:text-base leading-relaxed">
             {t.hero.description}
           </p>
+
+          {/* Interactive CTAs for Beginners - Larger, Clean Non-Gradient Tour Button */}
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-3">
+            <button
+              type="button"
+              onClick={() => setIsTourOpen(true)}
+              className="px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl font-extrabold text-sm sm:text-base bg-cyan-400 hover:bg-cyan-300 text-slate-950 shadow-xl shadow-cyan-400/20 flex items-center gap-2.5 cursor-pointer transition-all active:scale-95 border border-cyan-300"
+            >
+              <Compass className="w-5 h-5 text-slate-950" />
+              <span>{t.hero.startTourBtn}</span>
+            </button>
+            <a
+              href="#myths-section"
+              className="px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl font-bold text-sm sm:text-base bg-slate-900/90 hover:bg-slate-800 text-slate-100 border-2 border-slate-700/80 hover:border-rose-400/60 shadow-xl flex items-center gap-2.5 cursor-pointer transition-all active:scale-95"
+            >
+              <HelpCircle className="w-5 h-5 text-rose-400" />
+              <span>{t.hero.readMythsBtn}</span>
+            </a>
+          </div>
         </div>
 
         {/* 1. Main 3D Simulation Viewport */}
@@ -121,12 +197,16 @@ function MainApp() {
           <QuantumFieldCanvas
             settings={fieldSettings}
             onSettingsChange={handleSettingsChange}
+            triggerInjectPhoton={photonInjectTrigger}
           />
           <FieldControls
             settings={fieldSettings}
             onChange={handleSettingsChange}
           />
         </section>
+
+        {/* 2. Myth Busters: Debunking Classical Misconceptions */}
+        <MisconceptionsSection />
 
         {/* 2. Historical Timeline & Paradigm Shifts (Vertical Storyline) */}
         <section id="timeline-section" className="scroll-mt-24">
@@ -207,6 +287,14 @@ function MainApp() {
           </div>
         </div>
       </footer>
+
+      {/* Story Mode Walkthrough Modal for Beginners */}
+      {isTourOpen && (
+        <StoryModeTour
+          onClose={() => setIsTourOpen(false)}
+          onApplyStep={handleTourStep}
+        />
+      )}
     </div>
   );
 }
