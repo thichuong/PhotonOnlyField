@@ -14,6 +14,7 @@ import {
   Ruler,
 } from 'lucide-react';
 import { useLanguage } from '../../i18n';
+import { useInView } from '../../hooks/useInView';
 
 interface FlyingPulse {
   id: number;
@@ -35,6 +36,7 @@ interface HitEffect {
 
 export const MachZehnderLab: React.FC = () => {
   const { t } = useLanguage();
+  const { ref: containerRef, isSimulating } = useInView<HTMLDivElement>();
   const [phaseShiftDeg, setPhaseShiftDeg] = useState<number>(0); // 0 to 360 degrees
   const [hasBS2, setHasBS2] = useState<boolean>(true);
   const [isRunning, setIsRunning] = useState<boolean>(false);
@@ -96,9 +98,9 @@ export const MachZehnderLab: React.FC = () => {
     spawnPhoton();
   };
 
-  // Continuous emission loop
+  // Continuous emission loop - paused when out of view
   useEffect(() => {
-    if (!isRunning) return;
+    if (!isRunning || !isSimulating) return;
     const interval = setInterval(() => {
       if (pulsesRef.current.length < 15) {
         spawnPhoton();
@@ -106,19 +108,19 @@ export const MachZehnderLab: React.FC = () => {
     }, 240);
 
     return () => clearInterval(interval);
-  }, [isRunning, spawnPhoton]);
+  }, [isRunning, isSimulating, spawnPhoton]);
 
-  // Optical bench animation & canvas rendering
+  // Optical bench animation & canvas rendering - paused when out of view
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !isSimulating) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     let isMounted = true;
 
     const render = () => {
-      if (!isMounted) return;
+      if (!isMounted || !isSimulating) return;
 
       const w = canvas.width;
       const h = canvas.height;
@@ -559,7 +561,7 @@ export const MachZehnderLab: React.FC = () => {
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
       if (lastHitTimeoutRef.current) clearTimeout(lastHitTimeoutRef.current);
     };
-  }, [lastHit]);
+  }, [lastHit, isSimulating]);
 
   const handleReset = () => {
     setCountD1(0);
@@ -571,8 +573,13 @@ export const MachZehnderLab: React.FC = () => {
   };
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 lg:p-8 flex flex-col gap-6 backdrop-blur-md shadow-2xl">
-      {/* Header */}
+    <div
+      id="lab-mach-zehnder"
+      ref={containerRef}
+      className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 lg:p-8 flex flex-col gap-6 backdrop-blur-md shadow-2xl scroll-mt-28"
+      style={{ contentVisibility: 'auto', containIntrinsicSize: '750px' }}
+    >
+      {/* 1. Lab Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <span className="px-3 py-1 bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 rounded-lg text-xs font-mono font-bold">
@@ -636,6 +643,63 @@ export const MachZehnderLab: React.FC = () => {
                 </span>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. CHÚ THÍCH & HƯỚNG DẪN QUAN SÁT (ĐỌC TRƯỚC KHI THỰC NGHIỆM) */}
+      <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800/90 flex flex-col gap-4">
+        <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
+          <BookOpen className="w-4 h-4 text-cyan-400" />
+          <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+            Lý Thuyết Giao Thoa Kế & Nghịch Lý Lựa Chọn Trễ Wheeler
+          </h4>
+        </div>
+
+        {/* 4 Explanatory Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          {/* How It Works */}
+          <div className="bg-slate-900/70 p-4 rounded-xl border border-emerald-500/20 flex flex-col gap-2">
+            <span className="font-bold text-emerald-300 flex items-center gap-1.5 text-xs">
+              <BookOpen className="w-4 h-4 text-emerald-400" />
+              <span>{t.labs.machZehnder.howItWorksTitle}</span>
+            </span>
+            <p className="text-slate-300 text-xs leading-relaxed">
+              {t.labs.machZehnder.howItWorksDesc}
+            </p>
+          </div>
+
+          {/* Wheeler Delayed Choice */}
+          <div className="bg-slate-900/70 p-4 rounded-xl border border-amber-500/20 flex flex-col gap-2">
+            <span className="font-bold text-amber-300 flex items-center gap-1.5 text-xs">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span>{t.labs.machZehnder.delayedChoiceTitle}</span>
+            </span>
+            <p className="text-slate-300 text-xs leading-relaxed">
+              {t.labs.machZehnder.delayedChoiceDesc}
+            </p>
+          </div>
+
+          {/* Single Wavepacket Nature */}
+          <div className="bg-slate-900/70 p-4 rounded-xl border border-purple-500/20 flex flex-col gap-2">
+            <span className="font-bold text-purple-300 flex items-center gap-1.5 text-xs">
+              <HelpCircle className="w-4 h-4 text-purple-400" />
+              <span>{t.labs.machZehnder.whyWavepacketTitle}</span>
+            </span>
+            <p className="text-slate-300 text-xs leading-relaxed">
+              {t.labs.machZehnder.whyWavepacketDesc}
+            </p>
+          </div>
+
+          {/* QFT Insight */}
+          <div className="bg-slate-900/70 p-4 rounded-xl border border-cyan-500/20 flex flex-col gap-2">
+            <span className="font-bold text-cyan-300 flex items-center gap-1.5 text-xs">
+              <Eye className="w-4 h-4 text-cyan-400" />
+              <span>{t.labs.machZehnder.qftInsightTitle}</span>
+            </span>
+            <p className="text-slate-300 text-xs leading-relaxed">
+              {t.labs.machZehnder.qftInsightBody}
+            </p>
           </div>
         </div>
       </div>
@@ -866,52 +930,6 @@ export const MachZehnderLab: React.FC = () => {
             }}
             className="accent-yellow-400 h-2 bg-slate-900 rounded-lg cursor-pointer w-full"
           />
-        </div>
-      </div>
-
-      {/* Explainer Cards: Delayed Choice & QFT */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-        <div className="bg-slate-950/80 p-4.5 rounded-2xl border border-slate-800 flex flex-col gap-2">
-          <span className="font-bold text-amber-300 flex items-center gap-1.5 text-sm">
-            <Sparkles className="w-4 h-4 text-amber-400" />
-            <span>{t.labs.machZehnder.delayedChoiceTitle}</span>
-          </span>
-          <p className="text-slate-300 text-sm leading-relaxed">
-            {t.labs.machZehnder.delayedChoiceDesc}
-          </p>
-        </div>
-
-        <div className="bg-slate-950/80 p-4.5 rounded-2xl border border-slate-800 flex flex-col gap-2">
-          <span className="font-bold text-cyan-300 flex items-center gap-1.5 text-sm">
-            <Eye className="w-4 h-4 text-cyan-400" />
-            <span>{t.labs.machZehnder.qftInsightTitle}</span>
-          </span>
-          <p className="text-slate-300 text-sm leading-relaxed">
-            {t.labs.machZehnder.qftInsightBody}
-          </p>
-        </div>
-      </div>
-
-      {/* Additional Educational Insights: Phase Interference & Wavepacket Nature */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-        <div className="bg-slate-950/80 p-4.5 rounded-2xl border border-slate-800 flex flex-col gap-2">
-          <span className="font-bold text-emerald-300 flex items-center gap-1.5 text-xs">
-            <BookOpen className="w-4 h-4 text-emerald-400" />
-            <span>{t.labs.machZehnder.howItWorksTitle}</span>
-          </span>
-          <p className="text-slate-300 text-xs leading-relaxed">
-            {t.labs.machZehnder.howItWorksDesc}
-          </p>
-        </div>
-
-        <div className="bg-slate-950/80 p-4.5 rounded-2xl border border-slate-800 flex flex-col gap-2">
-          <span className="font-bold text-purple-300 flex items-center gap-1.5 text-xs">
-            <HelpCircle className="w-4 h-4 text-purple-400" />
-            <span>{t.labs.machZehnder.whyWavepacketTitle}</span>
-          </span>
-          <p className="text-slate-300 text-xs leading-relaxed">
-            {t.labs.machZehnder.whyWavepacketDesc}
-          </p>
         </div>
       </div>
     </div>

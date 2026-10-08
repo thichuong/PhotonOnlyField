@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Play, Pause, RotateCcw, Zap, Sparkles, Eye, Waves, Radio } from 'lucide-react';
+import { Play, Pause, RotateCcw, Zap, Sparkles, Eye, Waves, Radio, BookOpen, Sliders } from 'lucide-react';
 import { useLanguage } from '../../i18n';
+import { useInView } from '../../hooks/useInView';
 
 interface HitPoint {
   x: number;
@@ -12,6 +13,8 @@ type SlitMode = 'both' | 'left' | 'right';
 
 export const DoubleSlitLab: React.FC = () => {
   const { t } = useLanguage();
+  const { ref: containerRef, isSimulating } = useInView<HTMLDivElement>();
+
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [photonHits, setPhotonHits] = useState<HitPoint[]>([]);
   const [totalPhotons, setTotalPhotons] = useState<number>(0);
@@ -83,9 +86,10 @@ export const DoubleSlitLab: React.FC = () => {
     setTotalPhotons((c) => c + 1);
   };
 
-  // Continuous fire loop
+  // Continuous fire loop - paused when not simulating (out of view or background tab)
   useEffect(() => {
-    if (!isRunning) return;
+    if (!isRunning || !isSimulating) return;
+
     const interval = setInterval(() => {
       if (!screenCanvasRef.current) return;
       const w = screenCanvasRef.current.width;
@@ -103,7 +107,7 @@ export const DoubleSlitLab: React.FC = () => {
     }, firingMode === 'stream' ? 40 : 250);
 
     return () => clearInterval(interval);
-  }, [isRunning, firingMode, sampleInterferencePoint]);
+  }, [isRunning, isSimulating, firingMode, sampleInterferencePoint]);
 
   // Render Detector Screen Canvas
   useEffect(() => {
@@ -138,64 +142,45 @@ export const DoubleSlitLab: React.FC = () => {
     // Draw detected discrete photon dots
     photonHits.forEach((p) => {
       ctx.fillStyle = whichWayDetector ? 'rgba(244, 63, 94, 0.45)' : 'rgba(6, 182, 212, 0.45)';
-      ctx.shadowColor = whichWayDetector ? '#f43f5e' : '#06b6d4';
-      ctx.shadowBlur = 3;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 1.8, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
       ctx.fill();
     });
-    ctx.shadowBlur = 0;
 
-    // Intensity histogram bins at bottom
-    const bins = 60;
-    const binCounts = new Array(bins).fill(0);
-    const binWidth = canvas.width / bins;
-
-    photonHits.forEach((p) => {
-      const binIdx = Math.floor(p.x / binWidth);
-      if (binIdx >= 0 && binIdx < bins) {
-        binCounts[binIdx]++;
-      }
-    });
-
-    const maxCount = Math.max(...binCounts, 1);
-    ctx.fillStyle = whichWayDetector ? 'rgba(244, 63, 94, 0.35)' : 'rgba(168, 85, 247, 0.45)';
-    binCounts.forEach((count, idx) => {
-      const barHeight = (count / maxCount) * 55;
-      ctx.fillRect(idx * binWidth, canvas.height - barHeight, binWidth - 1, barHeight);
-    });
-
-    // Draw theoretical smooth |psi|^2 probability curve overlay
-    ctx.strokeStyle = whichWayDetector ? '#fb7185' : '#38bdf8';
+    // Draw analytical envelope line at bottom
+    ctx.strokeStyle = whichWayDetector ? '#f43f5e' : '#38bdf8';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    for (let px = 0; px < canvas.width; px += 2) {
-      const screenX = px - canvas.width / 2;
+    const bottomBase = canvas.height - 20;
+    for (let x = 0; x < canvas.width; x += 3) {
+      const screenX = x - canvas.width / 2;
       const intensity = computeIntensity(screenX);
-      const py = canvas.height - 10 - intensity * 50;
-      if (px === 0) ctx.moveTo(px, py);
-      else ctx.lineTo(px, py);
+      const y = bottomBase - intensity * 50;
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
     }
     ctx.stroke();
   }, [photonHits, computeIntensity, whichWayDetector]);
 
-  // Wave Propagation Chamber Animation Loop
+  // Dynamic Wavefront Animation Loop in Chamber - paused when out of view
   useEffect(() => {
-    if (!showWaveChamber) return;
     const canvas = chamberCanvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !showWaveChamber || !isSimulating) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     let isMounted = true;
 
     const renderChamber = () => {
-      if (!isMounted) return;
+      if (!isMounted || !isSimulating) return;
+
       chamberWavePhase.current += 0.08;
       const phase = chamberWavePhase.current;
 
       const w = canvas.width;
       const h = canvas.height;
+
+      // Dark chamber background
       ctx.fillStyle = '#020617';
       ctx.fillRect(0, 0, w, h);
 
@@ -312,7 +297,7 @@ export const DoubleSlitLab: React.FC = () => {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [showWaveChamber, slitDistance, slitMode, whichWayDetector]);
+  }, [showWaveChamber, slitDistance, slitMode, whichWayDetector, isSimulating]);
 
   const handleReset = () => {
     setPhotonHits([]);
@@ -321,8 +306,13 @@ export const DoubleSlitLab: React.FC = () => {
   };
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 lg:p-8 flex flex-col gap-6 backdrop-blur-md shadow-2xl">
-      {/* Lab Header */}
+    <div
+      id="lab-double-slit"
+      ref={containerRef}
+      className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 lg:p-8 flex flex-col gap-6 backdrop-blur-md shadow-2xl scroll-mt-28"
+      style={{ contentVisibility: 'auto', containIntrinsicSize: '750px' }}
+    >
+      {/* 1. Lab Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <span className="px-3 py-1 bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 rounded-lg text-xs font-mono font-bold">
@@ -346,7 +336,75 @@ export const DoubleSlitLab: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Dual Visualizer Grid */}
+      {/* 2. CHÚ THÍCH & ĐỊNH HƯỚNG QUAN SÁT (ĐỌC TRƯỚC KHI THỰC NGHIỆM) */}
+      <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800/90 flex flex-col gap-4">
+        <div className="flex items-center gap-2 border-b border-slate-800 pb-2.5">
+          <BookOpen className="w-4 h-4 text-cyan-400" />
+          <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+            {t.labs.doubleSlit.qftInsightTitle} & Hướng Dẫn Quan Sát
+          </h4>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-relaxed text-slate-300">
+          <div className="p-3.5 rounded-xl bg-slate-900/70 border border-cyan-500/20 flex flex-col gap-2">
+            <span className="font-bold text-cyan-300 flex items-center gap-1.5 text-xs">
+              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Bản Chất Trường QFT (Không Phải Viên Bi Chia Đôi)</span>
+            </span>
+            <p className="text-slate-300 leading-relaxed">
+              {t.labs.doubleSlit.qftInsightBody}
+            </p>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-slate-900/70 border border-purple-500/20 flex flex-col gap-2">
+            <span className="font-bold text-purple-300 flex items-center gap-1.5 text-xs">
+              <Eye className="w-3.5 h-3.5 text-purple-400" />
+              <span>Hiện Tượng Quan Trọng Cần Kiểm Chứng</span>
+            </span>
+            <ul className="list-disc list-inside space-y-1 text-slate-300">
+              <li>
+                <strong className="text-white">Bắn từng photon đơn lẻ:</strong> Mỗi hạt va chạm tại 1 điểm ngẫu nhiên, nhưng sau hàng trăm hạt sẽ tự tích lũy thành các vân giao thoa!
+              </li>
+              <li>
+                <strong className="text-white">Bật cảm biến Which-Way:</strong> Khi đo photon đi qua khe nào, hiện tượng kết hợp pha bị phá hủy ngay lập tức, chuyển thành phân bố cổ điển.
+              </li>
+              <li>
+                <strong className="text-white">Khoảng cách 2 khe (d):</strong> Càng xa nhau, các dải vân càng co cụm lại gần nhau hơn theo công thức $i = \lambda D / d$.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Slit Distance Slider */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1 border-t border-slate-800/60 text-xs">
+          <div className="flex items-center gap-2">
+            <Sliders className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="text-slate-300 font-medium">{t.labs.doubleSlit.slitDistanceLabel}:</span>
+            <span className="font-mono text-cyan-300 font-bold">{slitDistance} μm</span>
+          </div>
+          <input
+            type="range"
+            min="20"
+            max="60"
+            value={slitDistance}
+            onChange={(e) => {
+              setSlitDistance(parseInt(e.target.value));
+              handleReset();
+            }}
+            className="accent-cyan-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer flex-1 max-w-sm"
+          />
+        </div>
+      </div>
+
+      {/* Which-Way Active Alert Notice */}
+      {whichWayDetector && (
+        <div className="bg-rose-950/40 border border-rose-500/40 px-4 py-3 rounded-xl text-sm text-rose-300 flex items-center gap-2.5 leading-relaxed">
+          <Eye className="w-4 h-4 text-rose-400 shrink-0" />
+          <span>{t.labs.doubleSlit.whichWayActiveNotice}</span>
+        </div>
+      )}
+
+      {/* 3. KHU VỰC MÔ PHỎNG TƯƠNG TÁC */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Visualizer 1: Wavefront Propagation Chamber */}
         <div className="relative h-[280px] bg-slate-950 rounded-2xl overflow-hidden border border-slate-800 flex flex-col items-center justify-center">
@@ -394,15 +452,7 @@ export const DoubleSlitLab: React.FC = () => {
         </div>
       </div>
 
-      {/* Which-Way Active Alert Notice */}
-      {whichWayDetector && (
-        <div className="bg-rose-950/40 border border-rose-500/40 px-4 py-3 rounded-xl text-sm text-rose-300 flex items-center gap-2.5 leading-relaxed">
-          <Eye className="w-4 h-4 text-rose-400 shrink-0" />
-          <span>{t.labs.doubleSlit.whichWayActiveNotice}</span>
-        </div>
-      )}
-
-      {/* Interactive Controls & Experimental Configurations */}
+      {/* 4. Bộ Điều Khiển Tương Tác */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
         {/* Left: Fire Buttons */}
         <div className="md:col-span-6 flex flex-wrap items-center gap-2">
@@ -498,37 +548,6 @@ export const DoubleSlitLab: React.FC = () => {
             <Eye className="w-3.5 h-3.5" />
             <span>{t.labs.doubleSlit.whichWayLabel}</span>
           </button>
-        </div>
-      </div>
-
-      {/* Slit Distance Slider & QFT Insight */}
-      <div className="bg-slate-950/70 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 flex flex-col gap-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-          <div className="flex items-center gap-2">
-            <span className="text-slate-400">{t.labs.doubleSlit.slitDistanceLabel}</span>
-            <span className="font-mono text-cyan-300 font-bold">{slitDistance} μm</span>
-          </div>
-          <input
-            type="range"
-            min="20"
-            max="60"
-            value={slitDistance}
-            onChange={(e) => {
-              setSlitDistance(parseInt(e.target.value));
-              handleReset();
-            }}
-            className="accent-cyan-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer flex-1 max-w-xs"
-          />
-        </div>
-
-        <div className="border-t border-slate-800/80 pt-2.5 flex flex-col gap-1.5">
-          <div className="font-semibold text-cyan-300 flex items-center gap-1.5 text-sm">
-            <Sparkles className="w-4 h-4 text-cyan-400" />
-            <span>{t.labs.doubleSlit.qftInsightTitle}</span>
-          </div>
-          <p className="text-sm leading-relaxed text-slate-300">
-            {t.labs.doubleSlit.qftInsightBody}
-          </p>
         </div>
       </div>
     </div>

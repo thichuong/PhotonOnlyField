@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Minus, Zap, Eye, Sparkles, Layers, BookOpen, HelpCircle } from 'lucide-react';
 import { useLanguage } from '../../i18n';
+import { useInView } from '../../hooks/useInView';
 
 type ViewMode = 'wavefunction' | 'probability' | 'quadrature';
 
 export const FockStateLab: React.FC = () => {
   const { t } = useLanguage();
+  const { ref: containerRef, isSimulating } = useInView<HTMLDivElement>();
+
   const [photonNumber, setPhotonNumber] = useState<number>(1); // n = 0 to 5
   const [viewMode, setViewMode] = useState<ViewMode>('wavefunction');
   const [timePhase, setTimePhase] = useState<number>(0);
@@ -16,21 +19,24 @@ export const FockStateLab: React.FC = () => {
   const omega = 1.0;
   const totalEnergy = (photonNumber + 0.5) * omega; // E = (n + 1/2) hbar omega
 
-  // Phase animation loop for wavefunction time evolution exp(-i E_n t)
+  // Phase animation loop for wavefunction time evolution exp(-i E_n t) - paused when out of view
   useEffect(() => {
+    if (!isSimulating) return;
+
     let isMounted = true;
     const animate = () => {
-      if (!isMounted) return;
+      if (!isMounted || !isSimulating) return;
       phaseRef.current += 0.05 * (photonNumber + 0.5);
       setTimePhase(phaseRef.current);
       animationFrameRef.current = requestAnimationFrame(animate);
     };
     animationFrameRef.current = requestAnimationFrame(animate);
+
     return () => {
       isMounted = false;
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     };
-  }, [photonNumber]);
+  }, [photonNumber, isSimulating]);
 
   // Hermite polynomial evaluation H_n(x)
   const hermite = (n: number, x: number): number => {
@@ -98,85 +104,64 @@ export const FockStateLab: React.FC = () => {
           const isCurrent = lvl === photonNumber;
 
           // Generate waveform points on current level
-          const wavePoints: string[] = [];
-          if (isCurrent) {
-            const numSteps = 70;
-            const xRange = 3.6; // in dimensionless units
-            const stepPx = (halfWidth * 2) / numSteps;
+          const points: string[] = [];
+          const step = 2.0;
+          const xMax = 3.2;
 
-            for (let i = 0; i <= numSteps; i++) {
-              const xVal = -xRange + (i / numSteps) * (2 * xRange);
-              const psiVal = psi(lvl, xVal);
+          for (let px = -halfWidth; px <= halfWidth; px += step) {
+            const normX = (px / halfWidth) * xMax;
+            const waveVal = psi(lvl, normX);
 
-              let yOffset = 0;
-              if (viewMode === 'wavefunction') {
-                // Time-dependent wavefunction oscillating in phase
-                yOffset = psiVal * 28 * cosPhase;
-              } else {
-                // Probability density |psi|^2
-                yOffset = Math.pow(psiVal, 2) * 45;
-              }
-
-              const px = (originX - halfWidth) + i * stepPx;
-              const py = yPos - yOffset;
-              wavePoints.push(`${px.toFixed(1)},${py.toFixed(1)}`);
+            let offset = 0;
+            if (viewMode === 'wavefunction') {
+              offset = isCurrent ? waveVal * 28 * cosPhase : waveVal * 16;
+            } else if (viewMode === 'probability') {
+              offset = Math.pow(waveVal, 2) * 44;
             }
+
+            const canvasX = originX + px;
+            const canvasY = yPos - offset;
+            points.push(`${canvasX.toFixed(1)},${canvasY.toFixed(1)}`);
           }
 
           return (
-            <g key={lvl} className="transition-all duration-300">
-              {/* Energy Level Line */}
+            <g key={lvl}>
+              {/* Level Line */}
               <line
                 x1={originX - halfWidth}
                 y1={yPos}
                 x2={originX + halfWidth}
                 y2={yPos}
-                stroke={isCurrent ? '#06b6d4' : '#475569'}
-                strokeWidth={isCurrent ? '3' : '1.5'}
-                className={isCurrent ? 'filter drop-shadow-[0_0_8px_#06b6d4]' : ''}
+                stroke={isCurrent ? '#06b6d4' : '#334155'}
+                strokeWidth={isCurrent ? 2 : 1}
               />
 
-              {/* Level label */}
+              {/* Energy Label */}
               <text
-                x={originX + halfWidth + 10}
+                x={originX - halfWidth - 8}
                 y={yPos + 4}
-                fill={isCurrent ? '#38bdf8' : '#64748b'}
-                fontSize="11"
+                fill={isCurrent ? '#22d3ee' : '#64748b'}
+                fontSize="9"
                 fontFamily="monospace"
+                textAnchor="end"
                 fontWeight={isCurrent ? 'bold' : 'normal'}
               >
-                {lvl === 0 ? t.labs.fockState.vacuumStateLabel : `n=${lvl}`}
+                |{lvl}⟩ ({lvl + 0.5}ℏω)
               </text>
 
-              {/* Energy formula label */}
-              <text
-                x={originX - halfWidth - 55}
-                y={yPos + 4}
-                fill={isCurrent ? '#38bdf8' : '#475569'}
-                fontSize="10"
-                fontFamily="monospace"
-              >
-                {(lvl + 0.5).toFixed(1)} ℏω
-              </text>
-
-              {/* Render dynamic wavefunction curve on the active level */}
-              {isCurrent && wavePoints.length > 0 && (
-                <g>
-                  {/* Wave shadow fill */}
-                  <polygon
-                    points={`${originX - halfWidth},${yPos} ${wavePoints.join(' ')} ${originX + halfWidth},${yPos}`}
-                    fill={viewMode === 'wavefunction' ? 'rgba(6, 182, 212, 0.2)' : 'rgba(16, 185, 129, 0.25)'}
-                  />
-                  {/* Neon Wave curve */}
-                  <polyline
-                    points={wavePoints.join(' ')}
-                    fill="none"
-                    stroke={viewMode === 'wavefunction' ? '#38bdf8' : '#34d399'}
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                  />
-                </g>
-              )}
+              {/* Waveform curve */}
+              <polyline
+                points={points.join(' ')}
+                fill="none"
+                stroke={
+                  isCurrent
+                    ? viewMode === 'probability'
+                      ? '#10b981'
+                      : '#38bdf8'
+                    : '#1e293b'
+                }
+                strokeWidth={isCurrent ? 2.5 : 1}
+              />
             </g>
           );
         })}
@@ -184,68 +169,59 @@ export const FockStateLab: React.FC = () => {
     );
   };
 
-  // Render Quadrature Phase Space (X1, X2)
+  // Render Quadrature Phase Space X - P (Uncertainty Circle / Doughnut)
   const renderQuadraturePhaseSpace = () => {
-    const width = 280;
-    const height = 260;
-    const centerX = width / 2;
-    const centerY = height / 2;
-    const radius = 24 + photonNumber * 18; // r = sqrt(n + 1/2) scale
+    const width = 360;
+    const height = 240;
+    const originX = width / 2;
+    const originY = height / 2;
+    const radius = 25 + photonNumber * 18;
 
     return (
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto max-h-56">
-        {/* Grid axes X1 (Position quadrature) & X2 (Momentum quadrature) */}
-        <line x1="20" y1={centerY} x2={width - 20} y2={centerY} stroke="#334155" strokeWidth="1.5" />
-        <line x1={centerX} y1="20" x2={centerX} y2={height - 20} stroke="#334155" strokeWidth="1.5" />
+        {/* Phase Space Axes */}
+        <line x1="20" y1={originY} x2={width - 20} y2={originY} stroke="#334155" strokeWidth="1" />
+        <line x1={originX} y1="20" x2={originX} y2={height - 20} stroke="#334155" strokeWidth="1" />
+        <text x={width - 15} y={originY - 6} fill="#64748b" fontSize="9" fontFamily="monospace">X̂ (Điện)</text>
+        <text x={originX + 6} y="25" fill="#64748b" fontSize="9" fontFamily="monospace">P̂ (Từ)</text>
 
-        <text x={width - 15} y={centerY - 8} fill="#64748b" fontSize="10" fontFamily="monospace">X₁</text>
-        <text x={centerX + 8} y="25" fill="#64748b" fontSize="10" fontFamily="monospace">X₂</text>
-
-        {/* Concentric reference rings */}
-        {[1, 2, 3, 4, 5].map((lvl) => (
-          <circle
-            key={lvl}
-            cx={centerX}
-            cy={centerY}
-            r={24 + lvl * 18}
-            fill="none"
-            stroke="#1e293b"
-            strokeWidth="1"
-            strokeDasharray="3 3"
-          />
-        ))}
-
-        {/* Fock state annulus: Perfectly fixed radius, completely indeterminate phase */}
+        {/* Uncertainty Region: Concentric Circle for Fock State (Completely indeterminate phase) */}
         <circle
-          cx={centerX}
-          cy={centerY}
+          cx={originX}
+          cy={originY}
           r={radius}
           fill="none"
-          stroke="#06b6d4"
-          strokeWidth="14"
+          stroke="#a855f7"
+          strokeWidth="12"
           strokeOpacity="0.45"
-          className="filter drop-shadow-[0_0_12px_#06b6d4]"
-        />
-        <circle
-          cx={centerX}
-          cy={centerY}
-          r={radius}
-          fill="none"
-          stroke="#38bdf8"
-          strokeWidth="2"
         />
 
-        {/* State annotation */}
-        <text x={centerX} y={centerY + radius + 22} fill="#38bdf8" fontSize="10" fontFamily="monospace" textAnchor="middle">
-          |{photonNumber}⟩: Δn = 0, Δθ = 2π
+        {/* Sharp core */}
+        <circle
+          cx={originX}
+          cy={originY}
+          r={radius}
+          fill="none"
+          stroke="#c084fc"
+          strokeWidth="2"
+          strokeDasharray="4 3"
+        />
+
+        <text x={originX} y={height - 15} fill="#c084fc" fontSize="9" fontFamily="monospace" textAnchor="middle">
+          Δn = 0 (Xác định tuyệt đối số photon) ⟹ Δφ = ∞ (Pha quay ngẫu nhiên 360°)
         </text>
       </svg>
     );
   };
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 lg:p-8 flex flex-col gap-6 backdrop-blur-md shadow-2xl">
-      {/* Lab Header */}
+    <div
+      id="lab-fock-state"
+      ref={containerRef}
+      className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 lg:p-8 flex flex-col gap-6 backdrop-blur-md shadow-2xl scroll-mt-28"
+      style={{ contentVisibility: 'auto', containIntrinsicSize: '750px' }}
+    >
+      {/* 1. Lab Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <span className="px-3 py-1 bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 rounded-lg text-xs font-mono font-bold">
@@ -269,7 +245,65 @@ export const FockStateLab: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Interactive Workbench (Potential Well & Operators) */}
+      {/* 2. CHÚ THÍCH & ĐỊNH HƯỚNG QUAN SÁT (ĐỌC TRƯỚC KHI THỰC NGHIỆM) */}
+      <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800/90 flex flex-col gap-4">
+        <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
+          <BookOpen className="w-4 h-4 text-cyan-400" />
+          <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+            Lý Thuyết Trạng Thái Fock & Hướng Dẫn Quan Sát
+          </h4>
+        </div>
+
+        {/* Explanatory Cards: Ladder Analogy & ZPE Deep Dive */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 rounded-xl bg-slate-900/70 border border-amber-500/20 flex flex-col gap-2">
+            <span className="font-bold text-amber-300 flex items-center gap-2 text-sm">
+              <BookOpen className="w-4 h-4 text-amber-400" />
+              <span>{t.labs.fockState.ladderAnalogyTitle}</span>
+            </span>
+            <p className="text-slate-300 text-xs leading-relaxed">
+              {t.labs.fockState.ladderAnalogyDesc}
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-900/70 border border-cyan-500/20 flex flex-col gap-2">
+            <span className="font-bold text-cyan-300 flex items-center gap-2 text-sm">
+              <HelpCircle className="w-4 h-4 text-cyan-400" />
+              <span>{t.labs.fockState.zpeDeepDiveTitle}</span>
+            </span>
+            <p className="text-slate-300 text-xs leading-relaxed">
+              {t.labs.fockState.zpeDeepDiveDesc}
+            </p>
+          </div>
+        </div>
+
+        {/* 3 View Modes Guide */}
+        <div className="pt-2 border-t border-slate-800/70 flex flex-col gap-2.5">
+          <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+            <span>{t.labs.fockState.viewModeGuideTitle}</span>
+          </span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div className="p-3 rounded-xl bg-slate-900/60 border border-cyan-500/20 text-cyan-200 leading-relaxed">
+              {t.labs.fockState.viewWaveDesc}
+            </div>
+            <div className="p-3 rounded-xl bg-slate-900/60 border border-emerald-500/20 text-emerald-200 leading-relaxed">
+              {t.labs.fockState.viewProbDesc}
+            </div>
+            <div className="p-3 rounded-xl bg-slate-900/60 border border-purple-500/20 text-purple-200 leading-relaxed">
+              {t.labs.fockState.viewQuadDesc}
+            </div>
+          </div>
+        </div>
+
+        {/* Phase uncertainty note */}
+        <div className="bg-slate-900/50 p-3 rounded-xl border border-slate-800 text-xs text-slate-300 flex items-center gap-2 leading-relaxed">
+          <span className="font-semibold text-cyan-300 shrink-0">{t.labs.fockState.phaseUncertaintyLabel}:</span>
+          <span>{t.labs.fockState.phaseUncertaintyDesc}</span>
+        </div>
+      </div>
+
+      {/* 3. KHU VỰC MÔ PHỎNG TƯƠNG TÁC */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left: Harmonic Oscillator Potential Well / Phase Space Visualizer */}
         <div className="lg:col-span-7 bg-slate-950 rounded-2xl border border-slate-800 p-5 min-h-[420px] relative flex flex-col justify-between gap-3 shadow-inner">
@@ -401,58 +435,6 @@ export const FockStateLab: React.FC = () => {
               <span className="text-slate-200">{t.labs.fockState.totalFieldEnergySummary}</span>
               <span className="font-mono text-emerald-400 text-base">{totalEnergy.toFixed(1)} ℏω</span>
             </div>
-          </div>
-
-          {/* Phase uncertainty note */}
-          <div className="bg-slate-950/60 p-3.5 rounded-2xl border border-slate-800 text-sm text-slate-300 flex flex-col gap-1.5 leading-relaxed">
-            <span className="font-semibold text-cyan-300 text-sm">{t.labs.fockState.phaseUncertaintyLabel}</span>
-            <p className="leading-relaxed text-sm text-slate-300">
-              {t.labs.fockState.phaseUncertaintyDesc}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Explanatory Cards: Ladder Analogy, ZPE, & 3 View Modes Guide */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {/* Ladder Analogy */}
-        <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 flex flex-col gap-2.5">
-          <span className="font-bold text-amber-300 flex items-center gap-2 text-sm">
-            <BookOpen className="w-4 h-4 text-amber-400" />
-            <span>{t.labs.fockState.ladderAnalogyTitle}</span>
-          </span>
-          <p className="text-slate-300 text-sm leading-relaxed">
-            {t.labs.fockState.ladderAnalogyDesc}
-          </p>
-        </div>
-
-        {/* ZPE Deep Dive */}
-        <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 flex flex-col gap-2.5">
-          <span className="font-bold text-cyan-300 flex items-center gap-2 text-sm">
-            <HelpCircle className="w-4 h-4 text-cyan-400" />
-            <span>{t.labs.fockState.zpeDeepDiveTitle}</span>
-          </span>
-          <p className="text-slate-300 text-sm leading-relaxed">
-            {t.labs.fockState.zpeDeepDiveDesc}
-          </p>
-        </div>
-      </div>
-
-      {/* 3 View Modes Guide */}
-      <div className="bg-slate-950/80 p-4.5 rounded-2xl border border-slate-800 flex flex-col gap-2.5">
-        <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-          <span>{t.labs.fockState.viewModeGuideTitle}</span>
-        </span>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-          <div className="p-3 rounded-xl bg-slate-900/60 border border-cyan-500/20 text-cyan-200 leading-relaxed">
-            {t.labs.fockState.viewWaveDesc}
-          </div>
-          <div className="p-3 rounded-xl bg-slate-900/60 border border-emerald-500/20 text-emerald-200 leading-relaxed">
-            {t.labs.fockState.viewProbDesc}
-          </div>
-          <div className="p-3 rounded-xl bg-slate-900/60 border border-purple-500/20 text-purple-200 leading-relaxed">
-            {t.labs.fockState.viewQuadDesc}
           </div>
         </div>
       </div>

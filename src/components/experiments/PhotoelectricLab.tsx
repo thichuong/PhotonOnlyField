@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sun, AlertCircle, CheckCircle, Activity, Scale, Compass, Sparkles, BookOpen } from 'lucide-react';
 import { useLanguage } from '../../i18n';
+import { useInView } from '../../hooks/useInView';
 
 interface MetalTarget {
   nameKey: 'cesium' | 'potassium' | 'sodium' | 'zinc' | 'copper';
@@ -18,12 +19,14 @@ const METALS: MetalTarget[] = [
 
 export const PhotoelectricLab: React.FC = () => {
   const { t } = useLanguage();
+  const { ref: containerRef } = useInView<HTMLDivElement>();
+
   const [wavelength, setWavelength] = useState<number>(420); // nm
   const [selectedMetal, setSelectedMetal] = useState<MetalTarget>(METALS[0]);
   const [intensity, setIntensity] = useState<number>(3); // 1 to 5
   const [voltage, setVoltage] = useState<number>(0.0); // -4.0V to +2.0V
   const [activeGraphTab, setActiveGraphTab] = useState<'iv' | 'kmax'>('iv');
-  const [showClassicalComparison, setShowClassicalComparison] = useState<boolean>(false);
+  const [showClassicalComparison, setShowClassicalComparison] = useState<boolean>(true);
 
   // E = hc / lambda (in eV): hc ≈ 1239.84 eV.nm
   const photonEnergy = 1239.84 / wavelength;
@@ -33,14 +36,12 @@ export const PhotoelectricLab: React.FC = () => {
   const stoppingPotential = kineticEnergy; // in Volts (eV / e = V)
 
   // Photocurrent calculation
-  // Saturation current scales linearly with photon intensity
   const saturationCurrent = intensity * 15; // microAmperes (uA)
   let photocurrent = 0;
   if (canEject) {
     if (voltage <= -stoppingPotential) {
       photocurrent = 0;
     } else if (voltage < 0.8) {
-      // Transition from stopping potential to saturation
       const factor = Math.min(1, Math.max(0, (voltage + stoppingPotential) / (stoppingPotential + 0.8)));
       photocurrent = saturationCurrent * Math.pow(factor, 0.7);
     } else {
@@ -70,7 +71,6 @@ export const PhotoelectricLab: React.FC = () => {
     const scaleX = 35; // 35px per Volt
     const scaleY = 1.1; // scale for current
 
-    // Generate points from V = -4 to V = +2
     const points: string[] = [];
     for (let v = -4.0; v <= 2.0; v += 0.1) {
       let currentVal = 0;
@@ -113,10 +113,12 @@ export const PhotoelectricLab: React.FC = () => {
         ))}
 
         {/* Stopping potential marker */}
-        {canEject && stoppingPotential > 0 && (
+        {canEject && stoppingPotential > 0.05 && (
           <g>
-            <line x1={stoppingMarkerX} y1={originY - 8} x2={stoppingMarkerX} y2={originY + 8} stroke="#f43f5e" strokeWidth="2" />
-            <text x={stoppingMarkerX} y={originY + 22} fill="#fb7185" fontSize="8" fontFamily="monospace" textAnchor="middle">-V_stop</text>
+            <line x1={stoppingMarkerX} y1={originY - 8} x2={stoppingMarkerX} y2={originY + 8} stroke="#f43f5e" strokeWidth="2" strokeDasharray="2 2" />
+            <text x={stoppingMarkerX} y={originY - 12} fill="#f43f5e" fontSize="8" fontFamily="monospace" textAnchor="middle">
+              -V₀ ({(-stoppingPotential).toFixed(2)}V)
+            </text>
           </g>
         )}
 
@@ -146,7 +148,7 @@ export const PhotoelectricLab: React.FC = () => {
     const x0 = originX + nu0 * scaleNu;
     const y0 = originY;
     const xMax = originX + nuMax * scaleNu;
-    const kMaxVal = 4.135667 * (nuMax - nu0); // h in eV/PHz is 4.1357
+    const kMaxVal = 4.135667 * (nuMax - nu0);
     const yMax = originY - kMaxVal * scaleK;
 
     const currentX = originX + frequencyPHz * scaleNu;
@@ -184,8 +186,13 @@ export const PhotoelectricLab: React.FC = () => {
   };
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 lg:p-8 flex flex-col gap-6 backdrop-blur-md shadow-2xl">
-      {/* Lab Header */}
+    <div
+      id="lab-photoelectric"
+      ref={containerRef}
+      className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 lg:p-8 flex flex-col gap-6 backdrop-blur-md shadow-2xl scroll-mt-28"
+      style={{ contentVisibility: 'auto', containIntrinsicSize: '750px' }}
+    >
+      {/* 1. Lab Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <span className="px-3 py-1 bg-purple-500/15 border border-purple-500/30 text-purple-300 rounded-lg text-xs font-mono font-bold">
@@ -209,64 +216,143 @@ export const PhotoelectricLab: React.FC = () => {
         </div>
       </div>
 
-      {/* Quick Interactive Presets */}
-      <div className="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <span className="text-xs font-bold text-slate-300 flex items-center gap-1.5 shrink-0">
-          <Sparkles className="w-4 h-4 text-amber-400" />
-          <span>{t.labs.photoelectric.quickGuideTitle}:</span>
-        </span>
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            onClick={() => {
-              setWavelength(240);
-              setSelectedMetal(METALS[0]);
-              setIntensity(3);
-              setVoltage(0.0);
-            }}
-            className="px-3 py-1.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 text-purple-300 text-xs font-medium transition-all cursor-pointer"
-          >
-            {t.labs.photoelectric.presetUV}
-          </button>
-          <button
-            onClick={() => {
-              setWavelength(700);
-              setSelectedMetal(METALS[0]);
-              setIntensity(5);
-              setVoltage(0.0);
-            }}
-            className="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-medium transition-all cursor-pointer"
-          >
-            {t.labs.photoelectric.presetRed}
-          </button>
-          <button
-            onClick={() => {
-              setWavelength(360);
-              setSelectedMetal(METALS[0]);
-              setIntensity(3);
-              const ePhot = 1239.84 / 360;
-              const vStop = parseFloat((-(ePhot - METALS[0].workFunction)).toFixed(1));
-              setVoltage(vStop);
-            }}
-            className="px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-medium transition-all cursor-pointer"
-          >
-            {t.labs.photoelectric.presetStopping}
-          </button>
+      {/* 2. CHÚ THÍCH & ĐỊNH HƯỚNG QUAN SÁT (ĐỌC TRƯỚC KHI THỰC NGHIỆM) */}
+      <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800/90 flex flex-col gap-4">
+        {/* 3 Core Concepts Explanatory Card */}
+        <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
+          <BookOpen className="w-4 h-4 text-cyan-400" />
+          <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+            {t.labs.photoelectric.keyConceptsTitle} & Hướng Dẫn Định Hướng
+          </h4>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 text-xs">
+          <div className="p-3.5 rounded-xl bg-slate-900/80 border border-cyan-500/20 flex flex-col gap-1.5">
+            <span className="font-bold text-cyan-300 text-xs">
+              {t.labs.photoelectric.conceptWavelengthTitle}
+            </span>
+            <p className="text-slate-300 leading-relaxed">
+              {t.labs.photoelectric.conceptWavelengthDesc}
+            </p>
+          </div>
+          <div className="p-3.5 rounded-xl bg-slate-900/80 border border-purple-500/20 flex flex-col gap-1.5">
+            <span className="font-bold text-purple-300 text-xs">
+              {t.labs.photoelectric.conceptIntensityTitle}
+            </span>
+            <p className="text-slate-300 leading-relaxed">
+              {t.labs.photoelectric.conceptIntensityDesc}
+            </p>
+          </div>
+          <div className="p-3.5 rounded-xl bg-slate-900/80 border border-amber-500/20 flex flex-col gap-1.5">
+            <span className="font-bold text-amber-300 text-xs">
+              {t.labs.photoelectric.conceptVoltageTitle}
+            </span>
+            <p className="text-slate-300 leading-relaxed">
+              {t.labs.photoelectric.conceptVoltageDesc}
+            </p>
+          </div>
+        </div>
+
+        {/* Classical Wave vs Quantum QFT Comparison Card */}
+        <div className="pt-2 border-t border-slate-800/80 flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-300 flex items-center gap-2">
+              <Scale className="w-4 h-4 text-amber-400" />
+              <span>Đối So Sánh Mô Hình: Sóng Cổ Điển vs Lượng Tử (Einstein 1905)</span>
+            </span>
+            <button
+              onClick={() => setShowClassicalComparison(!showClassicalComparison)}
+              className="text-[11px] text-slate-400 hover:text-cyan-300 font-medium cursor-pointer transition-colors"
+            >
+              {showClassicalComparison ? 'Thu gọn' : 'Xem chi tiết'}
+            </button>
+          </div>
+
+          {showClassicalComparison && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs animate-in fade-in duration-300">
+              <div className="p-3.5 rounded-xl bg-rose-950/30 border border-rose-900/40 flex flex-col gap-2">
+                <span className="font-bold text-rose-300 flex items-center gap-1.5 text-xs">
+                  <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
+                  <span>{t.labs.photoelectric.classicalTheoryLabel}</span>
+                </span>
+                <p className="text-slate-300 leading-relaxed">
+                  {t.labs.photoelectric.classicalExplanation}
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-emerald-950/30 border border-emerald-900/40 flex flex-col gap-2">
+                <span className="font-bold text-emerald-300 flex items-center gap-1.5 text-xs">
+                  <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>{t.labs.photoelectric.quantumTheoryLabel}</span>
+                </span>
+                <p className="text-slate-300 leading-relaxed">
+                  {t.labs.photoelectric.quantumExplanation}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Quick Interactive Presets */}
+        <div className="bg-slate-900/70 p-3 rounded-xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <span className="font-bold text-slate-300 flex items-center gap-1.5 shrink-0">
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span>{t.labs.photoelectric.quickGuideTitle}:</span>
+          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => {
+                setWavelength(240);
+                setSelectedMetal(METALS[0]);
+                setIntensity(3);
+                setVoltage(0.0);
+              }}
+              className="px-3 py-1.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 text-purple-300 text-xs font-medium transition-all cursor-pointer"
+            >
+              {t.labs.photoelectric.presetUV}
+            </button>
+            <button
+              onClick={() => {
+                setWavelength(700);
+                setSelectedMetal(METALS[0]);
+                setIntensity(5);
+                setVoltage(0.0);
+              }}
+              className="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-medium transition-all cursor-pointer"
+            >
+              {t.labs.photoelectric.presetRed}
+            </button>
+            <button
+              onClick={() => {
+                setWavelength(360);
+                setSelectedMetal(METALS[0]);
+                setIntensity(3);
+                const ePhot = 1239.84 / 360;
+                const vStop = parseFloat((-(ePhot - METALS[0].workFunction)).toFixed(1));
+                setVoltage(vStop);
+              }}
+              className="px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-medium transition-all cursor-pointer"
+            >
+              {t.labs.photoelectric.presetStopping}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Main Simulation Workbench (2 Columns: Chamber + Graphs) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left: Vacuum Tube Chamber */}
-        <div className="lg:col-span-7 bg-slate-950 rounded-2xl border border-slate-800 p-5 min-h-[350px] relative flex flex-col justify-between gap-2">
-          <div className="flex items-center justify-between text-xs text-slate-400">
-            <span>{t.labs.photoelectric.vacuumTube}</span>
-            <span className="font-mono text-cyan-300 font-bold">
-              λ = {wavelength} nm ({currentColor.name}) • ν = {frequencyPHz.toFixed(2)} PHz
+      {/* 3. KHU VỰC MÔ PHỎNG TƯƠNG TÁC */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        {/* Left: Phototube Chamber Visualizer */}
+        <div className="lg:col-span-7 bg-slate-950 rounded-2xl border border-slate-800 p-5 flex flex-col justify-between min-h-[350px]">
+          <div className="flex items-center justify-between border-b border-slate-900 pb-2">
+            <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+              {t.labs.photoelectric.vacuumTube}
+            </span>
+            <span className="text-xs font-mono text-cyan-400">
+              λ = {wavelength} nm ({currentColor.name})
             </span>
           </div>
 
-          {/* Tube Schematic */}
-          <div className="relative flex-1 flex items-center justify-between px-6">
+          {/* Chamber Graphic Area */}
+          <div className="relative flex items-center justify-between py-6 px-2 my-auto">
             {/* Light Source Torch */}
             <div className="flex flex-col items-center">
               <div
@@ -430,7 +516,7 @@ export const PhotoelectricLab: React.FC = () => {
         </div>
       </div>
 
-      {/* Control Sliders Grid */}
+      {/* 4. Bộ Tham Số & Điều Khiển Thực Nghiệm */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Metal Selection */}
         <div className="flex flex-col gap-1.5 bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800">
@@ -481,7 +567,7 @@ export const PhotoelectricLab: React.FC = () => {
           </div>
         </div>
 
-        {/* Intensity Slider & Theory Toggle */}
+        {/* Intensity Slider */}
         <div className="flex flex-col justify-between bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800">
           <div>
             <div className="flex justify-between text-xs mb-1">
@@ -497,78 +583,9 @@ export const PhotoelectricLab: React.FC = () => {
               onChange={(e) => setIntensity(parseInt(e.target.value))}
               className="w-full accent-purple-400 h-2 bg-slate-900 rounded-lg cursor-pointer mt-2"
             />
-            <div className="text-sm text-slate-300 mt-1.5 leading-relaxed">
+            <div className="text-xs text-slate-400 mt-2 leading-relaxed">
               {t.labs.photoelectric.intensityHint}
             </div>
-          </div>
-
-          <button
-            onClick={() => setShowClassicalComparison(!showClassicalComparison)}
-            className="mt-2 py-2 px-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
-          >
-            <Scale className="w-3.5 h-3.5 text-amber-400" />
-            <span>{t.labs.photoelectric.classicalVsQuantumToggle}</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Classical Wave vs Quantum QFT Comparison Card */}
-      {showClassicalComparison && (
-        <div className="bg-slate-950 p-5 rounded-2xl border border-slate-800 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm animate-in fade-in duration-300">
-          <div className="p-4 rounded-xl bg-rose-950/30 border border-rose-900/40 flex flex-col gap-2">
-            <span className="font-bold text-rose-300 flex items-center gap-1.5 text-sm">
-              <AlertCircle className="w-4 h-4 text-rose-400" />
-              <span>{t.labs.photoelectric.classicalTheoryLabel}</span>
-            </span>
-            <p className="text-slate-200 text-sm leading-relaxed">
-              {t.labs.photoelectric.classicalExplanation}
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-emerald-950/30 border border-emerald-900/40 flex flex-col gap-2">
-            <span className="font-bold text-emerald-300 flex items-center gap-1.5 text-sm">
-              <CheckCircle className="w-4 h-4 text-emerald-400" />
-              <span>{t.labs.photoelectric.quantumTheoryLabel}</span>
-            </span>
-            <p className="text-slate-200 text-sm leading-relaxed">
-              {t.labs.photoelectric.quantumExplanation}
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* 3 Core Concepts Explanatory Card */}
-      <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 flex flex-col gap-3.5">
-        <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
-          <BookOpen className="w-4 h-4 text-cyan-400" />
-          <h4 className="text-sm font-bold text-white uppercase tracking-wider">
-            {t.labs.photoelectric.keyConceptsTitle}
-          </h4>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 text-xs">
-          <div className="p-3.5 rounded-xl bg-slate-900/80 border border-cyan-500/20 flex flex-col gap-1.5">
-            <span className="font-bold text-cyan-300 text-xs">
-              {t.labs.photoelectric.conceptWavelengthTitle}
-            </span>
-            <p className="text-slate-300 leading-relaxed">
-              {t.labs.photoelectric.conceptWavelengthDesc}
-            </p>
-          </div>
-          <div className="p-3.5 rounded-xl bg-slate-900/80 border border-purple-500/20 flex flex-col gap-1.5">
-            <span className="font-bold text-purple-300 text-xs">
-              {t.labs.photoelectric.conceptIntensityTitle}
-            </span>
-            <p className="text-slate-300 leading-relaxed">
-              {t.labs.photoelectric.conceptIntensityDesc}
-            </p>
-          </div>
-          <div className="p-3.5 rounded-xl bg-slate-900/80 border border-amber-500/20 flex flex-col gap-1.5">
-            <span className="font-bold text-amber-300 text-xs">
-              {t.labs.photoelectric.conceptVoltageTitle}
-            </span>
-            <p className="text-slate-300 leading-relaxed">
-              {t.labs.photoelectric.conceptVoltageDesc}
-            </p>
           </div>
         </div>
       </div>

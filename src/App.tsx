@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { FieldSettings } from './types/physics';
 import { QuantumFieldCanvas } from './components/canvas/QuantumFieldCanvas';
 import { FieldControls } from './components/controls/FieldControls';
@@ -38,9 +38,52 @@ function MainApp() {
     damping: 0.95,
   });
 
-  const [activeLabTab, setActiveLabTab] = useState<'double-slit' | 'photoelectric' | 'fock-state' | 'casimir' | 'mach-zehnder'>('double-slit');
+  type LabTabId = 'lab-double-slit' | 'lab-photoelectric' | 'lab-fock-state' | 'lab-casimir' | 'lab-mach-zehnder';
+  const [activeLabTab, setActiveLabTab] = useState<LabTabId>('lab-double-slit');
   const [isTourOpen, setIsTourOpen] = useState<boolean>(false);
   const [photonInjectTrigger, setPhotonInjectTrigger] = useState<number>(0);
+
+  const scrollToLab = useCallback((labId: LabTabId) => {
+    setActiveLabTab(labId);
+    const element = document.getElementById(labId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, []);
+
+  // Update active lab indicator on scroll
+  useEffect(() => {
+    const labIds: LabTabId[] = [
+      'lab-double-slit',
+      'lab-photoelectric',
+      'lab-fock-state',
+      'lab-casimir',
+      'lab-mach-zehnder',
+    ];
+
+    if (!('IntersectionObserver' in window)) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveLabTab(entry.target.id as LabTabId);
+          }
+        });
+      },
+      {
+        rootMargin: '-15% 0px -65% 0px',
+        threshold: 0,
+      }
+    );
+
+    labIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleSettingsChange = (newSettings: Partial<FieldSettings>) => {
     setFieldSettings((prev) => ({ ...prev, ...newSettings }));
@@ -216,79 +259,81 @@ function MainApp() {
         </section>
 
         {/* 3. Virtual Interactive Laboratories */}
-        <section id="labs-section" className="flex flex-col gap-6 scroll-mt-24">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <section id="labs-section" className="flex flex-col gap-8 scroll-mt-24">
+          <div className="sticky top-16 z-30 bg-slate-950/95 backdrop-blur-md py-3.5 -my-2 border-b border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold uppercase tracking-widest">
                 <FlaskConical className="w-4 h-4" />
                 <span>{t.labs.headerBadge}</span>
               </div>
-              <h2 className="text-3xl font-extrabold text-white tracking-tight mt-1">
+              <h2 className="text-2xl lg:text-3xl font-extrabold text-white tracking-tight mt-0.5">
                 {t.labs.sectionTitle}
               </h2>
             </div>
 
-            {/* Lab Switcher Tabs */}
-            <div className="flex flex-wrap items-center gap-1.5 bg-slate-900 p-1.5 rounded-2xl border border-slate-800 text-xs">
+            {/* Quick Jump Anchor Tabs */}
+            <div className="flex flex-wrap items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 text-xs shadow-lg">
               <button
-                onClick={() => setActiveLabTab('double-slit')}
+                onClick={() => scrollToLab('lab-double-slit')}
                 className={`px-3 py-1.5 rounded-xl font-medium transition-all cursor-pointer ${
-                  activeLabTab === 'double-slit'
+                  activeLabTab === 'lab-double-slit'
                     ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                {t.labs.tabDoubleSlit}
+                1. {t.labs.tabDoubleSlit}
               </button>
               <button
-                onClick={() => setActiveLabTab('photoelectric')}
+                onClick={() => scrollToLab('lab-photoelectric')}
                 className={`px-3 py-1.5 rounded-xl font-medium transition-all cursor-pointer ${
-                  activeLabTab === 'photoelectric'
+                  activeLabTab === 'lab-photoelectric'
                     ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                {t.labs.tabPhotoelectric}
+                2. {t.labs.tabPhotoelectric}
               </button>
               <button
-                onClick={() => setActiveLabTab('fock-state')}
+                onClick={() => scrollToLab('lab-fock-state')}
                 className={`px-3 py-1.5 rounded-xl font-medium transition-all cursor-pointer ${
-                  activeLabTab === 'fock-state'
+                  activeLabTab === 'lab-fock-state'
                     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                {t.labs.tabFockState}
+                3. {t.labs.tabFockState}
               </button>
               <button
-                onClick={() => setActiveLabTab('casimir')}
+                onClick={() => scrollToLab('lab-casimir')}
                 className={`px-3 py-1.5 rounded-xl font-medium transition-all cursor-pointer ${
-                  activeLabTab === 'casimir'
+                  activeLabTab === 'lab-casimir'
                     ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                {t.labs.tabCasimir}
+                4. {t.labs.tabCasimir}
               </button>
               <button
-                onClick={() => setActiveLabTab('mach-zehnder')}
+                onClick={() => scrollToLab('lab-mach-zehnder')}
                 className={`px-3 py-1.5 rounded-xl font-medium transition-all cursor-pointer ${
-                  activeLabTab === 'mach-zehnder'
+                  activeLabTab === 'lab-mach-zehnder'
                     ? 'bg-sky-500/20 text-sky-300 border border-sky-500/40 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                {t.labs.tabMachZehnder}
+                5. {t.labs.tabMachZehnder}
               </button>
             </div>
           </div>
 
-          {/* Render Active Lab */}
-          {activeLabTab === 'double-slit' && <DoubleSlitLab />}
-          {activeLabTab === 'photoelectric' && <PhotoelectricLab />}
-          {activeLabTab === 'fock-state' && <FockStateLab />}
-          {activeLabTab === 'casimir' && <CasimirLab />}
-          {activeLabTab === 'mach-zehnder' && <MachZehnderLab />}
+          {/* Render All 5 Labs in Sequence (Vertical Scroll Flow) */}
+          <div className="flex flex-col gap-10">
+            <DoubleSlitLab />
+            <PhotoelectricLab />
+            <FockStateLab />
+            <CasimirLab />
+            <MachZehnderLab />
+          </div>
         </section>
 
         {/* 4. Deep Dive Conceptual Explanation */}
