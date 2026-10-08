@@ -243,6 +243,9 @@ export const enTranslations: Translations = {
       description:
         'A cornerstone verification of quantum optics: A single photon encountering a 50:50 beam splitter does not choose "Path A OR Path B" like a ball; its continuous field wavepacket splits across both paths and interferes with itself.',
       phaseShiftLabel: 'Mirror Phase Shift (Δφ):',
+      pathD1Label: 'Arm d₁ (Reference optical path L₁)',
+      pathD2Label: 'Arm d₂ (Variable optical path L₂ = L₁ + Δd)',
+      pathDifferenceLabel: 'Path length difference Δd = d₂ - d₁:',
       detector1Label: 'Detector D₁ (Constructive Peak):',
       detector2Label: 'Detector D₂ (Destructive Minimum):',
       secondBeamSplitterToggle: 'Second Beam Splitter BS₂ (Recombination):',

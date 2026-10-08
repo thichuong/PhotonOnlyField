@@ -243,6 +243,9 @@ export const viTranslations: Translations = {
       description:
         'Thí nghiệm kiểm chứng cốt lõi của quang học lượng tử: Một photon duy nhất đi qua bộ tách chùm 50:50 không chọn "nhánh A hoặc nhánh B", mà gói sóng trường của nó phân tách đồng thời trên cả hai nhánh và tự can nhiễu.',
       phaseShiftLabel: 'Góc lệch pha gương (Δφ):',
+      pathD1Label: 'Nhánh d₁ (Quang trình chuẩn L₁)',
+      pathD2Label: 'Nhánh d₂ (Quang trình điều chỉnh L₂ = L₁ + Δd)',
+      pathDifferenceLabel: 'Hiệu quang lộ Δd = d₂ - d₁:',
       detector1Label: 'Đầu dò D₁ (Giao thoa cực đại):',
       detector2Label: 'Đầu dò D₂ (Giao thoa cực tiểu):',
       secondBeamSplitterToggle: 'Bộ tách chùm BS₂ (Tái kết hợp sóng):',

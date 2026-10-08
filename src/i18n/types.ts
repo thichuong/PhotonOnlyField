@@ -242,6 +242,9 @@ export interface Translations {
       title: string;
       description: string;
       phaseShiftLabel: string;
+      pathD1Label: string;
+      pathD2Label: string;
+      pathDifferenceLabel: string;
       detector1Label: string;
       detector2Label: string;
       secondBeamSplitterToggle: string;
