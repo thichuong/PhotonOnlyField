@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sun, AlertCircle, CheckCircle, Activity, Scale, Compass } from 'lucide-react';
+import { Sun, AlertCircle, CheckCircle, Activity, Scale, Compass, Sparkles, BookOpen } from 'lucide-react';
 import { useLanguage } from '../../i18n';
 
 interface MetalTarget {
@@ -209,10 +209,55 @@ export const PhotoelectricLab: React.FC = () => {
         </div>
       </div>
 
+      {/* Quick Interactive Presets */}
+      <div className="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <span className="text-xs font-bold text-slate-300 flex items-center gap-1.5 shrink-0">
+          <Sparkles className="w-4 h-4 text-amber-400" />
+          <span>{t.labs.photoelectric.quickGuideTitle}:</span>
+        </span>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => {
+              setWavelength(240);
+              setSelectedMetal(METALS[0]);
+              setIntensity(3);
+              setVoltage(0.0);
+            }}
+            className="px-3 py-1.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 text-purple-300 text-xs font-medium transition-all cursor-pointer"
+          >
+            {t.labs.photoelectric.presetUV}
+          </button>
+          <button
+            onClick={() => {
+              setWavelength(700);
+              setSelectedMetal(METALS[0]);
+              setIntensity(5);
+              setVoltage(0.0);
+            }}
+            className="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-medium transition-all cursor-pointer"
+          >
+            {t.labs.photoelectric.presetRed}
+          </button>
+          <button
+            onClick={() => {
+              setWavelength(360);
+              setSelectedMetal(METALS[0]);
+              setIntensity(3);
+              const ePhot = 1239.84 / 360;
+              const vStop = parseFloat((-(ePhot - METALS[0].workFunction)).toFixed(1));
+              setVoltage(vStop);
+            }}
+            className="px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-medium transition-all cursor-pointer"
+          >
+            {t.labs.photoelectric.presetStopping}
+          </button>
+        </div>
+      </div>
+
       {/* Main Simulation Workbench (2 Columns: Chamber + Graphs) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left: Vacuum Tube Chamber */}
-        <div className="lg:col-span-7 bg-slate-950 rounded-2xl border border-slate-800 p-5 h-[340px] relative overflow-hidden flex flex-col justify-between">
+        <div className="lg:col-span-7 bg-slate-950 rounded-2xl border border-slate-800 p-5 min-h-[350px] relative flex flex-col justify-between gap-2">
           <div className="flex items-center justify-between text-xs text-slate-400">
             <span>{t.labs.photoelectric.vacuumTube}</span>
             <span className="font-mono text-cyan-300 font-bold">
@@ -324,7 +369,7 @@ export const PhotoelectricLab: React.FC = () => {
         </div>
 
         {/* Right: Scientific Analysis Graphs & Stopping Voltage Slider */}
-        <div className="lg:col-span-5 bg-slate-950 rounded-2xl border border-slate-800 p-4 h-[340px] flex flex-col justify-between">
+        <div className="lg:col-span-5 bg-slate-950 rounded-2xl border border-slate-800 p-4 min-h-[350px] flex flex-col justify-between gap-2">
           {/* Graph Tabs */}
           <div className="flex items-center justify-between border-b border-slate-800/80 pb-2">
             <span className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
@@ -491,6 +536,42 @@ export const PhotoelectricLab: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* 3 Core Concepts Explanatory Card */}
+      <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 flex flex-col gap-3.5">
+        <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
+          <BookOpen className="w-4 h-4 text-cyan-400" />
+          <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+            {t.labs.photoelectric.keyConceptsTitle}
+          </h4>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 text-xs">
+          <div className="p-3.5 rounded-xl bg-slate-900/80 border border-cyan-500/20 flex flex-col gap-1.5">
+            <span className="font-bold text-cyan-300 text-xs">
+              {t.labs.photoelectric.conceptWavelengthTitle}
+            </span>
+            <p className="text-slate-300 leading-relaxed">
+              {t.labs.photoelectric.conceptWavelengthDesc}
+            </p>
+          </div>
+          <div className="p-3.5 rounded-xl bg-slate-900/80 border border-purple-500/20 flex flex-col gap-1.5">
+            <span className="font-bold text-purple-300 text-xs">
+              {t.labs.photoelectric.conceptIntensityTitle}
+            </span>
+            <p className="text-slate-300 leading-relaxed">
+              {t.labs.photoelectric.conceptIntensityDesc}
+            </p>
+          </div>
+          <div className="p-3.5 rounded-xl bg-slate-900/80 border border-amber-500/20 flex flex-col gap-1.5">
+            <span className="font-bold text-amber-300 text-xs">
+              {t.labs.photoelectric.conceptVoltageTitle}
+            </span>
+            <p className="text-slate-300 leading-relaxed">
+              {t.labs.photoelectric.conceptVoltageDesc}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

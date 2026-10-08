@@ -151,6 +151,17 @@ export interface Translations {
       classicalExplanation: string;
       quantumExplanation: string;
       planckConstantSlope: string;
+      quickGuideTitle: string;
+      presetUV: string;
+      presetRed: string;
+      presetStopping: string;
+      keyConceptsTitle: string;
+      conceptWavelengthTitle: string;
+      conceptWavelengthDesc: string;
+      conceptIntensityTitle: string;
+      conceptIntensityDesc: string;
+      conceptVoltageTitle: string;
+      conceptVoltageDesc: string;
       metals: {
         cesium: string;
         potassium: string;
@@ -195,6 +206,14 @@ export interface Translations {
       hermitePolynomialLabel: string;
       phaseUncertaintyLabel: string;
       phaseUncertaintyDesc: string;
+      ladderAnalogyTitle: string;
+      ladderAnalogyDesc: string;
+      zpeDeepDiveTitle: string;
+      zpeDeepDiveDesc: string;
+      viewModeGuideTitle: string;
+      viewWaveDesc: string;
+      viewProbDesc: string;
+      viewQuadDesc: string;
     };
     casimir: {
       badge: string;
@@ -211,6 +230,12 @@ export interface Translations {
       qftVacuumDesc: string;
       qftInsightTitle: string;
       qftInsightBody: string;
+      standingWaveAnalogyTitle: string;
+      standingWaveAnalogyDesc: string;
+      forceScalingTitle: string;
+      forceScalingDesc: string;
+      whyAttractTitle: string;
+      whyAttractDesc: string;
     };
     machZehnder: {
       badge: string;
@@ -231,6 +256,14 @@ export interface Translations {
       delayedChoiceDesc: string;
       qftInsightTitle: string;
       qftInsightBody: string;
+      phasePresetsTitle: string;
+      phasePreset0: string;
+      phasePreset90: string;
+      phasePreset180: string;
+      howItWorksTitle: string;
+      howItWorksDesc: string;
+      whyWavepacketTitle: string;
+      whyWavepacketDesc: string;
     };
   };
   qftDeepDive: {

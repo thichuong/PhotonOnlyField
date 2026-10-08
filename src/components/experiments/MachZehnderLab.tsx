@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Play, Pause, RotateCcw, Zap, Sparkles, Sliders, Split, Eye } from 'lucide-react';
+import { Play, Pause, RotateCcw, Zap, Sparkles, Sliders, Split, Eye, BookOpen, HelpCircle } from 'lucide-react';
 import { useLanguage } from '../../i18n';
 
 interface FlyingPulse {
@@ -398,8 +398,8 @@ export const MachZehnderLab: React.FC = () => {
           </button>
         </div>
 
-        {/* Phase Slider */}
-        <div className="md:col-span-5 bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800 flex flex-col gap-1.5">
+        {/* Phase Slider & Presets */}
+        <div className="md:col-span-5 bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800 flex flex-col gap-2">
           <div className="flex justify-between items-center text-xs">
             <span className="text-slate-300 font-medium flex items-center gap-1.5">
               <Sliders className="w-3.5 h-3.5 text-yellow-400" />
@@ -419,10 +419,47 @@ export const MachZehnderLab: React.FC = () => {
             }}
             className="accent-yellow-400 h-1.5 bg-slate-900 rounded-lg cursor-pointer w-full"
           />
-          <div className="flex justify-between text-[10px] text-slate-500 font-mono">
-            <span>0° (D₁=100%, D₂=0%)</span>
-            <span>180° (D₁=0%, D₂=100%)</span>
-            <span>360°</span>
+          {/* Quick Phase Presets */}
+          <div className="flex items-center justify-between gap-1 pt-1 border-t border-slate-800/80">
+            <button
+              onClick={() => {
+                setPhaseShiftDeg(0);
+                handleReset();
+              }}
+              className={`px-2 py-0.5 rounded-md text-[10px] font-mono transition-colors cursor-pointer ${
+                phaseShiftDeg === 0
+                  ? 'bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 font-bold'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              0° (D₁=100%)
+            </button>
+            <button
+              onClick={() => {
+                setPhaseShiftDeg(90);
+                handleReset();
+              }}
+              className={`px-2 py-0.5 rounded-md text-[10px] font-mono transition-colors cursor-pointer ${
+                phaseShiftDeg === 90
+                  ? 'bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 font-bold'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              90° (50/50)
+            </button>
+            <button
+              onClick={() => {
+                setPhaseShiftDeg(180);
+                handleReset();
+              }}
+              className={`px-2 py-0.5 rounded-md text-[10px] font-mono transition-colors cursor-pointer ${
+                phaseShiftDeg === 180
+                  ? 'bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 font-bold'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              180° (D₂=100%)
+            </button>
           </div>
         </div>
       </div>
@@ -446,6 +483,29 @@ export const MachZehnderLab: React.FC = () => {
           </span>
           <p className="text-slate-300 text-sm leading-relaxed">
             {t.labs.machZehnder.qftInsightBody}
+          </p>
+        </div>
+      </div>
+
+      {/* Additional Educational Insights: Phase Interference & Wavepacket Nature */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div className="bg-slate-950/80 p-4.5 rounded-2xl border border-slate-800 flex flex-col gap-2">
+          <span className="font-bold text-emerald-300 flex items-center gap-1.5 text-xs">
+            <BookOpen className="w-4 h-4 text-emerald-400" />
+            <span>{t.labs.machZehnder.howItWorksTitle}</span>
+          </span>
+          <p className="text-slate-300 text-xs leading-relaxed">
+            {t.labs.machZehnder.howItWorksDesc}
+          </p>
+        </div>
+
+        <div className="bg-slate-950/80 p-4.5 rounded-2xl border border-slate-800 flex flex-col gap-2">
+          <span className="font-bold text-purple-300 flex items-center gap-1.5 text-xs">
+            <HelpCircle className="w-4 h-4 text-purple-400" />
+            <span>{t.labs.machZehnder.whyWavepacketTitle}</span>
+          </span>
+          <p className="text-slate-300 text-xs leading-relaxed">
+            {t.labs.machZehnder.whyWavepacketDesc}
           </p>
         </div>
       </div>

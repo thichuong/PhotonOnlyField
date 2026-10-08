@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Plus, Minus, Zap, Eye, Sparkles, Layers } from 'lucide-react';
+import { Plus, Minus, Zap, Eye, Sparkles, Layers, BookOpen, HelpCircle } from 'lucide-react';
 import { useLanguage } from '../../i18n';
 
 type ViewMode = 'wavefunction' | 'probability' | 'quadrature';
@@ -80,7 +80,7 @@ export const FockStateLab: React.FC = () => {
     const cosPhase = Math.cos(timePhase);
 
     return (
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full max-h-64">
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto max-h-56">
         {/* Parabolic Potential Well Curve V(x) = 1/2 k x^2 */}
         <path
           d="M 50 25 Q 220 250 390 25"
@@ -193,7 +193,7 @@ export const FockStateLab: React.FC = () => {
     const radius = 24 + photonNumber * 18; // r = sqrt(n + 1/2) scale
 
     return (
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full max-h-64">
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto max-h-56">
         {/* Grid axes X1 (Position quadrature) & X2 (Momentum quadrature) */}
         <line x1="20" y1={centerY} x2={width - 20} y2={centerY} stroke="#334155" strokeWidth="1.5" />
         <line x1={centerX} y1="20" x2={centerX} y2={height - 20} stroke="#334155" strokeWidth="1.5" />
@@ -272,11 +272,11 @@ export const FockStateLab: React.FC = () => {
       {/* Main Interactive Workbench (Potential Well & Operators) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left: Harmonic Oscillator Potential Well / Phase Space Visualizer */}
-        <div className="lg:col-span-7 bg-slate-950 rounded-2xl border border-slate-800 p-5 h-[360px] relative overflow-hidden flex flex-col justify-between">
+        <div className="lg:col-span-7 bg-slate-950 rounded-2xl border border-slate-800 p-5 min-h-[420px] relative flex flex-col justify-between gap-3 shadow-inner">
           <div className="flex items-center justify-between text-xs text-slate-400">
             <span>{t.labs.fockState.potentialWellTitle}</span>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-cyan-300 font-bold">
+              <span className="font-mono text-cyan-300 font-bold bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
                 {t.labs.fockState.currentStateLabel} |{photonNumber}⟩
               </span>
             </div>
@@ -314,23 +314,23 @@ export const FockStateLab: React.FC = () => {
           </div>
 
           {/* Canvas Component */}
-          <div className="flex-1 flex items-center justify-center">
+          <div className="flex-1 flex items-center justify-center my-1">
             {viewMode === 'quadrature' ? renderQuadraturePhaseSpace() : renderHarmonicWell()}
           </div>
 
           {/* Bottom explanation */}
-          <div className="text-sm text-slate-300 bg-slate-900/80 p-3 rounded-xl border border-slate-800 flex items-center justify-between leading-relaxed">
+          <div className="text-xs sm:text-sm text-slate-300 bg-slate-900/90 p-3 rounded-xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 leading-relaxed shrink-0">
             {photonNumber === 0 ? (
-              <span className="text-amber-300 font-semibold text-sm">
+              <span className="text-amber-300 font-medium">
                 {t.labs.fockState.vacuumExplanation}
               </span>
             ) : (
-              <span className="text-cyan-300 text-sm">
+              <span className="text-cyan-300 font-medium">
                 {t.labs.fockState.excitedExplanation}
               </span>
             )}
-            <span className="font-mono text-xs text-slate-400">
-              {photonNumber === 0 ? 'H₀(x)=1' : `H_${photonNumber}(x) (${photonNumber} nút)`}
+            <span className="font-mono text-xs text-slate-300 bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800 whitespace-nowrap self-start sm:self-auto shrink-0 shadow-sm">
+              {photonNumber === 0 ? 'H₀(x) = 1' : `H_${photonNumber}(x) (${photonNumber} nút)`}
             </span>
           </div>
         </div>
@@ -409,6 +409,50 @@ export const FockStateLab: React.FC = () => {
             <p className="leading-relaxed text-sm text-slate-300">
               {t.labs.fockState.phaseUncertaintyDesc}
             </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Explanatory Cards: Ladder Analogy, ZPE, & 3 View Modes Guide */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {/* Ladder Analogy */}
+        <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 flex flex-col gap-2.5">
+          <span className="font-bold text-amber-300 flex items-center gap-2 text-sm">
+            <BookOpen className="w-4 h-4 text-amber-400" />
+            <span>{t.labs.fockState.ladderAnalogyTitle}</span>
+          </span>
+          <p className="text-slate-300 text-sm leading-relaxed">
+            {t.labs.fockState.ladderAnalogyDesc}
+          </p>
+        </div>
+
+        {/* ZPE Deep Dive */}
+        <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 flex flex-col gap-2.5">
+          <span className="font-bold text-cyan-300 flex items-center gap-2 text-sm">
+            <HelpCircle className="w-4 h-4 text-cyan-400" />
+            <span>{t.labs.fockState.zpeDeepDiveTitle}</span>
+          </span>
+          <p className="text-slate-300 text-sm leading-relaxed">
+            {t.labs.fockState.zpeDeepDiveDesc}
+          </p>
+        </div>
+      </div>
+
+      {/* 3 View Modes Guide */}
+      <div className="bg-slate-950/80 p-4.5 rounded-2xl border border-slate-800 flex flex-col gap-2.5">
+        <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+          <span>{t.labs.fockState.viewModeGuideTitle}</span>
+        </span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div className="p-3 rounded-xl bg-slate-900/60 border border-cyan-500/20 text-cyan-200 leading-relaxed">
+            {t.labs.fockState.viewWaveDesc}
+          </div>
+          <div className="p-3 rounded-xl bg-slate-900/60 border border-emerald-500/20 text-emerald-200 leading-relaxed">
+            {t.labs.fockState.viewProbDesc}
+          </div>
+          <div className="p-3 rounded-xl bg-slate-900/60 border border-purple-500/20 text-purple-200 leading-relaxed">
+            {t.labs.fockState.viewQuadDesc}
           </div>
         </div>
       </div>

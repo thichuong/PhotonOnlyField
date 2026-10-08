@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Gauge, Sparkles, AlertCircle, ArrowLeftRight, Layers } from 'lucide-react';
+import { Gauge, Sparkles, AlertCircle, ArrowLeftRight, Layers, BookOpen, HelpCircle } from 'lucide-react';
 import { useLanguage } from '../../i18n';
 
 export const CasimirLab: React.FC = () => {
@@ -328,6 +328,42 @@ export const CasimirLab: React.FC = () => {
               {t.labs.casimir.qftInsightBody}
             </p>
           </div>
+        </div>
+      </div>
+
+      {/* Explanatory Cards: Standing Wave Cavity, 1/d^4 Scaling, Why Attractive Force */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Guitar String Analogy */}
+        <div className="bg-slate-950/80 p-4.5 rounded-2xl border border-slate-800 flex flex-col gap-2">
+          <span className="font-bold text-amber-300 flex items-center gap-2 text-xs">
+            <BookOpen className="w-4 h-4 text-amber-400" />
+            <span>{t.labs.casimir.standingWaveAnalogyTitle}</span>
+          </span>
+          <p className="text-slate-300 text-xs leading-relaxed">
+            {t.labs.casimir.standingWaveAnalogyDesc}
+          </p>
+        </div>
+
+        {/* 1/d^4 Scaling */}
+        <div className="bg-slate-950/80 p-4.5 rounded-2xl border border-slate-800 flex flex-col gap-2">
+          <span className="font-bold text-cyan-300 flex items-center gap-2 text-xs">
+            <Sparkles className="w-4 h-4 text-cyan-400" />
+            <span>{t.labs.casimir.forceScalingTitle}</span>
+          </span>
+          <p className="text-slate-300 text-xs leading-relaxed">
+            {t.labs.casimir.forceScalingDesc}
+          </p>
+        </div>
+
+        {/* Why Attract */}
+        <div className="bg-slate-950/80 p-4.5 rounded-2xl border border-slate-800 flex flex-col gap-2">
+          <span className="font-bold text-emerald-300 flex items-center gap-2 text-xs">
+            <HelpCircle className="w-4 h-4 text-emerald-400" />
+            <span>{t.labs.casimir.whyAttractTitle}</span>
+          </span>
+          <p className="text-slate-300 text-xs leading-relaxed">
+            {t.labs.casimir.whyAttractDesc}
+          </p>
         </div>
       </div>
     </div>
