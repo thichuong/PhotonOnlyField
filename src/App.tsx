@@ -6,6 +6,8 @@ import { TimelineSection } from './components/timeline/TimelineSection';
 import { DoubleSlitLab } from './components/experiments/DoubleSlitLab';
 import { PhotoelectricLab } from './components/experiments/PhotoelectricLab';
 import { FockStateLab } from './components/experiments/FockStateLab';
+import { CasimirLab } from './components/experiments/CasimirLab';
+import { MachZehnderLab } from './components/experiments/MachZehnderLab';
 import { QFTDeepDive } from './components/explainer/QFTDeepDive';
 import { MisconceptionsSection } from './components/explainer/MisconceptionsSection';
 import { StoryModeTour } from './components/tour/StoryModeTour';
@@ -36,7 +38,7 @@ function MainApp() {
     damping: 0.95,
   });
 
-  const [activeLabTab, setActiveLabTab] = useState<'double-slit' | 'photoelectric' | 'fock-state'>('double-slit');
+  const [activeLabTab, setActiveLabTab] = useState<'double-slit' | 'photoelectric' | 'fock-state' | 'casimir' | 'mach-zehnder'>('double-slit');
   const [isTourOpen, setIsTourOpen] = useState<boolean>(false);
   const [photonInjectTrigger, setPhotonInjectTrigger] = useState<number>(0);
 
@@ -227,10 +229,10 @@ function MainApp() {
             </div>
 
             {/* Lab Switcher Tabs */}
-            <div className="flex items-center gap-1.5 bg-slate-900 p-1.5 rounded-2xl border border-slate-800 text-xs">
+            <div className="flex flex-wrap items-center gap-1.5 bg-slate-900 p-1.5 rounded-2xl border border-slate-800 text-xs">
               <button
                 onClick={() => setActiveLabTab('double-slit')}
-                className={`px-3.5 py-2 rounded-xl font-medium transition-all ${
+                className={`px-3 py-1.5 rounded-xl font-medium transition-all cursor-pointer ${
                   activeLabTab === 'double-slit'
                     ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'
@@ -240,7 +242,7 @@ function MainApp() {
               </button>
               <button
                 onClick={() => setActiveLabTab('photoelectric')}
-                className={`px-3.5 py-2 rounded-xl font-medium transition-all ${
+                className={`px-3 py-1.5 rounded-xl font-medium transition-all cursor-pointer ${
                   activeLabTab === 'photoelectric'
                     ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'
@@ -250,13 +252,33 @@ function MainApp() {
               </button>
               <button
                 onClick={() => setActiveLabTab('fock-state')}
-                className={`px-3.5 py-2 rounded-xl font-medium transition-all ${
+                className={`px-3 py-1.5 rounded-xl font-medium transition-all cursor-pointer ${
                   activeLabTab === 'fock-state'
                     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
                 {t.labs.tabFockState}
+              </button>
+              <button
+                onClick={() => setActiveLabTab('casimir')}
+                className={`px-3 py-1.5 rounded-xl font-medium transition-all cursor-pointer ${
+                  activeLabTab === 'casimir'
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                {t.labs.tabCasimir}
+              </button>
+              <button
+                onClick={() => setActiveLabTab('mach-zehnder')}
+                className={`px-3 py-1.5 rounded-xl font-medium transition-all cursor-pointer ${
+                  activeLabTab === 'mach-zehnder'
+                    ? 'bg-sky-500/20 text-sky-300 border border-sky-500/40 shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                {t.labs.tabMachZehnder}
               </button>
             </div>
           </div>
@@ -265,6 +287,8 @@ function MainApp() {
           {activeLabTab === 'double-slit' && <DoubleSlitLab />}
           {activeLabTab === 'photoelectric' && <PhotoelectricLab />}
           {activeLabTab === 'fock-state' && <FockStateLab />}
+          {activeLabTab === 'casimir' && <CasimirLab />}
+          {activeLabTab === 'mach-zehnder' && <MachZehnderLab />}
         </section>
 
         {/* 4. Deep Dive Conceptual Explanation */}

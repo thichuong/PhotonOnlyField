@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Play, Pause, RotateCcw, Zap, Sparkles } from 'lucide-react';
+import { Play, Pause, RotateCcw, Zap, Sparkles, Eye, Waves, Radio } from 'lucide-react';
 import { useLanguage } from '../../i18n';
 
 interface HitPoint {
@@ -8,77 +8,106 @@ interface HitPoint {
   id: number;
 }
 
+type SlitMode = 'both' | 'left' | 'right';
+
 export const DoubleSlitLab: React.FC = () => {
   const { t } = useLanguage();
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [photonHits, setPhotonHits] = useState<HitPoint[]>([]);
   const [totalPhotons, setTotalPhotons] = useState<number>(0);
   const [firingMode, setFiringMode] = useState<'single' | 'stream'>('stream');
-  const [slitDistance, setSlitDistance] = useState<number>(35); // khoảng cách khe
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [slitDistance, setSlitDistance] = useState<number>(36); // um
+  const [slitMode, setSlitMode] = useState<SlitMode>('both');
+  const [whichWayDetector, setWhichWayDetector] = useState<boolean>(false);
+  const [showWaveChamber, setShowWaveChamber] = useState<boolean>(true);
 
-  // Probability distribution for double slit interference:
-  // I(theta) = cos^2(pi * d * sin(theta) / lambda) * sinc^2(pi * a * sin(theta) / lambda)
-  const sampleInterferencePoint = useCallback((width: number, height: number): { x: number; y: number } => {
-    // Rejection sampling
+  const screenCanvasRef = useRef<HTMLCanvasElement>(null);
+  const chamberCanvasRef = useRef<HTMLCanvasElement>(null);
+  const animationFrameRef = useRef<number | null>(null);
+  const chamberWavePhase = useRef<number>(0);
+
+  // Intensity distribution function
+  const computeIntensity = useCallback((screenX: number): number => {
     const lambda = 12;
     const d = slitDistance;
-    const a = 8; // slit width
+    const a = 9; // slit width
+    const theta = screenX / 240;
 
+    const sinc = (val: number) => (Math.abs(val) < 1e-4 ? 1 : Math.sin(val) / val);
+    const slitOffset = (d / 2) / 250;
+
+    const leftDiffraction = Math.pow(sinc((Math.PI * a * Math.sin(theta + slitOffset)) / lambda), 2);
+    const rightDiffraction = Math.pow(sinc((Math.PI * a * Math.sin(theta - slitOffset)) / lambda), 2);
+
+    if (slitMode === 'left') {
+      return leftDiffraction;
+    }
+    if (slitMode === 'right') {
+      return rightDiffraction;
+    }
+
+    // Both slits open
+    if (whichWayDetector) {
+      // Coherence destroyed: Classical probability sum P = P1 + P2 (No cross interference term)
+      return 0.5 * leftDiffraction + 0.5 * rightDiffraction;
+    }
+
+    // Quantum field superposition: E = E1 + E2 => I = |E1 + E2|^2
+    const beta = (Math.PI * d * Math.sin(theta)) / lambda;
+    const alpha = (Math.PI * a * Math.sin(theta)) / lambda;
+    return Math.pow(Math.cos(beta), 2) * Math.pow(sinc(alpha), 2);
+  }, [slitDistance, slitMode, whichWayDetector]);
+
+  // Rejection sampling for individual photon hit points
+  const sampleInterferencePoint = useCallback((width: number, height: number): { x: number; y: number } => {
     for (let attempts = 0; attempts < 100; attempts++) {
       const screenX = (Math.random() - 0.5) * (width * 0.85);
-      const theta = screenX / 250; // angle approximation
-
-      const beta = (Math.PI * d * Math.sin(theta)) / lambda;
-      const alpha = (Math.PI * a * Math.sin(theta)) / lambda;
-
-      const sinc = alpha === 0 ? 1 : Math.sin(alpha) / alpha;
-      const intensity = Math.pow(Math.cos(beta), 2) * Math.pow(sinc, 2);
+      const intensity = computeIntensity(screenX);
 
       if (Math.random() < intensity) {
         return {
           x: width / 2 + screenX,
-          y: height / 2 + (Math.random() - 0.5) * (height * 0.75),
+          y: height / 2 + (Math.random() - 0.5) * (height * 0.72),
         };
       }
     }
     return { x: width / 2, y: height / 2 };
-  }, [slitDistance]);
+  }, [computeIntensity]);
 
   const fireSinglePhoton = () => {
-    if (!canvasRef.current) return;
-    const w = canvasRef.current.width;
-    const h = canvasRef.current.height;
+    if (!screenCanvasRef.current) return;
+    const w = screenCanvasRef.current.width;
+    const h = screenCanvasRef.current.height;
     const hit = sampleInterferencePoint(w, h);
-    setPhotonHits((prev) => [...prev.slice(-2500), { ...hit, id: Math.random() }]);
+    setPhotonHits((prev) => [...prev.slice(-3000), { ...hit, id: Math.random() }]);
     setTotalPhotons((c) => c + 1);
   };
 
-  // Auto fire loop
+  // Continuous fire loop
   useEffect(() => {
     if (!isRunning) return;
     const interval = setInterval(() => {
-      if (!canvasRef.current) return;
-      const w = canvasRef.current.width;
-      const h = canvasRef.current.height;
+      if (!screenCanvasRef.current) return;
+      const w = screenCanvasRef.current.width;
+      const h = screenCanvasRef.current.height;
       const newBatch: HitPoint[] = [];
-      const batchSize = firingMode === 'stream' ? 12 : 1;
+      const batchSize = firingMode === 'stream' ? 14 : 1;
 
       for (let i = 0; i < batchSize; i++) {
         const hit = sampleInterferencePoint(w, h);
         newBatch.push({ ...hit, id: Math.random() });
       }
 
-      setPhotonHits((prev) => [...prev.slice(-3000), ...newBatch]);
+      setPhotonHits((prev) => [...prev.slice(-3500), ...newBatch]);
       setTotalPhotons((c) => c + batchSize);
     }, firingMode === 'stream' ? 40 : 250);
 
     return () => clearInterval(interval);
   }, [isRunning, firingMode, sampleInterferencePoint]);
 
-  // Render on 2D Screen Canvas
+  // Render Detector Screen Canvas
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = screenCanvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -86,9 +115,9 @@ export const DoubleSlitLab: React.FC = () => {
     ctx.fillStyle = '#020617';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Subtle grid lines
-    ctx.strokeStyle = '#1e293b';
-    ctx.lineWidth = 0.5;
+    // Subtle background grid
+    ctx.strokeStyle = '#0f172a';
+    ctx.lineWidth = 1;
     for (let x = 0; x < canvas.width; x += 30) {
       ctx.beginPath();
       ctx.moveTo(x, 0);
@@ -96,7 +125,7 @@ export const DoubleSlitLab: React.FC = () => {
       ctx.stroke();
     }
 
-    // Center vertical marker
+    // Center reference line
     ctx.strokeStyle = '#06b6d433';
     ctx.lineWidth = 1;
     ctx.setLineDash([4, 4]);
@@ -106,18 +135,18 @@ export const DoubleSlitLab: React.FC = () => {
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // Draw detected photon spots
+    // Draw detected discrete photon dots
     photonHits.forEach((p) => {
-      ctx.fillStyle = 'rgba(6, 182, 212, 0.45)';
-      ctx.shadowColor = '#06b6d4';
-      ctx.shadowBlur = 4;
+      ctx.fillStyle = whichWayDetector ? 'rgba(244, 63, 94, 0.45)' : 'rgba(6, 182, 212, 0.45)';
+      ctx.shadowColor = whichWayDetector ? '#f43f5e' : '#06b6d4';
+      ctx.shadowBlur = 3;
       ctx.beginPath();
       ctx.arc(p.x, p.y, 1.8, 0, Math.PI * 2);
       ctx.fill();
     });
     ctx.shadowBlur = 0;
 
-    // Intensity histogram bar at the bottom
+    // Intensity histogram bins at bottom
     const bins = 60;
     const binCounts = new Array(bins).fill(0);
     const binWidth = canvas.width / bins;
@@ -130,12 +159,160 @@ export const DoubleSlitLab: React.FC = () => {
     });
 
     const maxCount = Math.max(...binCounts, 1);
-    ctx.fillStyle = 'rgba(168, 85, 247, 0.5)';
+    ctx.fillStyle = whichWayDetector ? 'rgba(244, 63, 94, 0.35)' : 'rgba(168, 85, 247, 0.45)';
     binCounts.forEach((count, idx) => {
-      const barHeight = (count / maxCount) * 50;
+      const barHeight = (count / maxCount) * 55;
       ctx.fillRect(idx * binWidth, canvas.height - barHeight, binWidth - 1, barHeight);
     });
-  }, [photonHits]);
+
+    // Draw theoretical smooth |psi|^2 probability curve overlay
+    ctx.strokeStyle = whichWayDetector ? '#fb7185' : '#38bdf8';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let px = 0; px < canvas.width; px += 2) {
+      const screenX = px - canvas.width / 2;
+      const intensity = computeIntensity(screenX);
+      const py = canvas.height - 10 - intensity * 50;
+      if (px === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+  }, [photonHits, computeIntensity, whichWayDetector]);
+
+  // Wave Propagation Chamber Animation Loop
+  useEffect(() => {
+    if (!showWaveChamber) return;
+    const canvas = chamberCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let isMounted = true;
+
+    const renderChamber = () => {
+      if (!isMounted) return;
+      chamberWavePhase.current += 0.08;
+      const phase = chamberWavePhase.current;
+
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, w, h);
+
+      const barrierX = w * 0.42;
+      const screenX = w * 0.95;
+      const sourceX = 35;
+      const sourceY = h / 2;
+
+      const slitSeparationPx = (slitDistance / 60) * 50;
+      const slitAY = h / 2 - slitSeparationPx / 2;
+      const slitBY = h / 2 + slitSeparationPx / 2;
+      const slitGap = 10;
+
+      // 1. Draw source wave ripples (from source to barrier)
+      const numSourceRings = 12;
+      for (let r = 0; r < numSourceRings; r++) {
+        const radius = ((r * 18 + phase * 14) % (barrierX - sourceX));
+        ctx.strokeStyle = 'rgba(6, 182, 212, 0.25)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(sourceX, sourceY, radius, -Math.PI / 2.5, Math.PI / 2.5);
+        ctx.stroke();
+      }
+
+      // Emitter point icon
+      ctx.fillStyle = '#38bdf8';
+      ctx.shadowColor = '#0284c7';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.arc(sourceX, sourceY, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // 2. Draw Barrier Wall
+      ctx.fillStyle = '#1e293b';
+      // Top section
+      ctx.fillRect(barrierX - 4, 0, 8, slitAY - slitGap / 2);
+      // Middle section
+      ctx.fillRect(barrierX - 4, slitAY + slitGap / 2, 8, (slitBY - slitGap / 2) - (slitAY + slitGap / 2));
+      // Bottom section
+      ctx.fillRect(barrierX - 4, slitBY + slitGap / 2, 8, h - (slitBY + slitGap / 2));
+
+      // Slit cover indicators if single slit
+      if (slitMode === 'right') {
+        ctx.fillStyle = '#ef4444aa';
+        ctx.fillRect(barrierX - 4, slitAY - slitGap / 2, 8, slitGap);
+      }
+      if (slitMode === 'left') {
+        ctx.fillStyle = '#ef4444aa';
+        ctx.fillRect(barrierX - 4, slitBY - slitGap / 2, 8, slitGap);
+      }
+
+      // 3. Draw Diffracted / Interfering Wavefronts after slits
+      const maxDist = screenX - barrierX;
+      const numRipples = 16;
+
+      const hasSlitA = slitMode === 'both' || slitMode === 'left';
+      const hasSlitB = slitMode === 'both' || slitMode === 'right';
+
+      if (hasSlitA) {
+        for (let r = 0; r < numRipples; r++) {
+          const radius = ((r * 16 + phase * 14) % maxDist);
+          ctx.strokeStyle = whichWayDetector ? 'rgba(244, 63, 94, 0.3)' : 'rgba(56, 189, 248, 0.3)';
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.arc(barrierX, slitAY, radius, -Math.PI / 2.2, Math.PI / 2.2);
+          ctx.stroke();
+        }
+      }
+
+      if (hasSlitB) {
+        for (let r = 0; r < numRipples; r++) {
+          const radius = ((r * 16 + phase * 14) % maxDist);
+          ctx.strokeStyle = whichWayDetector ? 'rgba(244, 63, 94, 0.3)' : 'rgba(168, 85, 247, 0.3)';
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.arc(barrierX, slitBY, radius, -Math.PI / 2.2, Math.PI / 2.2);
+          ctx.stroke();
+        }
+      }
+
+      // 4. Which-Way Detector Visual Icon
+      if (whichWayDetector) {
+        ctx.fillStyle = '#f43f5e';
+        ctx.shadowColor = '#f43f5e';
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.arc(barrierX + 16, slitAY, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Detector laser pointer line
+        ctx.strokeStyle = '#f43f5e88';
+        ctx.setLineDash([2, 2]);
+        ctx.beginPath();
+        ctx.moveTo(barrierX + 16, slitAY);
+        ctx.lineTo(barrierX, slitAY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // 5. Target Screen Line
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(screenX, 10, 4, h - 20);
+
+      animationFrameRef.current = requestAnimationFrame(renderChamber);
+    };
+
+    animationFrameRef.current = requestAnimationFrame(renderChamber);
+
+    return () => {
+      isMounted = false;
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [showWaveChamber, slitDistance, slitMode, whichWayDetector]);
 
   const handleReset = () => {
     setPhotonHits([]);
@@ -154,7 +331,7 @@ export const DoubleSlitLab: React.FC = () => {
           <h3 className="text-xl lg:text-2xl font-black text-white mt-2">
             {t.labs.doubleSlit.title}
           </h3>
-          <p className="text-xs text-slate-400 mt-1 max-w-2xl">
+          <p className="text-sm text-slate-300 mt-1.5 max-w-2xl leading-relaxed">
             {t.labs.doubleSlit.description}
           </p>
         </div>
@@ -169,37 +346,69 @@ export const DoubleSlitLab: React.FC = () => {
         </div>
       </div>
 
-      {/* Screen Canvas Visualizer */}
-      <div className="relative w-full h-[320px] bg-slate-950 rounded-2xl overflow-hidden border border-slate-800 flex flex-col items-center justify-center">
-        <canvas
-          ref={canvasRef}
-          width={800}
-          height={320}
-          className="w-full h-full object-cover"
-        />
-
-        {/* Screen overlay labels */}
-        <div className="absolute top-3 left-4 text-[11px] font-mono text-slate-400 bg-slate-900/80 px-2.5 py-1 rounded-md border border-slate-800">
-          {t.labs.doubleSlit.detectorScreen}
+      {/* Main Dual Visualizer Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Visualizer 1: Wavefront Propagation Chamber */}
+        <div className="relative h-[280px] bg-slate-950 rounded-2xl overflow-hidden border border-slate-800 flex flex-col items-center justify-center">
+          <canvas
+            ref={chamberCanvasRef}
+            width={500}
+            height={280}
+            className="w-full h-full object-cover"
+          />
+          <button
+            onClick={() => setShowWaveChamber(!showWaveChamber)}
+            className="absolute top-3 left-3 text-[10px] font-mono text-cyan-300 bg-slate-900/80 hover:bg-slate-800 px-2 py-1 rounded-md border border-slate-800 flex items-center gap-1.5 cursor-pointer transition-colors"
+          >
+            <Waves className="w-3 h-3 text-cyan-400" />
+            <span>{t.labs.doubleSlit.wavefrontToggle}</span>
+          </button>
+          {whichWayDetector && (
+            <div className="absolute top-3 right-3 text-[10px] font-mono text-rose-300 bg-rose-950/80 px-2 py-1 rounded-md border border-rose-800 flex items-center gap-1">
+              <Eye className="w-3 h-3 text-rose-400" />
+              <span>Which-Way ON</span>
+            </div>
+          )}
         </div>
 
-        <div className="absolute bottom-3 right-4 text-[10px] font-mono text-purple-400 bg-slate-900/80 px-2.5 py-1 rounded-md border border-slate-800">
-          {t.labs.doubleSlit.probabilityDensity}
-        </div>
-
-        {totalPhotons === 0 && (
-          <div className="absolute text-center text-xs text-slate-500 pointer-events-none">
-            {t.labs.doubleSlit.emptyHint}
+        {/* Visualizer 2: Detector Screen & |psi|^2 Density */}
+        <div className="relative h-[280px] bg-slate-950 rounded-2xl overflow-hidden border border-slate-800 flex flex-col items-center justify-center">
+          <canvas
+            ref={screenCanvasRef}
+            width={500}
+            height={280}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute top-3 left-3 text-[10px] font-mono text-slate-400 bg-slate-900/80 px-2 py-1 rounded-md border border-slate-800 flex items-center gap-1.5">
+            <Radio className="w-3 h-3 text-purple-400" />
+            <span>{t.labs.doubleSlit.detectorScreen}</span>
           </div>
-        )}
+          <div className="absolute bottom-3 right-3 text-[10px] font-mono text-purple-400 bg-slate-900/80 px-2 py-1 rounded-md border border-slate-800">
+            {t.labs.doubleSlit.probabilityDensity}
+          </div>
+          {totalPhotons === 0 && (
+            <div className="absolute text-center text-xs text-slate-500 pointer-events-none px-4">
+              {t.labs.doubleSlit.emptyHint}
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Controls & Explanation */}
+      {/* Which-Way Active Alert Notice */}
+      {whichWayDetector && (
+        <div className="bg-rose-950/40 border border-rose-500/40 px-4 py-3 rounded-xl text-sm text-rose-300 flex items-center gap-2.5 leading-relaxed">
+          <Eye className="w-4 h-4 text-rose-400 shrink-0" />
+          <span>{t.labs.doubleSlit.whichWayActiveNotice}</span>
+        </div>
+      )}
+
+      {/* Interactive Controls & Experimental Configurations */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+        {/* Left: Fire Buttons */}
         <div className="md:col-span-6 flex flex-wrap items-center gap-2">
           <button
             onClick={() => setIsRunning(!isRunning)}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${
+            className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
               isRunning
                 ? 'bg-amber-500 hover:bg-amber-400 text-slate-950'
                 : 'bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-500/20'
@@ -212,7 +421,7 @@ export const DoubleSlitLab: React.FC = () => {
           <button
             onClick={fireSinglePhoton}
             disabled={isRunning}
-            className="px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors flex items-center gap-1.5 disabled:opacity-40"
+            className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors flex items-center gap-1.5 disabled:opacity-40 cursor-pointer"
           >
             <Zap className="w-4 h-4 text-cyan-400" />
             <span>{t.labs.doubleSlit.fireSingle}</span>
@@ -220,43 +429,104 @@ export const DoubleSlitLab: React.FC = () => {
 
           <button
             onClick={() => setFiringMode(firingMode === 'stream' ? 'single' : 'stream')}
-            className="px-3 py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-medium border border-slate-700"
-            title="Tốc độ bắn"
+            className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-300 text-xs font-medium border border-slate-700 cursor-pointer"
           >
             {t.labs.doubleSlit.firingRate} {firingMode === 'stream' ? t.labs.doubleSlit.rateFast : t.labs.doubleSlit.rateSingle}
           </button>
 
           <button
             onClick={handleReset}
-            className="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors"
+            className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors cursor-pointer"
             title={t.labs.doubleSlit.clearTooltip}
           >
             <RotateCcw className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="md:col-span-6 bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 text-xs text-slate-300 flex flex-col gap-2">
-          <div className="flex items-center justify-between text-[11px]">
-            <span className="text-slate-400">{t.labs.doubleSlit.slitDistanceLabel}</span>
-            <span className="font-mono text-cyan-300">{slitDistance} μm</span>
-            <input
-              type="range"
-              min="20"
-              max="60"
-              value={slitDistance}
-              onChange={(e) => {
-                setSlitDistance(parseInt(e.target.value));
-                setPhotonHits([]);
-                setTotalPhotons(0);
+        {/* Right: Slit Config & Which-Way Toggle */}
+        <div className="md:col-span-6 flex flex-wrap items-center justify-end gap-2.5">
+          {/* Slit mode selector */}
+          <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+            <button
+              onClick={() => {
+                setSlitMode('both');
+                handleReset();
               }}
-              className="accent-cyan-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer ml-2"
-            />
+              className={`px-2.5 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
+                slitMode === 'both' ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              {t.labs.doubleSlit.slitsBoth}
+            </button>
+            <button
+              onClick={() => {
+                setSlitMode('left');
+                handleReset();
+              }}
+              className={`px-2.5 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
+                slitMode === 'left' ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              {t.labs.doubleSlit.slitLeftOnly}
+            </button>
+            <button
+              onClick={() => {
+                setSlitMode('right');
+                handleReset();
+              }}
+              className={`px-2.5 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
+                slitMode === 'right' ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              {t.labs.doubleSlit.slitRightOnly}
+            </button>
           </div>
-          <div className="font-semibold text-cyan-300 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5" />
+
+          {/* Which-Way Detector Button */}
+          <button
+            onClick={() => {
+              setWhichWayDetector(!whichWayDetector);
+              handleReset();
+            }}
+            disabled={slitMode !== 'both'}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
+              whichWayDetector
+                ? 'bg-rose-500/20 text-rose-300 border-rose-500/50 shadow-md shadow-rose-500/20'
+                : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200'
+            } disabled:opacity-30`}
+          >
+            <Eye className="w-3.5 h-3.5" />
+            <span>{t.labs.doubleSlit.whichWayLabel}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Slit Distance Slider & QFT Insight */}
+      <div className="bg-slate-950/70 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 flex flex-col gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="text-slate-400">{t.labs.doubleSlit.slitDistanceLabel}</span>
+            <span className="font-mono text-cyan-300 font-bold">{slitDistance} μm</span>
+          </div>
+          <input
+            type="range"
+            min="20"
+            max="60"
+            value={slitDistance}
+            onChange={(e) => {
+              setSlitDistance(parseInt(e.target.value));
+              handleReset();
+            }}
+            className="accent-cyan-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer flex-1 max-w-xs"
+          />
+        </div>
+
+        <div className="border-t border-slate-800/80 pt-2.5 flex flex-col gap-1.5">
+          <div className="font-semibold text-cyan-300 flex items-center gap-1.5 text-sm">
+            <Sparkles className="w-4 h-4 text-cyan-400" />
             <span>{t.labs.doubleSlit.qftInsightTitle}</span>
           </div>
-          <p className="text-[11px] leading-relaxed text-slate-300">
+          <p className="text-sm leading-relaxed text-slate-300">
             {t.labs.doubleSlit.qftInsightBody}
           </p>
         </div>

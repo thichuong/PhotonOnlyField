@@ -89,6 +89,8 @@ export interface Translations {
     tabDoubleSlit: string;
     tabPhotoelectric: string;
     tabFockState: string;
+    tabCasimir: string;
+    tabMachZehnder: string;
     doubleSlit: {
       badge: string;
       title: string;
@@ -107,6 +109,13 @@ export interface Translations {
       qftInsightTitle: string;
       qftInsightBody: string;
       clearTooltip: string;
+      slitConfigLabel: string;
+      slitsBoth: string;
+      slitLeftOnly: string;
+      slitRightOnly: string;
+      whichWayLabel: string;
+      whichWayActiveNotice: string;
+      wavefrontToggle: string;
     };
     photoelectric: {
       badge: string;
@@ -131,6 +140,17 @@ export interface Translations {
       energyPerPhoton: string;
       workFunction: string;
       maxKineticEnergy: string;
+      voltageLabel: string;
+      stoppingPotentialLabel: string;
+      photocurrentLabel: string;
+      graphTabIV: string;
+      graphTabKmax: string;
+      classicalVsQuantumToggle: string;
+      classicalTheoryLabel: string;
+      quantumTheoryLabel: string;
+      classicalExplanation: string;
+      quantumExplanation: string;
+      planckConstantSlope: string;
       metals: {
         cesium: string;
         potassium: string;
@@ -168,6 +188,49 @@ export interface Translations {
       photonCountSummary: string;
       vacuumZpeSummary: string;
       totalFieldEnergySummary: string;
+      viewModeLabel: string;
+      viewModeWavefunction: string;
+      viewModeProbability: string;
+      viewModeQuadrature: string;
+      hermitePolynomialLabel: string;
+      phaseUncertaintyLabel: string;
+      phaseUncertaintyDesc: string;
+    };
+    casimir: {
+      badge: string;
+      title: string;
+      description: string;
+      plateDistanceLabel: string;
+      forceMeasureLabel: string;
+      forceFormulaTitle: string;
+      modeCountInside: string;
+      modeCountOutside: string;
+      vacuumModeTitle: string;
+      classicalVacuumToggle: string;
+      classicalVacuumDesc: string;
+      qftVacuumDesc: string;
+      qftInsightTitle: string;
+      qftInsightBody: string;
+    };
+    machZehnder: {
+      badge: string;
+      title: string;
+      description: string;
+      phaseShiftLabel: string;
+      detector1Label: string;
+      detector2Label: string;
+      secondBeamSplitterToggle: string;
+      hasBS2Title: string;
+      noBS2Title: string;
+      fireSinglePhoton: string;
+      continuousFire: string;
+      pauseFire: string;
+      clearCounts: string;
+      interferenceGraphTitle: string;
+      delayedChoiceTitle: string;
+      delayedChoiceDesc: string;
+      qftInsightTitle: string;
+      qftInsightBody: string;
     };
   };
   qftDeepDive: {

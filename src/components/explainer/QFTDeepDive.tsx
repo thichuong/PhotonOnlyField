@@ -38,15 +38,15 @@ export const QFTDeepDive: React.FC = () => {
             <ul className="space-y-3 text-sm text-slate-200 leading-relaxed mt-1">
               <li className="flex flex-col gap-1 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80">
                 <span className="text-cyan-300 font-bold text-sm lg:text-base">{t.qftDeepDive.fieldPoint1Title}</span>
-                <span className="text-slate-200 text-xs lg:text-sm leading-relaxed">{t.qftDeepDive.fieldPoint1Text}</span>
+                <span className="text-slate-200 text-sm leading-relaxed">{t.qftDeepDive.fieldPoint1Text}</span>
               </li>
               <li className="flex flex-col gap-1 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80">
                 <span className="text-cyan-300 font-bold text-sm lg:text-base">{t.qftDeepDive.fieldPoint2Title}</span>
-                <span className="text-slate-200 text-xs lg:text-sm leading-relaxed">{t.qftDeepDive.fieldPoint2Text}</span>
+                <span className="text-slate-200 text-sm leading-relaxed">{t.qftDeepDive.fieldPoint2Text}</span>
               </li>
               <li className="flex flex-col gap-1 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80">
                 <span className="text-cyan-300 font-bold text-sm lg:text-base">{t.qftDeepDive.fieldPoint3Title}</span>
-                <span className="text-slate-200 text-xs lg:text-sm leading-relaxed">{t.qftDeepDive.fieldPoint3Text}</span>
+                <span className="text-slate-200 text-sm leading-relaxed">{t.qftDeepDive.fieldPoint3Text}</span>
               </li>
             </ul>
           </div>
@@ -68,7 +68,7 @@ export const QFTDeepDive: React.FC = () => {
             <div className="bg-slate-900/90 p-4 lg:p-5 rounded-xl border border-slate-800 text-sm lg:text-base text-cyan-200 leading-relaxed font-medium">
               {t.qftDeepDive.detectorRuleText}
             </div>
-            <p className="text-slate-300 text-xs lg:text-sm leading-relaxed">
+            <p className="text-slate-300 text-sm leading-relaxed">
               {t.qftDeepDive.detectorConclusion}
             </p>
           </div>
@@ -81,7 +81,7 @@ export const QFTDeepDive: React.FC = () => {
                 {t.qftDeepDive.dualityResolutionTitle}
               </span>
             </div>
-            <p className="text-xs lg:text-sm text-slate-200 leading-relaxed">
+            <p className="text-sm text-slate-200 leading-relaxed">
               {t.qftDeepDive.dualityResolutionText}
             </p>
           </div>
@@ -108,7 +108,7 @@ export const QFTDeepDive: React.FC = () => {
             <span className="text-sm lg:text-base font-bold text-cyan-300">
               {t.qftDeepDive.vacuumPoint1Title}
             </span>
-            <p className="text-xs lg:text-sm text-slate-200 leading-relaxed">
+            <p className="text-sm text-slate-200 leading-relaxed">
               {t.qftDeepDive.vacuumPoint1Text}
             </p>
           </div>
@@ -117,7 +117,7 @@ export const QFTDeepDive: React.FC = () => {
             <span className="text-sm lg:text-base font-bold text-purple-300">
               {t.qftDeepDive.vacuumPoint2Title}
             </span>
-            <p className="text-xs lg:text-sm text-slate-200 leading-relaxed">
+            <p className="text-sm text-slate-200 leading-relaxed">
               {t.qftDeepDive.vacuumPoint2Text}
             </p>
           </div>
@@ -126,7 +126,7 @@ export const QFTDeepDive: React.FC = () => {
             <span className="text-sm lg:text-base font-bold text-emerald-300">
               {t.qftDeepDive.vacuumPoint3Title}
             </span>
-            <p className="text-xs lg:text-sm text-slate-200 leading-relaxed">
+            <p className="text-sm text-slate-200 leading-relaxed">
               {t.qftDeepDive.vacuumPoint3Text}
             </p>
           </div>
@@ -140,8 +140,8 @@ export const QFTDeepDive: React.FC = () => {
         </h3>
 
         <div className="overflow-x-auto rounded-2xl border border-slate-800">
-          <table className="w-full text-left text-xs bg-slate-900/60">
-            <thead className="bg-slate-950 text-slate-400 font-mono uppercase text-[11px] border-b border-slate-800">
+          <table className="w-full text-left text-sm bg-slate-900/60">
+            <thead className="bg-slate-950 text-slate-400 font-mono uppercase text-xs border-b border-slate-800">
               <tr>
                 <th className="p-4">{t.qftDeepDive.thCriteria}</th>
                 <th className="p-4 text-amber-300">{t.qftDeepDive.thNewton}</th>
@@ -149,7 +149,7 @@ export const QFTDeepDive: React.FC = () => {
                 <th className="p-4 text-cyan-300">{t.qftDeepDive.thQft}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800 text-slate-300">
+            <tbody className="divide-y divide-slate-800 text-slate-300 text-sm">
               <tr>
                 <td className="p-4 font-semibold text-slate-200">{t.qftDeepDive.row1Criteria}</td>
                 <td className="p-4">{t.qftDeepDive.row1Newton}</td>

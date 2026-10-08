@@ -104,24 +104,24 @@ export const StoryModeTour: React.FC<StoryModeTourProps> = ({
             {currentStep.title}
           </h4>
 
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+          <p className="text-sm text-slate-200 leading-relaxed font-normal">
             {currentStep.description}
           </p>
 
           {/* Key Takeaway Box */}
-          <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col gap-1.5 text-xs text-cyan-200">
-            <span className="font-semibold text-cyan-400 flex items-center gap-1.5 uppercase font-mono text-[10px] tracking-wider">
-              <CheckCircle className="w-3.5 h-3.5" />
+          <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col gap-2 text-sm text-cyan-200">
+            <span className="font-semibold text-cyan-400 flex items-center gap-1.5 uppercase font-mono text-xs tracking-wider">
+              <CheckCircle className="w-4 h-4" />
               Kết Luận Cốt Lõi (Key Realization)
             </span>
-            <p className="leading-relaxed text-slate-200 font-medium">
+            <p className="leading-relaxed text-slate-100 font-medium text-sm">
               {currentStep.takeaway}
             </p>
           </div>
 
           {/* Action Hint */}
-          <div className="flex items-center gap-2 text-[11px] font-mono text-purple-300 bg-purple-950/30 px-3 py-2 rounded-xl border border-purple-500/20">
-            <Zap className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+          <div className="flex items-center gap-2 text-xs font-mono text-purple-300 bg-purple-950/30 px-3.5 py-2.5 rounded-xl border border-purple-500/20">
+            <Zap className="w-4 h-4 text-purple-400 shrink-0" />
             <span>{currentStep.actionHint}</span>
           </div>
         </div>

@@ -117,19 +117,19 @@ export const TimelineSection: React.FC = () => {
                     </p>
 
                     {item.quote && (
-                      <div className="bg-slate-950/60 border-l-2 border-cyan-400 p-3.5 rounded-r-xl text-xs text-slate-300 italic flex items-start gap-2.5">
+                      <div className="bg-slate-950/60 border-l-2 border-cyan-400 p-3.5 rounded-r-xl text-sm text-slate-300 italic flex items-start gap-2.5 leading-relaxed">
                         <Quote className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
                         <span>"{item.quote}"</span>
                       </div>
                     )}
 
                     {/* Paradigm Shift Alert */}
-                    <div className="bg-slate-950/80 border border-slate-800 p-4 rounded-2xl flex flex-col gap-1.5">
+                    <div className="bg-slate-950/80 border border-slate-800 p-4.5 rounded-2xl flex flex-col gap-2">
                       <div className="text-xs font-bold text-cyan-300 flex items-center gap-1.5 uppercase tracking-wide">
                         <Sparkles className="w-3.5 h-3.5" />
                         <span>{t.timeline.paradigmShiftLabel}</span>
                       </div>
-                      <div className="text-xs text-slate-300 leading-normal">
+                      <div className="text-sm text-slate-200 leading-relaxed font-normal">
                         {item.paradigmShift}
                       </div>
                     </div>
@@ -181,7 +181,7 @@ export const TimelineSection: React.FC = () => {
                           <CheckCircle className="w-4 h-4 text-cyan-400" />
                           <span>{t.timeline.qftPinnacleTitle}</span>
                         </div>
-                        <p className="text-[11px] text-slate-300 leading-relaxed">
+                        <p className="text-sm text-slate-300 leading-relaxed">
                           {t.timeline.qftPinnacleDesc}
                         </p>
                       </div>
@@ -192,7 +192,7 @@ export const TimelineSection: React.FC = () => {
                       <div className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider">
                         {t.timeline.coreFormulaLabel}
                       </div>
-                      <div className="text-xs text-slate-200 leading-relaxed font-medium">
+                      <div className="text-sm text-slate-200 leading-relaxed font-medium">
                         {item.formulaMeaning}
                       </div>
                       <div className="mt-1 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400 font-mono">

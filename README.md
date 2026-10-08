@@ -31,10 +31,12 @@ Hành trình 300 năm lịch sử qua 7 cột mốc vĩ đại:
 
 *Mỗi cột mốc đều có nút kích hoạt ngay trạng thái mô phỏng 3D tương ứng.*
 
-### 3. Phòng Thí Nghiệm Ảo Tương Tác
-* **Lab 1: Khe kép với Photon đơn lẻ:** Bắn từng photon một, quan sát sự tích tụ ngẫu nhiên từng điểm nhưng dần dần tạo nên vân giao thoa xác suất $|\psi|^2$.
-* **Lab 2: Hiệu ứng quang điện (Einstein):** Thay đổi kim loại catốt (Cs, K, Na, Zn, Cu), điều chỉnh bước sóng từ UV tới ánh sáng đỏ, chứng minh năng lượng $h\nu$ độc lập với cường độ sáng.
-* **Lab 3: Trạng thái Fock $|n\rangle$:** Khám phá thang năng lượng dao động tử điều hòa $E = (n + \frac{1}{2})\hbar\omega$, thử nghiệm toán tử sinh $a^\dagger$ và hủy $a$.
+### 3. Phòng Thí Nghiệm Ảo Tương Tác (5 Trạm Thực Nghiệm Toàn Diện)
+* **Lab 1: Khe kép với Photon đơn lẻ:** Mô phỏng buồng lan truyền mặt sóng (Wavefront chamber), chuyển đổi cấu hình mở/đóng từng khe, kích hoạt đầu dò đường đi (*Which-Way detector*) làm sụp đổ vân giao thoa, và hiển thị đường cong mật độ xác suất $|\psi|^2$.
+* **Lab 2: Hiệu ứng quang điện & Điện áp hãm:** Tích hợp biến trở điện áp hãm ($V_{\text{hãm}}$), hiển thị đặc tuyến $I-V$, đồ thị động $K_{\text{max}} - \nu$ xác định hằng số Planck $h$, và bảng đối chiếu trực quan mô hình sóng cổ điển vs QFT.
+* **Lab 3: Trạng thái Fock $|n\rangle$ & Hàm sóng QFT:** Khám phá thang năng lượng dao động tử điều hòa $E = (n + \frac{1}{2})\hbar\omega$, đồ thị hàm sóng Hermite-Gauss động $\psi_n(x)$, mật độ xác suất $|\psi_n(x)|^2$ và không gian pha bất định $(X_1, X_2)$.
+* **Lab 4: Hiệu ứng Casimir (Chân không lượng tử):** Bằng chứng thực nghiệm tối thượng của dao động điểm không ($E_0 = \frac{1}{2}\hbar\omega$), đo lực hút áp suất bức xạ Casimir $F/A \propto 1/d^4$ khi thay đổi khoảng cách giữa 2 tấm gương nano trong chân không.
+* **Lab 5: Giao thoa kế Mach-Zehnder photon đơn:** Kiểm chứng gói sóng kích thích phân tách đồng thời trên 2 nhánh quang học, thay đổi góc lệch pha $\Delta\phi$, và thực hiện thí nghiệm Lựa chọn Trì hoãn của Wheeler (*Delayed-Choice* khi tháo lắp bộ tách chùm BS2).
 
 ---
 

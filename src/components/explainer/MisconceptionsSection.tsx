@@ -54,7 +54,7 @@ export const MisconceptionsSection: React.FC = () => {
                       <Lightbulb className="w-4 h-4 text-cyan-400 shrink-0" />
                       <span>{t.myths.realityBadge}</span>
                     </div>
-                    <p className="text-xs md:text-sm text-slate-200 leading-relaxed font-normal">
+                    <p className="text-sm text-slate-200 leading-relaxed font-normal">
                       {item.reality}
                     </p>
                   </div>
@@ -65,14 +65,14 @@ export const MisconceptionsSection: React.FC = () => {
                       <Waves className="w-4 h-4 text-purple-400 shrink-0" />
                       <span>{t.myths.analogyBadge}</span>
                     </div>
-                    <p className="text-xs md:text-sm text-slate-300 leading-relaxed italic">
+                    <p className="text-sm text-slate-300 leading-relaxed italic">
                       "{item.analogy}"
                     </p>
                   </div>
                 </div>
 
                 {/* 3. Takeaway Truth - No truncate, full multiline text wrapping */}
-                <div className="bg-slate-950/90 p-3.5 rounded-xl border border-cyan-500/30 flex items-start gap-2.5 text-xs text-cyan-200 font-mono leading-relaxed mt-1">
+                <div className="bg-slate-950/90 p-3.5 rounded-xl border border-cyan-500/30 flex items-start gap-2.5 text-sm text-cyan-200 font-mono leading-relaxed mt-1">
                   <Sparkles className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
                   <span className="break-words font-medium">{item.qftTruth}</span>
                 </div>
