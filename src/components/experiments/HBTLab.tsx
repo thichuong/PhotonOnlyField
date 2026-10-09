@@ -96,10 +96,9 @@ export const HBTLab: React.FC = () => {
     lastHitsRef.current = [];
   }, []);
 
-  // Compute calculated g^(2)(0) from current histogram
+  // Compute calculated g^(2)(0) consistently from experimental counters
+  // Standard Pulsed HBT Formula: g^(2)(0) = (N_12 * N_pulse) / (N_1 * N_2)
   const centerBin = Math.floor(HISTOGRAM_BINS / 2);
-  const centerCount = histogram[centerBin];
-  // Calculate average of side bins (excluding center bin ± 2)
   let sideSum = 0;
   let sideBinsCount = 0;
   for (let i = 0; i < HISTOGRAM_BINS; i++) {
@@ -109,8 +108,11 @@ export const HBTLab: React.FC = () => {
     }
   }
   const averageSideCount = sideBinsCount > 0 && sideSum > 0 ? sideSum / sideBinsCount : 0;
+
   const calculatedG2Zero =
-    averageSideCount > 0 ? (centerCount / averageSideCount).toFixed(2) : centerCount > 0 ? '0.00' : '0.00';
+    totalEmissions > 0 && d1Clicks > 0 && d2Clicks > 0
+      ? ((coincidencesAtZero * totalEmissions) / (d1Clicks * d2Clicks)).toFixed(2)
+      : '0.00';
 
   // Apply scenario presets
   const applyPreset = useCallback(
@@ -123,7 +125,7 @@ export const HBTLab: React.FC = () => {
         setIsRunning(true);
       } else if (presetKey === 'real-lab') {
         setSourceType('single-photon');
-        setDarkCountRate(0.08);
+        setDarkCountRate(0.03);
         setPulseRate(12);
         setIsRunning(true);
       } else if (presetKey === 'laser') {
@@ -141,7 +143,7 @@ export const HBTLab: React.FC = () => {
     [handleClearData]
   );
 
-  // Trigger one discrete pulse event
+  // Trigger one discrete pulse event with quantum-accurate statistics
   const firePulse = useCallback(() => {
     const currentSource = sourceTypeRef.current;
     const currentDark = darkCountRateRef.current;
@@ -153,150 +155,87 @@ export const HBTLab: React.FC = () => {
     const color =
       currentSource === 'single-photon' ? '#06b6d4' : currentSource === 'laser' ? '#a855f7' : '#f97316';
 
+    let photonCount = 1;
     if (currentSource === 'single-photon') {
-      // Sub-Poissonian: Single localized excitation
-      // Quantum choice at 50:50 Beam Splitter:
-      // Photon is either reflected (D1) or transmitted (D2), NEVER both!
-      const pathChoice = Math.random() < 0.5 ? 'd1' : 'd2';
+      // Fock |1> state: Exactly 1 photon per emission
+      photonCount = 1;
+    } else if (currentSource === 'laser') {
+      // Coherent State: Poisson photon statistics (mean mu = 1.0)
+      let count = 0;
+      let pPois = 1.0;
+      const lPois = Math.exp(-1.0);
+      do {
+        count++;
+        pPois *= Math.random();
+      } while (pPois > lPois);
+      photonCount = count - 1;
+    } else {
+      // Thermal State: Bose-Einstein Super-Poissonian distribution (mean mu = 1.0)
+      const u = Math.random();
+      photonCount = Math.floor(Math.log(1 - u) / Math.log(0.5));
+    }
 
+    // Distribute photons independently at 50:50 Beam Splitter
+    let d1PhotonCount = 0;
+    let d2PhotonCount = 0;
+
+    for (let i = 0; i < Math.max(1, photonCount); i++) {
+      const pathChoice: 'd1' | 'd2' = Math.random() < 0.5 ? 'd1' : 'd2';
+      if (photonCount > 0) {
+        if (pathChoice === 'd1') d1PhotonCount++;
+        else d2PhotonCount++;
+      }
+
+      // Visual photon wavepacket animation
       flyingPhotonsRef.current.push({
-        id: pulseId,
+        id: pulseId + i * 0.1,
         x: 0,
         y: 0,
         target: pathChoice,
         stage: 'source-to-bs',
         color,
         speed: 0.02,
-        progress: 0,
+        progress: -i * 0.04,
       });
-
-      // Account for dark counts (thermal noise in APD)
-      const d1Dark = Math.random() < currentDark;
-      const d2Dark = Math.random() < currentDark;
-
-      // Update counters & histogram
-      setTimeout(() => {
-        const d1Hit = pathChoice === 'd1' || d1Dark;
-        const d2Hit = pathChoice === 'd2' || d2Dark;
-
-        if (d1Hit) setD1Clicks((c) => c + 1);
-        if (d2Hit) setD2Clicks((c) => c + 1);
-
-        if (d1Hit && d2Hit) {
-          // Coincidence at tau = 0 (only possible via dark count in single photon mode)
-          setCoincidencesAtZero((c) => c + 1);
-          setHistogram((prev) => {
-            const next = [...prev];
-            next[centerBin] += 1;
-            return next;
-          });
-        }
-
-        // Increment background side bins from consecutive pulses
-        setHistogram((prev) => {
-          const next = [...prev];
-          const offset = Math.floor(Math.random() * (HISTOGRAM_BINS - 1));
-          if (offset !== centerBin) {
-            next[offset] += 1;
-          }
-          return next;
-        });
-      }, 500);
-    } else if (currentSource === 'laser') {
-      // Coherent State: Poisson statistics
-      // Probability of multiple photons per pulse follows Poisson distribution
-      const pZero = 0.35;
-      const pOne = 0.45;
-      const roll = Math.random();
-
-      let photonCount = 1;
-      if (roll < pZero) photonCount = 0;
-      else if (roll > pZero + pOne) photonCount = 2; // Two photons in same pulse!
-
-      for (let i = 0; i < Math.max(1, photonCount); i++) {
-        const path = Math.random() < 0.5 ? 'd1' : 'd2';
-        flyingPhotonsRef.current.push({
-          id: pulseId + i * 0.1,
-          x: 0,
-          y: 0,
-          target: path,
-          stage: 'source-to-bs',
-          color,
-          speed: 0.02,
-          progress: i * -0.05,
-        });
-      }
-
-      setTimeout(() => {
-        let d1Hit = false;
-        let d2Hit = false;
-
-        if (photonCount === 1) {
-          if (Math.random() < 0.5) d1Hit = true;
-          else d2Hit = true;
-        } else if (photonCount >= 2) {
-          // Two photons can split to both D1 and D2!
-          if (Math.random() < 0.5) {
-            d1Hit = true;
-            d2Hit = true;
-          } else {
-            d1Hit = true;
-          }
-        }
-
-        if (d1Hit) setD1Clicks((c) => c + 1);
-        if (d2Hit) setD2Clicks((c) => c + 1);
-
-        // Coincidence at tau = 0 happens at flat Poisson rate
-        setHistogram((prev) => {
-          const next = [...prev];
-          // Uniform accidental distribution
-          const randomBin = Math.floor(Math.random() * HISTOGRAM_BINS);
-          next[randomBin] += 1;
-          if (d1Hit && d2Hit) {
-            setCoincidencesAtZero((c) => c + 1);
-            next[centerBin] += 1;
-          }
-          return next;
-        });
-      }, 500);
-    } else {
-      // Thermal State: Bose-Einstein Super-Poissonian bunching
-      // Photons clump together in bunches!
-      const clumpSize = Math.random() < 0.6 ? 2 : 1;
-
-      for (let i = 0; i < clumpSize; i++) {
-        flyingPhotonsRef.current.push({
-          id: pulseId + i * 0.1,
-          x: 0,
-          y: 0,
-          target: i === 0 ? 'd1' : 'd2',
-          stage: 'source-to-bs',
-          color,
-          speed: 0.02,
-          progress: i * -0.04,
-        });
-      }
-
-      setTimeout(() => {
-        setD1Clicks((c) => c + 1);
-        setD2Clicks((c) => c + 1);
-
-        setHistogram((prev) => {
-          const next = [...prev];
-          // Side bins fill up
-          const sideBin = Math.floor(Math.random() * HISTOGRAM_BINS);
-          next[sideBin] += 1;
-
-          // Center bin at tau = 0 gets double weight due to bunching!
-          if (clumpSize >= 2) {
-            setCoincidencesAtZero((c) => c + 1);
-            next[centerBin] += 2;
-          }
-          return next;
-        });
-      }, 500);
     }
+
+    // APD detector trigger with dark counts
+    const d1Dark = Math.random() < currentDark;
+    const d2Dark = Math.random() < currentDark;
+    const d1Hit = d1PhotonCount > 0 || d1Dark;
+    const d2Hit = d2PhotonCount > 0 || d2Dark;
+
+    setTimeout(() => {
+      if (d1Hit) setD1Clicks((c) => c + 1);
+      if (d2Hit) setD2Clicks((c) => c + 1);
+
+      const isCoincidence = d1Hit && d2Hit;
+      if (isCoincidence) {
+        setCoincidencesAtZero((c) => c + 1);
+      }
+
+      // Update histogram bins
+      setHistogram((prev) => {
+        const next = [...prev];
+        // 1. Center bin (tau = 0) tracks physical joint clicks within same pulse
+        if (isCoincidence) {
+          next[centerBin] += 1;
+        }
+
+        // 2. Side bins represent accidental coincidence events between consecutive independent pulses
+        // Physical accidental coincidence probability per pulse is P(D1) * P(D2)
+        const pAccidental = (d1Hit ? 0.6 : 0.2) * (d2Hit ? 0.6 : 0.2);
+        if (Math.random() < pAccidental) {
+          // Select a random bin from side bins excluding center region
+          const sideOffset = Math.floor(Math.random() * (HISTOGRAM_BINS - 8));
+          const targetBin = sideOffset < (centerBin - 4) ? sideOffset : sideOffset + 8;
+          if (targetBin >= 0 && targetBin < HISTOGRAM_BINS) {
+            next[targetBin] += 1;
+          }
+        }
+        return next;
+      });
+    }, 500);
   }, [centerBin]);
 
   // Continuous emission timer
