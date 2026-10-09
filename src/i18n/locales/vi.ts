@@ -316,7 +316,7 @@ export const viTranslations: Translations = {
       badge: 'Phòng Thí Nghiệm 5',
       title: 'Thí Nghiệm Hanbury Brown - Twiss: Đo Chống Chùm Photon',
       description:
-        'Bằng chứng thực nghiệm tối hậu chứng minh bức xạ điện từ bắt buộc phải lượng tử hóa: Đo hàm tương quan bậc hai g⁽²⁾(τ). Khi g⁽²⁾(0) < 1, hiện tượng Chống Chùm (Antibunching) vi phạm giới hạn sóng cổ điển Cauchy-Schwarz.',
+        'Khảo sát tính chất lượng tử của trường bức xạ qua hàm tương quan bậc hai g⁽²⁾(τ): Hiện tượng Chống Chùm (g⁽²⁾(0) < 1) vi phạm giới hạn sóng cổ điển Cauchy-Schwarz.',
       // Controls
       sourceSelectLabel: 'Loại nguồn phát bức xạ:',
       sourceSinglePhoton: 'Photon Đơn Lẻ (Fock |1⟩)',
@@ -371,6 +371,11 @@ export const viTranslations: Translations = {
       transmittedArm: 'Nhánh truyền qua (50%)',
       // Educational Insights
       theorySectionTitle: 'Cơ Sở Vật Lý & Bản Chất Lượng Tử Của Phép Đo HBT',
+      deltaTPurposeTitle: 'Ý Nghĩa & Mục Đích Của Phép Đo Độ Trễ Thời Gian Δt = t₂ - t₁',
+      deltaTPurposeDesc:
+        'Phép đo độ trễ thời gian Δt = t₂ - t₁ giữa hai detector D₁ và D₂ nhằm xác định xác suất hai photon cùng kích hoạt đầu dò tại cùng một thời điểm (τ = Δt = 0). Nếu ánh sáng gồm các photon đơn lẻ (lượng tử năng lượng hν không thể phân chia), một photon chỉ có thể bị phản xạ hoặc truyền qua NPBS 50:50 — nghĩa là chỉ kích hoạt D₁ HOẶC D₂, KHÔNG BAO GIỜ kích hoạt cả hai cùng lúc tại Δt = 0. Do đó, đáy lõm N(0) = 0 và g⁽²⁾(0) < 1 chính là bằng chứng thực nghiệm tối hậu chứng minh ánh sáng là các hạt lượng tử rời rạc, không thể chia cắt.',
+      deltaTPurposeHint:
+        'Độ trễ Δt = t₂ - t₁ để làm gì? Đo chênh lệch thời gian giữa 2 detector để kiểm chứng: một photon đơn lẻ không thể bị chẻ đôi để kích hoạt cả D₁ và D₂ cùng lúc (tại Δt = 0). Đáy N(0) = 0 chứng minh ánh sáng bắt buộc phải lượng tử hóa.',
       cauchySchwarzTitle: '1. Bất Đẳng Thức Cauchy-Schwarz Cổ Điển vs Vi Phạm Lượng Tử',
       cauchySchwarzDesc:
         'Trong quang học sóng cổ điển của Maxwell, cường độ sáng I(t) là một đại lượng vô hướng thực không âm. Theo bất đẳng thức Cauchy-Schwarz, hàm tương quan cường độ bắt buộc phải thỏa mãn: ⟨I(t) I(t+τ)⟩ ≤ ⟨I(t)²⟩, dẫn đến g⁽²⁾(0) ≥ 1 và g⁽²⁾(0) ≥ g⁽²⁾(τ). Khi thí nghiệm đo được g⁽²⁾(0) < 1, điều đó khẳng định sóng điện từ cổ điển hoàn toàn thất bại: ánh sáng không thể là sóng liên tục!',

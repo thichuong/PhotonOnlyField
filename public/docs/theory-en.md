@@ -159,7 +159,7 @@ A cornerstone verification of quantum optics: A single photon encountering a 50:
 ### 5.5 Lab 5: Hanbury Brown - Twiss Experiment: Photon Antibunching
 *Virtual Lab 5*
 
-The definitive empirical proof mandating electromagnetic field quantization: Measuring the second-order correlation function g⁽²⁾(τ). When g⁽²⁾(0) < 1, Photon Antibunching violates the classical Cauchy-Schwarz wave inequality.
+Investigating the quantum nature of radiation fields via the second-order correlation function g⁽²⁾(τ): Photon Antibunching (g⁽²⁾(0) < 1) violates the classical Cauchy-Schwarz wave inequality.
 
 - **Normalized Second-Order Correlation Function:**
   $$g^{(2)}(\tau) = \frac{\langle : \hat{I}(t) \hat{I}(t+\tau) : \rangle}{\langle \hat{I}(t) \rangle^2} = \frac{\langle \hat{a}^\dagger(t) \hat{a}^\dagger(t+\tau) \hat{a}(t+\tau) \hat{a}(t) \rangle}{\langle \hat{a}^\dagger(t) \hat{a}(t) \rangle^2}$$

@@ -369,6 +369,9 @@ export interface Translations {
       transmittedArm: string;
       // Educational Insights
       theorySectionTitle: string;
+      deltaTPurposeTitle: string;
+      deltaTPurposeDesc: string;
+      deltaTPurposeHint: string;
       cauchySchwarzTitle: string;
       cauchySchwarzDesc: string;
       qftFockTitle: string;

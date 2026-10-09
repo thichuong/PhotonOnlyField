@@ -181,7 +181,7 @@ Thí nghiệm kiểm chứng cốt lõi của quang học lượng tử: Một p
 ### 5.5 Phòng Lab 5: Thí Nghiệm Hanbury Brown - Twiss: Đo Chống Chùm Photon
 *Phòng Thí Nghiệm 5*
 
-Bằng chứng thực nghiệm tối hậu chứng minh bức xạ điện từ bắt buộc phải lượng tử hóa: Đo hàm tương quan bậc hai g⁽²⁾(τ). Khi g⁽²⁾(0) < 1, hiện tượng Chống Chùm (Antibunching) vi phạm giới hạn sóng cổ điển Cauchy-Schwarz.
+Khảo sát tính chất lượng tử của trường bức xạ qua hàm tương quan bậc hai g⁽²⁾(τ): Hiện tượng Chống Chùm (g⁽²⁾(0) < 1) vi phạm giới hạn sóng cổ điển Cauchy-Schwarz.
 
 - **Hàm tương quan bậc hai chuẩn hóa:**
   $$g^{(2)}(\tau) = \frac{\langle : \hat{I}(t) \hat{I}(t+\tau) : \rangle}{\langle \hat{I}(t) \rangle^2} = \frac{\langle \hat{a}^\dagger(t) \hat{a}^\dagger(t+\tau) \hat{a}(t+\tau) \hat{a}(t) \rangle}{\langle \hat{a}^\dagger(t) \hat{a}(t) \rangle^2}$$

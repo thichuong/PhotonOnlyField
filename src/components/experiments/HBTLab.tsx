@@ -42,7 +42,7 @@ const HISTOGRAM_BINS = 41; // Bins from -10ns to +10ns (center bin is index 20, 
 const TAU_MAX_NS = 10;
 
 export const HBTLab: React.FC = () => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const { ref: containerRef, isSimulating } = useInView<HTMLDivElement>();
 
   // State
@@ -78,12 +78,14 @@ export const HBTLab: React.FC = () => {
   const sourceTypeRef = useRef(sourceType);
   const darkCountRateRef = useRef(darkCountRate);
   const tRef = useRef(t);
+  const languageRef = useRef(language);
 
   useEffect(() => {
     sourceTypeRef.current = sourceType;
     darkCountRateRef.current = darkCountRate;
     tRef.current = t;
-  }, [sourceType, darkCountRate, t]);
+    languageRef.current = language;
+  }, [sourceType, darkCountRate, t, language]);
 
   // Clear all statistics & histogram data
   const handleClearData = useCallback(() => {
@@ -277,18 +279,16 @@ export const HBTLab: React.FC = () => {
       ctx.fillStyle = '#020617';
       ctx.fillRect(0, 0, w, h);
 
-      // Optical Bench Coordinates
-      const sourceX = 60;
-      const sourceY = h / 2 + 35;
-      const filterX = 140;
-      const bsX = 260;
+      // Optical Bench Coordinates (Optimized for 230px canvas)
+      const sourceX = 55;
+      const sourceY = 135;
+      const filterX = 130;
+      const bsX = 235;
       const bsY = sourceY;
       const d1X = bsX;
-      const d1Y = 55; // Vertical Reflected Arm
-      const d2X = w - 75;
+      const d1Y = 46; // Vertical Reflected Arm
+      const d2X = w - 65;
       const d2Y = bsY; // Horizontal Transmitted Arm
-      const tcspcX = (d1X + d2X) / 2;
-      const tcspcY = h - 45;
 
       // 1. Draw Optical Axis Guideline (Dashed)
       ctx.strokeStyle = '#1e293b';
@@ -308,33 +308,20 @@ export const HBTLab: React.FC = () => {
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // 2. Draw Signal Coaxial Cables to TCSPC Timer Box
-      ctx.strokeStyle = '#334155';
-      ctx.lineWidth = 2;
-      // D1 to TCSPC (Start Channel cable)
-      ctx.beginPath();
-      ctx.moveTo(d1X + 15, d1Y);
-      ctx.bezierCurveTo(d1X + 70, d1Y, tcspcX - 40, tcspcY - 30, tcspcX - 30, tcspcY - 15);
-      ctx.stroke();
+      const isVi = languageRef.current === 'vi';
 
-      // D2 to TCSPC (Stop Channel cable)
-      ctx.beginPath();
-      ctx.moveTo(d2X, d2Y + 15);
-      ctx.bezierCurveTo(d2X, tcspcY - 15, tcspcX + 60, tcspcY - 30, tcspcX + 30, tcspcY - 15);
-      ctx.stroke();
-
-      // 3. Draw Emitter Source
+      // 2. Draw Emitter Source
       ctx.fillStyle = '#0f172a';
       ctx.strokeStyle = '#38bdf8';
       ctx.lineWidth = 2;
-      ctx.fillRect(sourceX - 35, sourceY - 25, 50, 50);
-      ctx.strokeRect(sourceX - 35, sourceY - 25, 50, 50);
+      ctx.fillRect(sourceX - 35, sourceY - 24, 48, 48);
+      ctx.strokeRect(sourceX - 35, sourceY - 24, 48, 48);
 
       // Emitter aperture lens
       ctx.fillStyle = '#38bdf8';
-      ctx.fillRect(sourceX + 15, sourceY - 12, 6, 24);
+      ctx.fillRect(sourceX + 13, sourceY - 10, 5, 20);
 
-      // Emitter Label
+      // Emitter Label (Bilingual)
       ctx.fillStyle = '#f8fafc';
       ctx.font = 'bold 12px ui-monospace, monospace';
       const emitterName =
@@ -342,24 +329,27 @@ export const HBTLab: React.FC = () => {
           ? 'NV Center'
           : sourceTypeRef.current === 'laser'
             ? 'Laser'
-            : 'Thermal';
-      ctx.fillText(emitterName, sourceX - 32, sourceY + 40);
+            : isVi
+              ? 'Nhiệt'
+              : 'Thermal';
+      ctx.fillText(emitterName, sourceX - 30, sourceY + 36);
 
-      // 4. Draw Bandpass Filter (Narrowband spectral filter)
+      // 3. Draw Bandpass Filter (Narrowband spectral filter - Bilingual)
       ctx.fillStyle = 'rgba(16, 185, 129, 0.2)';
       ctx.strokeStyle = '#10b981';
       ctx.lineWidth = 2;
-      ctx.fillRect(filterX - 6, sourceY - 20, 12, 40);
-      ctx.strokeRect(filterX - 6, sourceY - 20, 12, 40);
+      ctx.fillRect(filterX - 6, sourceY - 18, 12, 36);
+      ctx.strokeRect(filterX - 6, sourceY - 18, 12, 36);
       ctx.fillStyle = '#34d399';
       ctx.font = '12px ui-monospace, monospace';
-      ctx.fillText('Filter', filterX - 16, sourceY + 34);
+      const filterName = isVi ? 'Bộ lọc' : 'Filter';
+      ctx.fillText(filterName, filterX - (isVi ? 20 : 16), sourceY + 30);
 
-      // 5. Draw 50:50 Non-Polarizing Beam Splitter (NPBS) Cube
+      // 4. Draw 50:50 Non-Polarizing Beam Splitter (NPBS) Cube
       ctx.fillStyle = 'rgba(56, 189, 248, 0.12)';
       ctx.strokeStyle = '#38bdf8';
       ctx.lineWidth = 2;
-      const bsSize = 36;
+      const bsSize = 34;
       ctx.fillRect(bsX - bsSize / 2, bsY - bsSize / 2, bsSize, bsSize);
       ctx.strokeRect(bsX - bsSize / 2, bsY - bsSize / 2, bsSize, bsSize);
 
@@ -373,49 +363,61 @@ export const HBTLab: React.FC = () => {
 
       ctx.fillStyle = '#e0f2fe';
       ctx.font = 'bold 12px ui-monospace, monospace';
-      ctx.fillText('NPBS 50:50', bsX - 34, bsY + 36);
+      ctx.fillText('NPBS 50:50', bsX - 34, bsY + 32);
 
-      // 6. Draw Detectors D1 and D2 (SPAD Avalanche Photodiodes)
+      // 5. Draw Detectors D1 and D2 (SPAD Avalanche Photodiodes)
       // Detector 1 (D1 - Start Channel)
       ctx.fillStyle = '#064e3b';
       ctx.strokeStyle = '#10b981';
       ctx.lineWidth = 2;
-      ctx.fillRect(d1X - 22, d1Y - 20, 44, 30);
-      ctx.strokeRect(d1X - 22, d1Y - 20, 44, 30);
+      ctx.fillRect(d1X - 22, d1Y - 18, 44, 28);
+      ctx.strokeRect(d1X - 22, d1Y - 18, 44, 28);
       // Diode sensor window
       ctx.fillStyle = '#34d399';
       ctx.fillRect(d1X - 12, d1Y + 10, 24, 4);
 
       ctx.fillStyle = '#a7f3d0';
       ctx.font = 'bold 12px ui-monospace, monospace';
-      ctx.fillText('D₁ (Start)', d1X - 28, d1Y - 26);
+      ctx.fillText('D₁ (Start)', d1X + 12, d1Y - 22);
 
       // Detector 2 (D2 - Stop Channel)
       ctx.fillStyle = '#4c1d95';
       ctx.strokeStyle = '#c084fc';
       ctx.lineWidth = 2;
-      ctx.fillRect(d2X - 10, d2Y - 22, 30, 44);
-      ctx.strokeRect(d2X - 10, d2Y - 22, 30, 44);
+      ctx.fillRect(d2X - 10, d2Y - 20, 28, 42);
+      ctx.strokeRect(d2X - 10, d2Y - 20, 28, 42);
       // Diode sensor window
       ctx.fillStyle = '#c084fc';
-      ctx.fillRect(d2X - 14, d2Y - 12, 4, 24);
+      ctx.fillRect(d2X - 14, d2Y - 10, 4, 20);
 
       ctx.fillStyle = '#e9d5ff';
       ctx.font = 'bold 12px ui-monospace, monospace';
-      ctx.fillText('D₂ (Stop)', d2X - 24, d2Y + 38);
+      ctx.fillText('D₂ (Stop)', d2X - 24, d2Y + 34);
 
-      // 7. Draw TCSPC Correlator Module Box
-      ctx.fillStyle = '#090d16';
-      ctx.strokeStyle = '#64748b';
-      ctx.lineWidth = 2;
-      ctx.fillRect(tcspcX - 80, tcspcY - 22, 160, 36);
-      ctx.strokeRect(tcspcX - 80, tcspcY - 22, 160, 36);
+      // 6. Correlator Time Delay Indicator: Δt = t₂ - t₁ (Top-right corner)
+      const tagW = 105;
+      const tagH = 24;
+      const tagX = w - tagW - 14;
+      const tagY = 12;
+
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1.5;
+      if (typeof ctx.roundRect === 'function') {
+        ctx.beginPath();
+        ctx.roundRect(tagX, tagY, tagW, tagH, 6);
+        ctx.fill();
+        ctx.stroke();
+      } else {
+        ctx.fillRect(tagX, tagY, tagW, tagH);
+        ctx.strokeRect(tagX, tagY, tagW, tagH);
+      }
 
       ctx.fillStyle = '#38bdf8';
       ctx.font = 'bold 12px ui-monospace, monospace';
-      ctx.fillText('TCSPC: Δt = t₂ - t₁', tcspcX - 66, tcspcY + 2);
+      ctx.fillText('Δt = t₂ - t₁', tagX + 12, tagY + 16);
 
-      // 8. Update & Draw Flying Photons
+      // 7. Update & Draw Flying Photons
       const activePhotons: FlyingPhoton[] = [];
       const currentPhotons = flyingPhotonsRef.current;
 
@@ -423,7 +425,7 @@ export const HBTLab: React.FC = () => {
         p.progress += p.speed;
 
         if (p.stage === 'source-to-bs') {
-          p.x = sourceX + 20 + p.progress * (bsX - (sourceX + 20));
+          p.x = sourceX + 18 + p.progress * (bsX - (sourceX + 18));
           p.y = sourceY;
 
           if (p.progress >= 1.0) {
@@ -517,10 +519,10 @@ export const HBTLab: React.FC = () => {
     ctx.fillStyle = '#020617';
     ctx.fillRect(0, 0, w, h);
 
-    const padLeft = 55;
-    const padRight = 25;
-    const padTop = 35;
-    const padBottom = 45;
+    const padLeft = 46;
+    const padRight = 20;
+    const padTop = 22;
+    const padBottom = 34;
 
     const plotW = w - padLeft - padRight;
     const plotH = h - padTop - padBottom;
@@ -540,7 +542,7 @@ export const HBTLab: React.FC = () => {
       // Label inside non-classical zone
       ctx.fillStyle = '#06b6d4';
       ctx.font = 'bold 12px ui-monospace, monospace';
-      ctx.fillText(t.labs.hbt.nonClassicalZone, padLeft + 12, padTop + plotH - 12);
+      ctx.fillText(t.labs.hbt.nonClassicalZone, padLeft + 10, padTop + plotH - 10);
     }
 
     // 2. Draw Classical Boundary Guideline at g^(2) = 1 (Dashed Red Line)
@@ -553,26 +555,25 @@ export const HBTLab: React.FC = () => {
     ctx.stroke();
     ctx.setLineDash([]);
 
-    ctx.fillStyle = '#fb7185';
-    ctx.font = 'bold 12px ui-monospace, monospace';
-    ctx.fillText('g⁽²⁾=1 (Cổ điển)', padLeft + plotW - 120, classicalLimitY - 6);
+    const classicalBoundaryLabel = language === 'vi' ? 'g⁽²⁾=1 (Cổ điển)' : 'g⁽²⁾=1 (Classical)';
+    ctx.fillText(classicalBoundaryLabel, padLeft + plotW - 110, classicalLimitY - 5);
 
     // 3. Draw Grid Lines
     ctx.strokeStyle = '#1e293b';
     ctx.lineWidth = 1;
 
     // Horizontal grid
-    for (let i = 0; i <= 4; i++) {
-      const gy = padTop + (plotH / 4) * i;
+    for (let i = 0; i <= 3; i++) {
+      const gy = padTop + (plotH / 3) * i;
       ctx.beginPath();
       ctx.moveTo(padLeft, gy);
       ctx.lineTo(padLeft + plotW, gy);
       ctx.stroke();
 
-      const labelVal = Math.round(maxCount * (1 - i / 4));
+      const labelVal = Math.round(maxCount * (1 - i / 3));
       ctx.fillStyle = '#64748b';
       ctx.font = '12px ui-monospace, monospace';
-      ctx.fillText(labelVal.toString(), padLeft - 38, gy + 4);
+      ctx.fillText(labelVal.toString(), padLeft - 34, gy + 4);
     }
 
     // Center vertical tau = 0 line
@@ -668,20 +669,24 @@ export const HBTLab: React.FC = () => {
       ctx.stroke();
 
       const label = tVal === 0 ? '0' : `${tVal > 0 ? '+' : ''}${tVal}ns`;
-      ctx.fillText(label, tx - (tVal === 0 ? 4 : 14), padTop + plotH + 20);
+      ctx.fillText(label, tx - (tVal === 0 ? 4 : 14), padTop + plotH + 16);
     }
 
-    // Axis titles
+    // Axis titles (Bilingual)
     ctx.fillStyle = '#cbd5e1';
     ctx.font = 'bold 12px ui-sans-serif, system-ui';
-    ctx.fillText('τ = t₂ - t₁ (Độ trễ thời gian nanosecond)', padLeft + plotW / 2 - 120, padTop + plotH + 38);
+    const tauAxisTitle =
+      language === 'vi'
+        ? 'τ = t₂ - t₁ (Độ trễ thời gian nanosecond)'
+        : 'τ = t₂ - t₁ (Time delay in nanoseconds)';
+    ctx.fillText(tauAxisTitle, padLeft + plotW / 2 - (language === 'vi' ? 120 : 110), padTop + plotH + 30);
 
     ctx.save();
     ctx.translate(14, padTop + plotH / 2 + 40);
     ctx.rotate(-Math.PI / 2);
-    ctx.fillText('Số đếm trùng phùng N(τ)', 0, 0);
+    ctx.fillText(t.labs.hbt.coincidenceCountLabel, 0, 0);
     ctx.restore();
-  }, [histogram, averageSideCount, darkCountRate, sourceType, centerBin, t]);
+  }, [histogram, averageSideCount, darkCountRate, sourceType, centerBin, t, language]);
 
   // Non-classical verdict styling
   const numG2 = parseFloat(calculatedG2Zero);
@@ -692,43 +697,221 @@ export const HBTLab: React.FC = () => {
     <div
       ref={containerRef}
       id="lab-hbt"
-      className="scroll-mt-24 p-5 lg:p-7 rounded-3xl bg-slate-900/85 border border-slate-800 shadow-2xl flex flex-col gap-6"
+      className="scroll-mt-24 p-4 lg:p-5 rounded-3xl bg-slate-900/90 border border-slate-800 shadow-2xl flex flex-col gap-3.5"
     >
-      {/* 1. Header with Badge & Overview */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
+      {/* 1. Compact Header with Title, Badge & Presets */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-mono font-medium">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>{t.labs.hbt.badge}</span>
+          <div className="flex items-center gap-2">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-mono font-medium">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{t.labs.hbt.badge}</span>
+            </div>
+            <h3 className="text-lg lg:text-xl font-black text-white tracking-tight">
+              {t.labs.hbt.title}
+            </h3>
           </div>
-          <h3 className="text-xl lg:text-2xl font-black text-white tracking-tight mt-2">
-            {t.labs.hbt.title}
-          </h3>
-          <p className="text-sm text-slate-300 max-w-3xl mt-1.5 leading-relaxed font-normal">
+          <p className="text-sm text-slate-300 mt-1 leading-relaxed font-normal">
             {t.labs.hbt.description}
           </p>
         </div>
 
-        {/* Real-time g^(2)(0) Status Tag */}
-        <div className="shrink-0 p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col items-center justify-center min-w-[170px] shadow-lg">
-          <span className="text-xs text-slate-400 font-mono uppercase tracking-wider">
-            {t.labs.hbt.statG2ZeroCalculated}
+        {/* Experimental Presets as Compact Chips */}
+        <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+          <span className="text-xs font-mono text-slate-400 uppercase mr-1 hidden sm:inline">
+            {language === 'vi' ? 'Kịch bản:' : 'Presets:'}
           </span>
-          <div className="text-2xl lg:text-3xl font-black font-mono tracking-tight my-0.5">
-            <span
-              className={
-                isNonClassical
-                  ? 'text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]'
-                  : isThermal
-                    ? 'text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]'
-                    : 'text-purple-400'
-              }
-            >
-              g⁽²⁾(0) = {calculatedG2Zero}
+          <button
+            type="button"
+            onClick={() => applyPreset('ideal-quantum')}
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer ${
+              sourceType === 'single-photon' && darkCountRate === 0
+                ? 'bg-emerald-500/20 text-emerald-200 border-emerald-500/50 shadow-sm'
+                : 'bg-slate-950/60 hover:bg-slate-800 text-slate-300 border-slate-800'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+            <span>{language === 'vi' ? 'Lý tưởng (g⁽²⁾=0)' : 'Ideal (g⁽²⁾=0)'}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => applyPreset('real-lab')}
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer ${
+              sourceType === 'single-photon' && darkCountRate > 0
+                ? 'bg-cyan-500/20 text-cyan-200 border-cyan-500/50 shadow-sm'
+                : 'bg-slate-950/60 hover:bg-slate-800 text-slate-300 border-slate-800'
+            }`}
+          >
+            <Cpu className="w-3.5 h-3.5 text-cyan-400" />
+            <span>{language === 'vi' ? 'Lab thực tế' : 'Real Lab'}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => applyPreset('laser')}
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer ${
+              sourceType === 'laser'
+                ? 'bg-purple-500/20 text-purple-200 border-purple-500/50 shadow-sm'
+                : 'bg-slate-950/60 hover:bg-slate-800 text-slate-300 border-slate-800'
+            }`}
+          >
+            <Zap className="w-3.5 h-3.5 text-purple-400" />
+            <span>{language === 'vi' ? 'Laser Poisson' : 'Poisson Laser'}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => applyPreset('thermal')}
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer ${
+              sourceType === 'thermal'
+                ? 'bg-amber-500/20 text-amber-200 border-amber-500/50 shadow-sm'
+                : 'bg-slate-950/60 hover:bg-slate-800 text-slate-300 border-slate-800'
+            }`}
+          >
+            <Flame className="w-3.5 h-3.5 text-amber-400" />
+            <span>{language === 'vi' ? 'Nhiệt (Bunching)' : 'Thermal (Bunching)'}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* 2. Dual-Panel Visualizer Layout (Compact 230px height) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
+        {/* Panel 1: Optical Bench Canvas */}
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <Radio className="w-3.5 h-3.5 text-cyan-400" />
+              {t.labs.hbt.benchTitle}
+            </span>
+            <span className="text-xs text-slate-400 font-mono">
+              60 FPS Engine
             </span>
           </div>
+
+          <div className="relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 shadow-inner">
+            <canvas
+              ref={benchCanvasRef}
+              width={540}
+              height={230}
+              className="w-full h-auto block"
+            />
+            {/* Quick annotation tag (Bilingual) */}
+            <div className="absolute top-2 left-2 bg-slate-900/90 backdrop-blur-md px-2.5 py-0.5 rounded-lg border border-slate-800 text-xs text-slate-300 font-mono flex items-center gap-1.5 pointer-events-none">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+              <span>
+                {sourceType === 'single-photon'
+                  ? (language === 'vi' ? 'Fock |1⟩ (1 photon/xung)' : 'Fock |1⟩ (1 photon/pulse)')
+                  : sourceType === 'laser'
+                    ? 'Laser |α⟩ (Poisson)'
+                    : (language === 'vi' ? 'Nhiệt (Bose)' : 'Thermal (Bose)')}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Panel 2: Coincidence Histogram Canvas */}
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5 text-emerald-400" />
+              {t.labs.hbt.graphTitle}
+            </span>
+            <span className="text-xs text-slate-400 font-mono">
+              {t.labs.hbt.measuredDataLegend}
+            </span>
+          </div>
+
+          <div className="relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 shadow-inner">
+            <canvas
+              ref={graphCanvasRef}
+              width={540}
+              height={230}
+              className="w-full h-auto block"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Explanatory Note for Δt = t₂ - t₁ */}
+      <div className="px-3.5 py-2 rounded-xl bg-cyan-950/30 border border-cyan-500/20 flex items-center gap-2.5 text-xs text-slate-200">
+        <HelpCircle className="w-4 h-4 text-cyan-400 shrink-0" />
+        <span className="font-medium leading-relaxed">
+          <strong className="text-cyan-300 font-bold font-mono">Δt = t₂ - t₁: </strong>
+          {t.labs.hbt.deltaTPurposeHint}
+        </span>
+      </div>
+
+      {/* 3. PRIMARY COMMAND & METRIC BAR: Simulation Action Buttons + g⁽²⁾(0) Measurement */}
+      <div className="p-3 lg:p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-3 shadow-lg">
+        {/* Left: Action Control Buttons */}
+        <div className="flex items-center gap-2.5 w-full md:w-auto justify-start">
+          <button
+            type="button"
+            onClick={() => setIsRunning(!isRunning)}
+            className={`px-4 py-2.5 rounded-xl font-extrabold text-xs flex items-center gap-2 cursor-pointer transition-all shadow-md ${
+              isRunning
+                ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/20'
+                : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/20'
+            }`}
+          >
+            {isRunning ? (
+              <>
+                <Pause className="w-4 h-4" />
+                <span>{t.labs.hbt.pauseFire}</span>
+              </>
+            ) : (
+              <>
+                <Play className="w-4 h-4 fill-current" />
+                <span>{t.labs.hbt.continuousFire}</span>
+              </>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={firePulse}
+            disabled={isRunning}
+            className="px-4 py-2.5 rounded-xl font-bold text-xs bg-cyan-600 hover:bg-cyan-500 text-slate-950 flex items-center gap-2 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
+          >
+            <Zap className="w-4 h-4 text-slate-950 fill-current" />
+            <span>{t.labs.hbt.fireSinglePulse}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleClearData}
+            className="px-3 py-2.5 rounded-xl font-bold text-xs bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 hover:border-slate-700 flex items-center gap-1.5 cursor-pointer transition-all"
+            title={t.labs.hbt.clearData}
+          >
+            <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
+            <span className="hidden sm:inline">{t.labs.hbt.clearData}</span>
+          </button>
+        </div>
+
+        {/* Right: Prominent g^(2)(0) Measurement Badge */}
+        <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end bg-slate-900/90 px-3.5 py-2 rounded-xl border border-slate-800">
+          <div className="flex flex-col text-right">
+            <span className="text-xs text-slate-400 font-mono uppercase tracking-wider">
+              {t.labs.hbt.statG2ZeroCalculated}
+            </span>
+            <div className="text-xl lg:text-2xl font-black font-mono tracking-tight leading-none my-0.5">
+              <span
+                className={
+                  isNonClassical
+                    ? 'text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]'
+                    : isThermal
+                      ? 'text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]'
+                      : 'text-purple-400'
+                }
+              >
+                g⁽²⁾(0) = {calculatedG2Zero}
+              </span>
+            </div>
+          </div>
+
           <span
-            className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+            className={`text-xs font-bold px-2.5 py-1 rounded-full whitespace-nowrap ${
               isNonClassical
                 ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
                 : isThermal
@@ -745,341 +928,164 @@ export const HBTLab: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Experimental Presets Bar */}
-      <div className="flex flex-col gap-2">
-        <span className="text-xs font-mono text-slate-400 uppercase tracking-wider font-semibold">
-          {t.labs.hbt.presetsTitle}
-        </span>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-          <button
-            type="button"
-            onClick={() => applyPreset('ideal-quantum')}
-            className={`px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all text-left flex items-center justify-between border cursor-pointer ${
-              sourceType === 'single-photon' && darkCountRate === 0
-                ? 'bg-emerald-500/20 text-emerald-200 border-emerald-500/50 shadow-md shadow-emerald-500/10'
-                : 'bg-slate-950/60 hover:bg-slate-800 text-slate-300 border-slate-800'
-            }`}
-          >
-            <span>{t.labs.hbt.presetIdealQuantum}</span>
-            <Sparkles className="w-4 h-4 text-emerald-400 shrink-0 ml-1" />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => applyPreset('real-lab')}
-            className={`px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all text-left flex items-center justify-between border cursor-pointer ${
-              sourceType === 'single-photon' && darkCountRate > 0
-                ? 'bg-cyan-500/20 text-cyan-200 border-cyan-500/50 shadow-md shadow-cyan-500/10'
-                : 'bg-slate-950/60 hover:bg-slate-800 text-slate-300 border-slate-800'
-            }`}
-          >
-            <span>{t.labs.hbt.presetRealLab}</span>
-            <Cpu className="w-4 h-4 text-cyan-400 shrink-0 ml-1" />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => applyPreset('laser')}
-            className={`px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all text-left flex items-center justify-between border cursor-pointer ${
-              sourceType === 'laser'
-                ? 'bg-purple-500/20 text-purple-200 border-purple-500/50 shadow-md shadow-purple-500/10'
-                : 'bg-slate-950/60 hover:bg-slate-800 text-slate-300 border-slate-800'
-            }`}
-          >
-            <span>{t.labs.hbt.presetPoissonLaser}</span>
-            <Zap className="w-4 h-4 text-purple-400 shrink-0 ml-1" />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => applyPreset('thermal')}
-            className={`px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all text-left flex items-center justify-between border cursor-pointer ${
-              sourceType === 'thermal'
-                ? 'bg-amber-500/20 text-amber-200 border-amber-500/50 shadow-md shadow-amber-500/10'
-                : 'bg-slate-950/60 hover:bg-slate-800 text-slate-300 border-slate-800'
-            }`}
-          >
-            <span>{t.labs.hbt.presetThermalBunching}</span>
-            <Flame className="w-4 h-4 text-amber-400 shrink-0 ml-1" />
-          </button>
-        </div>
-      </div>
-
-      {/* 3. Dual-Panel Visualizer Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        {/* Panel 1: Optical Bench Canvas */}
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between px-1">
-            <span className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-              <Radio className="w-3.5 h-3.5 text-cyan-400" />
-              {t.labs.hbt.benchTitle}
-            </span>
-            <span className="text-xs text-slate-400 font-mono">
-              60 FPS WebGL Engine
-            </span>
-          </div>
-
-          <div className="relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 shadow-inner">
-            <canvas
-              ref={benchCanvasRef}
-              width={540}
-              height={320}
-              className="w-full h-auto block"
-            />
-            {/* Quick annotations on top of canvas */}
-            <div className="absolute top-2.5 left-2.5 bg-slate-900/90 backdrop-blur-md px-2.5 py-1 rounded-lg border border-slate-800 text-xs text-slate-300 font-mono flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-              <span>
-                {sourceType === 'single-photon'
-                  ? 'Trạng thái Fock |1⟩ (Một photon/xung)'
-                  : sourceType === 'laser'
-                    ? 'Trạng thái Coherent |α⟩ (Poisson)'
-                    : 'Ánh sáng nhiệt (Tụ chùm Bose)'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Panel 2: Coincidence Histogram Canvas */}
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between px-1">
-            <span className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-emerald-400" />
-              {t.labs.hbt.graphTitle}
-            </span>
-            <span className="text-xs text-slate-400 font-mono">
-              {t.labs.hbt.measuredDataLegend}
-            </span>
-          </div>
-
-          <div className="relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 shadow-inner">
-            <canvas
-              ref={graphCanvasRef}
-              width={540}
-              height={320}
-              className="w-full h-auto block"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Live Statistics Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800 flex flex-col">
+      {/* 4. Live Statistics (Compact 4-column strip) */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <div className="px-3 py-2 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
           <span className="text-xs text-slate-400 font-mono">
             {t.labs.hbt.statTotalEmissions}
           </span>
-          <span className="text-xl font-black text-white font-mono mt-1">
+          <span className="text-sm font-black text-white font-mono">
             {totalEmissions.toLocaleString()}
           </span>
         </div>
 
-        <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800 flex flex-col">
+        <div className="px-3 py-2 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
           <span className="text-xs text-emerald-400 font-mono">
             {t.labs.hbt.statDetector1Hits}
           </span>
-          <span className="text-xl font-black text-emerald-300 font-mono mt-1">
+          <span className="text-sm font-black text-emerald-300 font-mono">
             {d1Clicks.toLocaleString()}
           </span>
         </div>
 
-        <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800 flex flex-col">
+        <div className="px-3 py-2 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
           <span className="text-xs text-purple-400 font-mono">
             {t.labs.hbt.statDetector2Hits}
           </span>
-          <span className="text-xl font-black text-purple-300 font-mono mt-1">
+          <span className="text-sm font-black text-purple-300 font-mono">
             {d2Clicks.toLocaleString()}
           </span>
         </div>
 
-        <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800 flex flex-col">
+        <div className="px-3 py-2 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
           <span className="text-xs text-rose-400 font-mono">
             {t.labs.hbt.statCoincidencesZero}
           </span>
-          <span className="text-xl font-black text-rose-300 font-mono mt-1">
+          <span className="text-sm font-black text-rose-300 font-mono">
             {coincidencesAtZero.toLocaleString()}
           </span>
         </div>
       </div>
 
-      {/* 5. Interactive Control Panel */}
-      <div className="p-4 lg:p-5 rounded-2xl bg-slate-950/70 border border-slate-800 flex flex-col gap-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {/* Source Selection */}
-          <div className="flex flex-col gap-2">
+      {/* 5. Compact Settings Strip (3 columns in 1 row) */}
+      <div className="p-3 rounded-2xl bg-slate-950/60 border border-slate-800 grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
+        {/* Source Selection & Mode Toggle */}
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center justify-between">
             <label className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">
               {t.labs.hbt.sourceSelectLabel}
             </label>
-            <div className="grid grid-cols-3 gap-1.5 bg-slate-900 p-1.5 rounded-xl border border-slate-800">
+            <div className="flex items-center gap-1 bg-slate-900 p-0.5 rounded-lg border border-slate-800">
               <button
                 type="button"
-                onClick={() => setSourceType('single-photon')}
-                className={`py-2 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
-                  sourceType === 'single-photon'
-                    ? 'bg-cyan-500 text-slate-950 shadow-sm'
+                onClick={() => setEmissionMode('pulsed')}
+                className={`px-2 py-0.5 rounded text-xs font-bold transition-all cursor-pointer ${
+                  emissionMode === 'pulsed'
+                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                {t.labs.hbt.sourceSinglePhoton.split(' ')[0]}
+                {language === 'vi' ? 'Xung' : 'Pulsed'}
               </button>
               <button
                 type="button"
-                onClick={() => setSourceType('laser')}
-                className={`py-2 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
-                  sourceType === 'laser'
-                    ? 'bg-purple-500 text-white shadow-sm'
+                onClick={() => setEmissionMode('cw')}
+                className={`px-2 py-0.5 rounded text-xs font-bold transition-all cursor-pointer ${
+                  emissionMode === 'cw'
+                    ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                {t.labs.hbt.sourceLaser.split(' ')[0]}
+                CW
               </button>
-              <button
-                type="button"
-                onClick={() => setSourceType('thermal')}
-                className={`py-2 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
-                  sourceType === 'thermal'
-                    ? 'bg-amber-500 text-slate-950 shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                {t.labs.hbt.sourceThermal.split(' ')[0]}
-              </button>
-            </div>
-            <p className="text-xs text-slate-400 font-mono mt-0.5">
-              {sourceType === 'single-photon'
-                ? t.labs.hbt.sourceSinglePhotonDesc
-                : sourceType === 'laser'
-                  ? t.labs.hbt.sourceLaserDesc
-                  : t.labs.hbt.sourceThermalDesc}
-            </p>
-
-            {/* Emission Mode Toggle */}
-            <div className="flex items-center justify-between pt-1">
-              <span className="text-xs font-bold text-slate-300 font-mono">
-                {t.labs.hbt.emissionModeLabel}
-              </span>
-              <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setEmissionMode('pulsed')}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    emissionMode === 'pulsed'
-                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  {t.labs.hbt.modePulsed}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setEmissionMode('cw')}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    emissionMode === 'cw'
-                      ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  {t.labs.hbt.modeCW}
-                </button>
-              </div>
             </div>
           </div>
 
-          {/* Pulse Repetition Rate */}
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">
-                {t.labs.hbt.rateLabel}
-              </label>
-              <span className="text-xs font-mono text-cyan-400 font-bold">
-                {pulseRate} xung/giây
-              </span>
-            </div>
-            <input
-              type="range"
-              min={2}
-              max={25}
-              step={1}
-              value={pulseRate}
-              onChange={(e) => setPulseRate(Number(e.target.value))}
-              className="w-full accent-cyan-400 bg-slate-800 h-2 rounded-lg cursor-pointer"
-            />
-            <div className="flex justify-between text-xs text-slate-400 font-mono">
-              <span>Chậm (2 Hz)</span>
-              <span>Nhanh (25 Hz)</span>
-            </div>
-          </div>
-
-          {/* APD Dark Count Noise Slider */}
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">
-                {t.labs.hbt.darkCountLabel}
-              </label>
-              <span className="text-xs font-mono text-rose-400 font-bold">
-                {(darkCountRate * 100).toFixed(0)}%
-              </span>
-            </div>
-            <input
-              type="range"
-              min={0.0}
-              max={0.2}
-              step={0.01}
-              value={darkCountRate}
-              onChange={(e) => setDarkCountRate(Number(e.target.value))}
-              className="w-full accent-rose-400 bg-slate-800 h-2 rounded-lg cursor-pointer"
-            />
-            <div className="flex justify-between text-xs text-slate-400 font-mono">
-              <span>Lý tưởng (0%)</span>
-              <span>Nhiễu cao (20%)</span>
-            </div>
+          <div className="grid grid-cols-3 gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800">
+            <button
+              type="button"
+              onClick={() => setSourceType('single-photon')}
+              className={`py-1.5 px-1 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
+                sourceType === 'single-photon'
+                  ? 'bg-cyan-500 text-slate-950 shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              Fock |1⟩
+            </button>
+            <button
+              type="button"
+              onClick={() => setSourceType('laser')}
+              className={`py-1.5 px-1 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
+                sourceType === 'laser'
+                  ? 'bg-purple-500 text-white shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              Laser |α⟩
+            </button>
+            <button
+              type="button"
+              onClick={() => setSourceType('thermal')}
+              className={`py-1.5 px-1 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
+                sourceType === 'thermal'
+                  ? 'bg-amber-500 text-slate-950 shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              {language === 'vi' ? 'Nhiệt' : 'Thermal'}
+            </button>
           </div>
         </div>
 
-        {/* Action Buttons Row */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800/80">
-          <div className="flex items-center gap-2.5">
-            <button
-              type="button"
-              onClick={() => setIsRunning(!isRunning)}
-              className={`px-4 py-2.5 rounded-xl font-extrabold text-xs flex items-center gap-2 cursor-pointer transition-all shadow-md ${
-                isRunning
-                  ? 'bg-amber-500 hover:bg-amber-400 text-slate-950'
-                  : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950'
-              }`}
-            >
-              {isRunning ? (
-                <>
-                  <Pause className="w-4 h-4" />
-                  <span>{t.labs.hbt.pauseFire}</span>
-                </>
-              ) : (
-                <>
-                  <Play className="w-4 h-4" />
-                  <span>{t.labs.hbt.continuousFire}</span>
-                </>
-              )}
-            </button>
-
-            <button
-              type="button"
-              onClick={firePulse}
-              disabled={isRunning}
-              className="px-4 py-2.5 rounded-xl font-bold text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-2 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-            >
-              <Zap className="w-4 h-4 text-cyan-400" />
-              <span>{t.labs.hbt.fireSinglePulse}</span>
-            </button>
+        {/* Pulse Repetition Rate Slider */}
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">
+              {t.labs.hbt.rateLabel}
+            </label>
+            <span className="text-xs font-mono text-cyan-400 font-bold">
+              {pulseRate} {language === 'vi' ? 'xung/s' : 'pulses/s'}
+            </span>
           </div>
+          <input
+            type="range"
+            min={2}
+            max={25}
+            step={1}
+            value={pulseRate}
+            onChange={(e) => setPulseRate(Number(e.target.value))}
+            className="w-full accent-cyan-400 bg-slate-800 h-2 rounded-lg cursor-pointer"
+          />
+          <div className="flex justify-between text-xs text-slate-400 font-mono">
+            <span>{language === 'vi' ? 'Chậm (2 Hz)' : 'Slow (2 Hz)'}</span>
+            <span>{language === 'vi' ? 'Nhanh (25 Hz)' : 'Fast (25 Hz)'}</span>
+          </div>
+        </div>
 
-          <button
-            type="button"
-            onClick={handleClearData}
-            className="px-3.5 py-2.5 rounded-xl font-bold text-xs bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 hover:border-slate-700 flex items-center gap-2 cursor-pointer transition-all"
-          >
-            <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
-            <span>{t.labs.hbt.clearData}</span>
-          </button>
+        {/* APD Dark Count Noise Slider */}
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">
+              {t.labs.hbt.darkCountLabel}
+            </label>
+            <span className="text-xs font-mono text-rose-400 font-bold">
+              {(darkCountRate * 100).toFixed(0)}%
+            </span>
+          </div>
+          <input
+            type="range"
+            min={0.0}
+            max={0.2}
+            step={0.01}
+            value={darkCountRate}
+            onChange={(e) => setDarkCountRate(Number(e.target.value))}
+            className="w-full accent-rose-400 bg-slate-800 h-2 rounded-lg cursor-pointer"
+          />
+          <div className="flex justify-between text-xs text-slate-400 font-mono">
+            <span>{language === 'vi' ? 'Lý tưởng (0%)' : 'Ideal (0%)'}</span>
+            <span>{language === 'vi' ? 'Nhiễu cao (20%)' : 'High Noise (20%)'}</span>
+          </div>
         </div>
       </div>
 
@@ -1103,6 +1109,39 @@ export const HBTLab: React.FC = () => {
 
         {showDetails && (
           <div className="px-5 pb-5 pt-2 flex flex-col gap-5 border-t border-slate-800/80">
+            {/* Card 0: Purpose of Delta t = t2 - t1 */}
+            <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col gap-2.5">
+              <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                <HelpCircle className="w-4 h-4 text-cyan-400" />
+                <span>{t.labs.hbt.deltaTPurposeTitle}</span>
+              </h4>
+              <p className="text-sm text-slate-300 leading-relaxed font-normal">
+                {t.labs.hbt.deltaTPurposeDesc}
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 mt-1">
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 flex flex-col gap-1">
+                  <span className="text-xs font-bold text-rose-300 font-mono">
+                    {language === 'vi' ? '● Sóng cổ điển (Tại Δt = 0):' : '● Classical Wave (At Δt = 0):'}
+                  </span>
+                  <p className="text-xs text-slate-300 leading-relaxed font-normal">
+                    {language === 'vi'
+                      ? 'Sóng liên tục bị chia đôi tại NPBS 50:50. Cả 2 nhánh đều có năng lượng nên D₁ và D₂ thường xuyên cùng kích hoạt tại Δt = 0 (g⁽²⁾(0) ≥ 1).'
+                      : 'Continuous wave splits evenly at 50:50 NPBS. Both arms carry power, so D₁ and D₂ frequently click together at Δt = 0 (g⁽²⁾(0) ≥ 1).'}
+                  </p>
+                </div>
+                <div className="p-3 rounded-lg bg-slate-950/80 border border-slate-800 flex flex-col gap-1">
+                  <span className="text-xs font-bold text-emerald-300 font-mono">
+                    {language === 'vi' ? '● Hạt lượng tử Fock |1⟩ (Tại Δt = 0):' : '● Quantum Fock |1⟩ (At Δt = 0):'}
+                  </span>
+                  <p className="text-xs text-slate-300 leading-relaxed font-normal">
+                    {language === 'vi'
+                      ? 'Một photon đơn lẻ (hν) không thể bị chẻ làm đôi. Nó chỉ đi vào D₁ HOẶC D₂, do đó không bao giờ có trùng phùng tại Δt = 0 (N(0) = 0, g⁽²⁾(0) = 0).'
+                      : 'A single photon (hν) cannot be split. It triggers either D₁ OR D₂, strictly yielding zero coincidences at Δt = 0 (N(0) = 0, g⁽²⁾(0) = 0).'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* Card 1: Cauchy-Schwarz classical inequality */}
             <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col gap-2">
               <h4 className="text-sm font-bold text-white flex items-center gap-2">

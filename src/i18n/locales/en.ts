@@ -316,7 +316,7 @@ export const enTranslations: Translations = {
       badge: 'Virtual Lab 5',
       title: 'Hanbury Brown - Twiss Experiment: Photon Antibunching',
       description:
-        'The definitive empirical proof mandating electromagnetic field quantization: Measuring the second-order correlation function g⁽²⁾(τ). When g⁽²⁾(0) < 1, Photon Antibunching violates the classical Cauchy-Schwarz wave inequality.',
+        'Investigating the quantum nature of radiation fields via the second-order correlation function g⁽²⁾(τ): Photon Antibunching (g⁽²⁾(0) < 1) violates the classical Cauchy-Schwarz wave inequality.',
       // Controls
       sourceSelectLabel: 'Radiation Source Type:',
       sourceSinglePhoton: 'Single Photon (Fock |1⟩)',
@@ -371,6 +371,11 @@ export const enTranslations: Translations = {
       transmittedArm: 'Transmitted Path (50%)',
       // Educational Insights
       theorySectionTitle: 'Physical Foundations & Quantum Nature of HBT',
+      deltaTPurposeTitle: 'Purpose & Meaning of the Time Delay Measurement Δt = t₂ - t₁',
+      deltaTPurposeDesc:
+        'Measuring the time delay Δt = t₂ - t₁ between detectors D₁ and D₂ determines the joint probability of two photon clicks arriving simultaneously (τ = Δt = 0). If light consists of indivisible single-photon energy quanta (hν), each photon can only be reflected or transmitted at the 50:50 NPBS — triggering D₁ OR D₂, NEVER both simultaneously at Δt = 0. Therefore, the dip to zero counts N(0) = 0 and g⁽²⁾(0) < 1 is the definitive empirical proof that light is quantized into indivisible corpuscles, refuting continuous classical wave theory.',
+      deltaTPurposeHint:
+        'What is Δt = t₂ - t₁ for? Measures the time difference between detectors to verify that an indivisible single photon cannot split and trigger both D₁ and D₂ simultaneously (at Δt = 0). A dip to N(0) = 0 proves light is quantized.',
       cauchySchwarzTitle: '1. Classical Cauchy-Schwarz Inequality vs Quantum Violation',
       cauchySchwarzDesc:
         'In Maxwell classical wave optics, intensity I(t) is a non-negative real scalar. The Cauchy-Schwarz inequality dictates: ⟨I(t) I(t+τ)⟩ ≤ ⟨I(t)²⟩, which mathematically enforces g⁽²⁾(0) ≥ 1 and g⁽²⁾(0) ≥ g⁽²⁾(τ). When an experiment measures g⁽²⁾(0) < 1, classical continuous wave optics fails completely: light cannot be a continuous electromagnetic wave!',
