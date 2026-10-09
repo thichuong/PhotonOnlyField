@@ -137,7 +137,7 @@ function MainApp() {
               <h1 className="font-black text-base lg:text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-cyan-400 bg-clip-text text-transparent">
                 {t.nav.title}
               </h1>
-              <p className="text-[10px] text-slate-400 font-mono -mt-0.5">
+              <p className="text-xs text-slate-400 font-mono -mt-0.5">
                 {t.nav.tagline}
               </p>
             </div>

@@ -182,8 +182,8 @@ export const FockStateLab: React.FC = () => {
         {/* Phase Space Axes */}
         <line x1="20" y1={originY} x2={width - 20} y2={originY} stroke="#334155" strokeWidth="1" />
         <line x1={originX} y1="20" x2={originX} y2={height - 20} stroke="#334155" strokeWidth="1" />
-        <text x={width - 15} y={originY - 6} fill="#64748b" fontSize="9" fontFamily="monospace">X̂ (Điện)</text>
-        <text x={originX + 6} y="25" fill="#64748b" fontSize="9" fontFamily="monospace">P̂ (Từ)</text>
+        <text x={width - 15} y={originY - 6} fill="#64748b" fontSize="10" fontFamily="monospace">{t.labs.fockState.electricQuad}</text>
+        <text x={originX + 6} y="25" fill="#64748b" fontSize="10" fontFamily="monospace">{t.labs.fockState.magneticQuad}</text>
 
         {/* Uncertainty Region: Concentric Circle for Fock State (Completely indeterminate phase) */}
         <circle
@@ -208,7 +208,7 @@ export const FockStateLab: React.FC = () => {
         />
 
         <text x={originX} y={height - 15} fill="#c084fc" fontSize="9" fontFamily="monospace" textAnchor="middle">
-          Δn = 0 (Xác định tuyệt đối số photon) ⟹ Δφ = ∞ (Pha quay ngẫu nhiên 360°)
+          {t.labs.fockState.phaseUncertaintyFormula}
         </text>
       </svg>
     );
@@ -236,7 +236,7 @@ export const FockStateLab: React.FC = () => {
         </div>
 
         <div className="bg-slate-950 px-4 py-2.5 rounded-xl border border-slate-800 text-xs flex flex-col justify-center">
-          <div className="text-[10px] text-cyan-400 font-bold uppercase tracking-wider">
+          <div className="text-xs text-cyan-400 font-bold uppercase tracking-wider">
             {t.labs.fockState.hamiltonianTitle}
           </div>
           <div className="text-slate-300 text-xs mt-0.5 font-mono font-medium">
@@ -250,7 +250,7 @@ export const FockStateLab: React.FC = () => {
         <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
           <BookOpen className="w-4 h-4 text-cyan-400" />
           <h4 className="text-sm font-bold text-white uppercase tracking-wider">
-            Lý Thuyết Trạng Thái Fock & Hướng Dẫn Quan Sát
+            {t.labs.fockState.guideTitle}
           </h4>
         </div>
 
@@ -364,7 +364,7 @@ export const FockStateLab: React.FC = () => {
               </span>
             )}
             <span className="font-mono text-xs text-slate-300 bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800 whitespace-nowrap self-start sm:self-auto shrink-0 shadow-sm">
-              {photonNumber === 0 ? 'H₀(x) = 1' : `H_${photonNumber}(x) (${photonNumber} nút)`}
+              {photonNumber === 0 ? 'H₀(x) = 1' : `H_${photonNumber}(x) (${photonNumber} ${t.labs.fockState.nodeCountSuffix})`}
             </span>
           </div>
         </div>
@@ -389,7 +389,7 @@ export const FockStateLab: React.FC = () => {
                 </div>
                 <div className="text-left">
                   <div className="font-bold">{t.labs.fockState.creationTitle}</div>
-                  <div className="text-[10px] text-slate-400">{t.labs.fockState.creationDesc}</div>
+                  <div className="text-xs text-slate-400">{t.labs.fockState.creationDesc}</div>
                 </div>
               </div>
               <span className="font-mono text-xs">â†|{photonNumber}⟩ = √{photonNumber + 1}|{photonNumber + 1}⟩</span>
@@ -407,7 +407,7 @@ export const FockStateLab: React.FC = () => {
                 </div>
                 <div className="text-left">
                   <div className="font-bold">{t.labs.fockState.annihilationTitle}</div>
-                  <div className="text-[10px] text-slate-400">{t.labs.fockState.annihilationDesc}</div>
+                  <div className="text-xs text-slate-400">{t.labs.fockState.annihilationDesc}</div>
                 </div>
               </div>
               <span className="font-mono text-xs">
@@ -424,10 +424,10 @@ export const FockStateLab: React.FC = () => {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-slate-400">{t.labs.fockState.vacuumZpeSummary}</span>
-              <span className="font-mono text-amber-300 font-bold">0.5 ℏω (Bất biến)</span>
+              <span className="font-mono text-amber-300 font-bold">{t.labs.fockState.invariantVacuum}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-slate-400">Năng lượng kích thích nℏω:</span>
+              <span className="text-slate-400">{t.labs.fockState.excitationEnergyLabel}</span>
               <span className="font-mono text-cyan-300 font-bold">{photonNumber}.0 ℏω</span>
             </div>
             <div className="h-px bg-slate-800 my-0.5" />

@@ -24,7 +24,7 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
               <h3 className="text-sm font-bold text-white tracking-wide">
                 {t.controls.bannerTitle}
               </h3>
-              <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[10px] rounded-full font-mono font-semibold">
+              <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-xs rounded-full font-mono font-semibold">
                 {t.controls.bannerBadge}
               </span>
             </div>
@@ -77,7 +77,7 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
             onChange={(e) => onChange({ waveFrequency: parseFloat(e.target.value) })}
             className="w-full accent-cyan-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
           />
-          <div className="flex justify-between text-[10px] text-slate-500">
+          <div className="flex justify-between text-xs text-slate-400">
             <span>{t.controls.lowEnergyWave}</span>
             <span>{t.controls.highEnergyWave}</span>
           </div>
@@ -101,7 +101,7 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
             onChange={(e) => onChange({ amplitude: parseFloat(e.target.value) })}
             className="w-full accent-purple-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
           />
-          <div className="flex justify-between text-[10px] text-slate-500">
+          <div className="flex justify-between text-xs text-slate-400">
             <span>{t.controls.gentleRipple}</span>
             <span>{t.controls.strongExcitation}</span>
           </div>
@@ -116,7 +116,7 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
             </span>
             <button
               onClick={() => onChange({ showWireframe: !settings.showWireframe })}
-              className={`text-[11px] font-mono flex items-center gap-1 px-2 py-0.5 rounded border transition-colors ${
+              className={`text-xs font-mono flex items-center gap-1 px-2.5 py-0.5 rounded border transition-colors ${
                 settings.showWireframe
                   ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300'
                   : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200'
@@ -129,7 +129,7 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
           <div className="grid grid-cols-3 gap-1.5">
             <button
               onClick={() => onChange({ colorScheme: 'quantum-cyan' })}
-              className={`py-1.5 px-2 text-[11px] rounded-lg border font-medium transition-all ${
+              className={`py-1.5 px-2 text-xs rounded-lg border font-medium transition-all ${
                 settings.colorScheme === 'quantum-cyan'
                   ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300'
                   : 'bg-slate-800/80 border-slate-700 text-slate-400 hover:text-slate-200'
@@ -139,7 +139,7 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
             </button>
             <button
               onClick={() => onChange({ colorScheme: 'electric-violet' })}
-              className={`py-1.5 px-2 text-[11px] rounded-lg border font-medium transition-all ${
+              className={`py-1.5 px-2 text-xs rounded-lg border font-medium transition-all ${
                 settings.colorScheme === 'electric-violet'
                   ? 'bg-purple-500/20 border-purple-400 text-purple-300'
                   : 'bg-slate-800/80 border-slate-700 text-slate-400 hover:text-slate-200'
@@ -149,7 +149,7 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
             </button>
             <button
               onClick={() => onChange({ colorScheme: 'energy-amber' })}
-              className={`py-1.5 px-2 text-[11px] rounded-lg border font-medium transition-all ${
+              className={`py-1.5 px-2 text-xs rounded-lg border font-medium transition-all ${
                 settings.colorScheme === 'energy-amber'
                   ? 'bg-amber-500/20 border-amber-400 text-amber-300'
                   : 'bg-slate-800/80 border-slate-700 text-slate-400 hover:text-slate-200'

@@ -1,11 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { useLanguage } from '../../i18n';
 
 interface MiniParticleCanvasProps {
   className?: string;
 }
 
 export const MiniParticleCanvas: React.FC<MiniParticleCanvasProps> = ({ className = '' }) => {
+  const { t } = useLanguage();
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -135,9 +137,9 @@ export const MiniParticleCanvas: React.FC<MiniParticleCanvasProps> = ({ classNam
   return (
     <div className={`relative rounded-xl overflow-hidden border border-amber-500/20 bg-slate-950/80 ${className}`}>
       <div ref={mountRef} className="w-full h-48 md:h-56" />
-      <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between pointer-events-none px-2 py-1 bg-slate-950/70 backdrop-blur-sm rounded-lg border border-slate-800 text-[10px] text-amber-300 font-mono">
-        <span>Mô hình Hạt Cổ Điển</span>
-        <span>Bay thẳng trong chân không rỗng</span>
+      <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between pointer-events-none px-2.5 py-1 bg-slate-950/70 backdrop-blur-sm rounded-lg border border-slate-800 text-xs text-amber-300 font-mono">
+        <span>{t.timeline.miniParticleLabel}</span>
+        <span>{t.timeline.miniParticleDesc}</span>
       </div>
     </div>
   );

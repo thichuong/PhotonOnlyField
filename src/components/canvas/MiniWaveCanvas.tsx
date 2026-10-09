@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { useLanguage } from '../../i18n';
 
 interface MiniWaveCanvasProps {
   className?: string;
@@ -10,6 +11,7 @@ export const MiniWaveCanvas: React.FC<MiniWaveCanvasProps> = ({
   className = '',
   type = 'interference',
 }) => {
+  const { t } = useLanguage();
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -159,9 +161,9 @@ export const MiniWaveCanvas: React.FC<MiniWaveCanvasProps> = ({
   return (
     <div className={`relative rounded-xl overflow-hidden border border-cyan-500/20 bg-slate-950/80 ${className}`}>
       <div ref={mountRef} className="w-full h-48 md:h-56" />
-      <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between pointer-events-none px-2 py-1 bg-slate-950/70 backdrop-blur-sm rounded-lg border border-slate-800 text-[10px] text-cyan-300 font-mono">
-        <span>{type === 'interference' ? 'Giao Thoa 2 Nguồn Sóng' : 'Sóng Lan Truyền'}</span>
-        <span>Biên độ cộng hưởng & triệt tiêu</span>
+      <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between pointer-events-none px-2.5 py-1 bg-slate-950/70 backdrop-blur-sm rounded-lg border border-slate-800 text-xs text-cyan-300 font-mono">
+        <span>{type === 'interference' ? t.timeline.miniWaveInterference : t.timeline.miniWavePlane}</span>
+        <span>{t.timeline.miniWaveDesc}</span>
       </div>
     </div>
   );

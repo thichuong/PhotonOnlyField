@@ -35,7 +35,7 @@ export const MisconceptionsSection: React.FC = () => {
                   #{index + 1}
                 </div>
                 <div className="flex flex-col gap-1.5 flex-1">
-                  <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-rose-400 flex items-center gap-1">
+                  <span className="text-xs uppercase font-mono tracking-wider font-bold text-rose-400 flex items-center gap-1">
                     <AlertOctagon className="w-3.5 h-3.5" />
                     {t.myths.mythBadge}
                   </span>

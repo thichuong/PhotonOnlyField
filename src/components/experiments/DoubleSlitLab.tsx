@@ -330,7 +330,7 @@ export const DoubleSlitLab: React.FC = () => {
         <div className="bg-slate-950 px-4 py-2.5 rounded-xl border border-slate-800 flex items-center gap-3">
           <Sparkles className="w-4 h-4 text-cyan-400" />
           <div className="flex flex-col">
-            <span className="text-[10px] text-slate-400 uppercase font-mono">{t.labs.doubleSlit.photonsInteracted}</span>
+            <span className="text-xs text-slate-400 uppercase font-mono">{t.labs.doubleSlit.photonsInteracted}</span>
             <span className="font-mono text-lg font-bold text-cyan-300">{totalPhotons.toLocaleString()}</span>
           </div>
         </div>
@@ -341,7 +341,7 @@ export const DoubleSlitLab: React.FC = () => {
         <div className="flex items-center gap-2 border-b border-slate-800 pb-2.5">
           <BookOpen className="w-4 h-4 text-cyan-400" />
           <h4 className="text-sm font-bold text-white uppercase tracking-wider">
-            {t.labs.doubleSlit.qftInsightTitle} & Hướng Dẫn Quan Sát
+            {t.labs.doubleSlit.qftInsightTitle} & {t.labs.doubleSlit.guideTitle}
           </h4>
         </div>
 
@@ -349,7 +349,7 @@ export const DoubleSlitLab: React.FC = () => {
           <div className="p-3.5 rounded-xl bg-slate-900/70 border border-cyan-500/20 flex flex-col gap-2">
             <span className="font-bold text-cyan-300 flex items-center gap-1.5 text-xs">
               <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Bản Chất Trường QFT (Không Phải Viên Bi Chia Đôi)</span>
+              <span>{t.labs.doubleSlit.fieldNatureTitle}</span>
             </span>
             <p className="text-slate-300 leading-relaxed">
               {t.labs.doubleSlit.qftInsightBody}
@@ -359,18 +359,12 @@ export const DoubleSlitLab: React.FC = () => {
           <div className="p-3.5 rounded-xl bg-slate-900/70 border border-purple-500/20 flex flex-col gap-2">
             <span className="font-bold text-purple-300 flex items-center gap-1.5 text-xs">
               <Eye className="w-3.5 h-3.5 text-purple-400" />
-              <span>Hiện Tượng Quan Trọng Cần Kiểm Chứng</span>
+              <span>{t.labs.doubleSlit.keyPhenomenaTitle}</span>
             </span>
             <ul className="list-disc list-inside space-y-1 text-slate-300">
-              <li>
-                <strong className="text-white">Bắn từng photon đơn lẻ:</strong> Mỗi hạt va chạm tại 1 điểm ngẫu nhiên, nhưng sau hàng trăm hạt sẽ tự tích lũy thành các vân giao thoa!
-              </li>
-              <li>
-                <strong className="text-white">Bật cảm biến Which-Way:</strong> Khi đo photon đi qua khe nào, hiện tượng kết hợp pha bị phá hủy ngay lập tức, chuyển thành phân bố cổ điển.
-              </li>
-              <li>
-                <strong className="text-white">Khoảng cách 2 khe (d):</strong> Càng xa nhau, các dải vân càng co cụm lại gần nhau hơn theo công thức $i = \lambda D / d$.
-              </li>
+              <li>{t.labs.doubleSlit.singlePhotonCheck}</li>
+              <li>{t.labs.doubleSlit.whichWayCheck}</li>
+              <li>{t.labs.doubleSlit.slitDistCheck}</li>
             </ul>
           </div>
         </div>
@@ -416,14 +410,14 @@ export const DoubleSlitLab: React.FC = () => {
           />
           <button
             onClick={() => setShowWaveChamber(!showWaveChamber)}
-            className="absolute top-3 left-3 text-[10px] font-mono text-cyan-300 bg-slate-900/80 hover:bg-slate-800 px-2 py-1 rounded-md border border-slate-800 flex items-center gap-1.5 cursor-pointer transition-colors"
+            className="absolute top-3 left-3 text-xs font-mono text-cyan-300 bg-slate-900/80 hover:bg-slate-800 px-2.5 py-1 rounded-md border border-slate-800 flex items-center gap-1.5 cursor-pointer transition-colors"
           >
-            <Waves className="w-3 h-3 text-cyan-400" />
+            <Waves className="w-3.5 h-3.5 text-cyan-400" />
             <span>{t.labs.doubleSlit.wavefrontToggle}</span>
           </button>
           {whichWayDetector && (
-            <div className="absolute top-3 right-3 text-[10px] font-mono text-rose-300 bg-rose-950/80 px-2 py-1 rounded-md border border-rose-800 flex items-center gap-1">
-              <Eye className="w-3 h-3 text-rose-400" />
+            <div className="absolute top-3 right-3 text-xs font-mono text-rose-300 bg-rose-950/80 px-2.5 py-1 rounded-md border border-rose-800 flex items-center gap-1">
+              <Eye className="w-3.5 h-3.5 text-rose-400" />
               <span>Which-Way ON</span>
             </div>
           )}
@@ -437,11 +431,11 @@ export const DoubleSlitLab: React.FC = () => {
             height={280}
             className="w-full h-full object-cover"
           />
-          <div className="absolute top-3 left-3 text-[10px] font-mono text-slate-400 bg-slate-900/80 px-2 py-1 rounded-md border border-slate-800 flex items-center gap-1.5">
-            <Radio className="w-3 h-3 text-purple-400" />
+          <div className="absolute top-3 left-3 text-xs font-mono text-slate-400 bg-slate-900/80 px-2.5 py-1 rounded-md border border-slate-800 flex items-center gap-1.5">
+            <Radio className="w-3.5 h-3.5 text-purple-400" />
             <span>{t.labs.doubleSlit.detectorScreen}</span>
           </div>
-          <div className="absolute bottom-3 right-3 text-[10px] font-mono text-purple-400 bg-slate-900/80 px-2 py-1 rounded-md border border-slate-800">
+          <div className="absolute bottom-3 right-3 text-xs font-mono text-purple-400 bg-slate-900/80 px-2.5 py-1 rounded-md border border-slate-800">
             {t.labs.doubleSlit.probabilityDensity}
           </div>
           {totalPhotons === 0 && (

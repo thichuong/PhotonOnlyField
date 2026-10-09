@@ -82,6 +82,12 @@ export interface Translations {
     qftPinnacleTitle: string;
     qftPinnacleDesc: string;
     coreFormulaLabel: string;
+    mathExpressionLabel: string;
+    miniParticleLabel: string;
+    miniParticleDesc: string;
+    miniWaveInterference: string;
+    miniWavePlane: string;
+    miniWaveDesc: string;
   };
   labs: {
     headerBadge: string;
@@ -116,11 +122,23 @@ export interface Translations {
       whichWayLabel: string;
       whichWayActiveNotice: string;
       wavefrontToggle: string;
+      guideTitle: string;
+      fieldNatureTitle: string;
+      keyPhenomenaTitle: string;
+      singlePhotonCheck: string;
+      whichWayCheck: string;
+      slitDistCheck: string;
     };
     photoelectric: {
       badge: string;
       title: string;
       description: string;
+      guideTitle: string;
+      modelComparisonTitle: string;
+      collapseDetails: string;
+      expandDetails: string;
+      stoppingNote: string;
+      experimentalGraphsTitle: string;
       formulaTitle: string;
       formulaDetail: string;
       vacuumTube: string;
@@ -183,6 +201,7 @@ export interface Translations {
       badge: string;
       title: string;
       description: string;
+      guideTitle: string;
       hamiltonianTitle: string;
       energyDetail: string;
       potentialWellTitle: string;
@@ -214,11 +233,18 @@ export interface Translations {
       viewWaveDesc: string;
       viewProbDesc: string;
       viewQuadDesc: string;
+      nodeCountSuffix: string;
+      invariantVacuum: string;
+      excitationEnergyLabel: string;
+      electricQuad: string;
+      magneticQuad: string;
+      phaseUncertaintyFormula: string;
     };
     casimir: {
       badge: string;
       title: string;
       description: string;
+      guideTitle: string;
       plateDistanceLabel: string;
       forceMeasureLabel: string;
       forceFormulaTitle: string;
@@ -236,6 +262,11 @@ export interface Translations {
       forceScalingDesc: string;
       whyAttractTitle: string;
       whyAttractDesc: string;
+      allWavelengths: string;
+      strongForceShortDist: string;
+      weakForceLongDist: string;
+      qftVacuumModel: string;
+      classicalVacuumModel: string;
     };
     machZehnder: {
       badge: string;

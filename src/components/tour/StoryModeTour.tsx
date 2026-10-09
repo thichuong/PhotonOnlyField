@@ -52,7 +52,7 @@ export const StoryModeTour: React.FC<StoryModeTourProps> = ({
               <Compass className="w-4 h-4 animate-spin" style={{ animationDuration: '16s' }} />
             </div>
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold block">
+              <span className="text-xs font-mono uppercase tracking-wider text-cyan-400 font-bold block">
                 {t.tour.tourBadge}
               </span>
               <h3 className="text-sm sm:text-base font-bold text-white tracking-tight">

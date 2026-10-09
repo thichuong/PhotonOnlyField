@@ -610,7 +610,7 @@ export const MachZehnderLab: React.FC = () => {
           >
             <div className={`w-3 h-3 rounded-full ${lastHit === 'D1' ? 'bg-emerald-300 animate-ping' : 'bg-emerald-500'}`} />
             <div className="flex flex-col">
-              <span className="text-[10px] text-slate-400 font-mono font-medium">
+              <span className="text-xs text-slate-400 font-mono font-medium">
                 {t.labs.machZehnder.detector1Header}
               </span>
               <div className="flex items-baseline gap-1.5">
@@ -618,7 +618,7 @@ export const MachZehnderLab: React.FC = () => {
                 <span className="font-mono text-xs text-slate-400">
                   ({totalHits > 0 ? ((countD1 / totalHits) * 100).toFixed(0) : 0}%)
                 </span>
-                <span className="text-[10px] text-emerald-500/80 font-mono">
+                <span className="text-xs text-emerald-500/80 font-mono">
                   [{t.labs.machZehnder.theoryAbbr}: {(probD1 * 100).toFixed(0)}%]
                 </span>
               </div>
@@ -635,7 +635,7 @@ export const MachZehnderLab: React.FC = () => {
           >
             <div className={`w-3 h-3 rounded-full ${lastHit === 'D2' ? 'bg-purple-300 animate-ping' : 'bg-purple-500'}`} />
             <div className="flex flex-col">
-              <span className="text-[10px] text-slate-400 font-mono font-medium">
+              <span className="text-xs text-slate-400 font-mono font-medium">
                 {t.labs.machZehnder.detector2Header}
               </span>
               <div className="flex items-baseline gap-1.5">
@@ -643,7 +643,7 @@ export const MachZehnderLab: React.FC = () => {
                 <span className="font-mono text-xs text-slate-400">
                   ({totalHits > 0 ? ((countD2 / totalHits) * 100).toFixed(0) : 0}%)
                 </span>
-                <span className="text-[10px] text-purple-400/80 font-mono">
+                <span className="text-xs text-purple-400/80 font-mono">
                   [{t.labs.machZehnder.theoryAbbr}: {(probD2 * 100).toFixed(0)}%]
                 </span>
               </div>
@@ -722,20 +722,20 @@ export const MachZehnderLab: React.FC = () => {
 
           {/* Overlay Banner */}
           <div className="absolute top-2.5 left-3 flex flex-wrap items-center gap-2 pointer-events-none">
-            <div className="text-[10px] font-mono text-slate-300 bg-slate-900/90 px-2.5 py-1 rounded-md border border-slate-800 flex items-center gap-1.5 backdrop-blur-sm">
+            <div className="text-xs font-mono text-slate-300 bg-slate-900/90 px-2.5 py-1 rounded-md border border-slate-800 flex items-center gap-1.5 backdrop-blur-sm">
               {hasBS2 ? (
                 <span className="text-cyan-300 flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-cyan-400" />
+                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
                   <span>{t.labs.machZehnder.hasBS2Title}</span>
                 </span>
               ) : (
                 <span className="text-rose-300 flex items-center gap-1">
-                  <Eye className="w-3 h-3 text-rose-400" />
+                  <Eye className="w-3.5 h-3.5 text-rose-400" />
                   <span>{t.labs.machZehnder.noBS2Title}</span>
                 </span>
               )}
             </div>
-            <div className="text-[10px] font-mono text-amber-300 bg-amber-950/85 px-2 py-1 rounded-md border border-amber-800/80 backdrop-blur-sm hidden sm:block">
+            <div className="text-xs font-mono text-amber-300 bg-amber-950/85 px-2 py-1 rounded-md border border-amber-800/80 backdrop-blur-sm hidden sm:block">
               {hasBS2 ? t.labs.machZehnder.superpositionBanner : t.labs.machZehnder.whichPathBanner}
             </div>
           </div>
@@ -751,10 +751,10 @@ export const MachZehnderLab: React.FC = () => {
               </div>
               <div>
                 <h4 className="text-sm font-bold text-white">{t.labs.machZehnder.pathAnalysisTitle}</h4>
-                <span className="text-[10px] font-mono text-slate-400">{t.labs.machZehnder.pathAnalysisSubtitle}</span>
+                <span className="text-xs font-mono text-slate-400">{t.labs.machZehnder.pathAnalysisSubtitle}</span>
               </div>
             </div>
-            <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-yellow-500/10 border border-yellow-500/30 text-yellow-300">
+            <span className="px-2 py-0.5 rounded-md text-xs font-mono font-bold bg-yellow-500/10 border border-yellow-500/30 text-yellow-300">
               Δd = {deltaPathWavelength} λ
             </span>
           </div>
@@ -764,16 +764,16 @@ export const MachZehnderLab: React.FC = () => {
             {/* Nhánh d1 */}
             <div className="bg-slate-900/70 p-3 rounded-xl border border-cyan-500/20 flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-cyan-300 flex items-center gap-1.5">
+                <span className="text-xs font-bold text-cyan-300 flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-cyan-400" />
                   {t.labs.machZehnder.armD1Title}
                 </span>
-                <span className="text-[10px] font-mono text-slate-400">{t.labs.machZehnder.armD1Standard}</span>
+                <span className="text-xs font-mono text-slate-400">{t.labs.machZehnder.armD1Standard}</span>
               </div>
-              <div className="text-[11px] font-mono text-slate-300">
+              <div className="text-xs font-mono text-slate-300">
                 {t.labs.machZehnder.opticalPathLabel} <span className="text-white font-bold">L₀</span>
               </div>
-              <div className="text-[10px] text-slate-400 leading-tight">
+              <div className="text-xs text-slate-400 leading-tight">
                 {t.labs.machZehnder.armD1Detail}
               </div>
             </div>
@@ -781,16 +781,16 @@ export const MachZehnderLab: React.FC = () => {
             {/* Nhánh d2 */}
             <div className="bg-slate-900/70 p-3 rounded-xl border border-amber-500/20 flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-amber-300 flex items-center gap-1.5">
+                <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-amber-400" />
                   {t.labs.machZehnder.armD2Title}
                 </span>
-                <span className="text-[10px] font-mono text-amber-400 font-bold">+{deltaPathWavelength}λ</span>
+                <span className="text-xs font-mono text-amber-400 font-bold">+{deltaPathWavelength}λ</span>
               </div>
-              <div className="text-[11px] font-mono text-slate-300">
+              <div className="text-xs font-mono text-slate-300">
                 {t.labs.machZehnder.opticalPathLabel} <span className="text-white font-bold">L₀ + Δd</span>
               </div>
-              <div className="text-[10px] text-slate-400 leading-tight">
+              <div className="text-xs text-slate-400 leading-tight">
                 {t.labs.machZehnder.phaseShifterSetting}{' '}
                 <span className="text-yellow-300 font-bold">{phaseShiftDeg}°</span>
               </div>
@@ -804,14 +804,14 @@ export const MachZehnderLab: React.FC = () => {
                 <Ruler className="w-3.5 h-3.5 text-cyan-400" />
                 <span>{hasBS2 ? t.labs.machZehnder.stateInterference : t.labs.machZehnder.stateWhichPath}</span>
               </span>
-              <span className="text-[10px] font-mono text-slate-400">
+              <span className="text-xs font-mono text-slate-400">
                 {hasBS2 ? 'P₁ + P₂ = 100%' : '50% / 50%'}
               </span>
             </div>
 
             {/* D1 Progress */}
             <div>
-              <div className="flex justify-between text-[11px] font-mono mb-1">
+              <div className="flex justify-between text-xs font-mono mb-1">
                 <span className="text-emerald-400 font-bold flex items-center gap-1">
                   <span>D₁ (cos² Δφ/2):</span>
                   <span className="text-slate-400 font-normal">
@@ -835,7 +835,7 @@ export const MachZehnderLab: React.FC = () => {
 
             {/* D2 Progress */}
             <div>
-              <div className="flex justify-between text-[11px] font-mono mb-1">
+              <div className="flex justify-between text-xs font-mono mb-1">
                 <span className="text-purple-400 font-bold flex items-center gap-1">
                   <span>D₂ (sin² Δφ/2):</span>
                   <span className="text-slate-400 font-normal">
@@ -859,7 +859,7 @@ export const MachZehnderLab: React.FC = () => {
           </div>
 
           {/* Physical Insight Footer */}
-          <div className="text-[11px] text-slate-400 bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/80 leading-relaxed font-mono">
+          <div className="text-xs text-slate-400 bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/80 leading-relaxed font-mono">
             {hasBS2 ? (
               <span>
                 💡 <span className="text-cyan-300 font-semibold">QFT:</span>{' '}

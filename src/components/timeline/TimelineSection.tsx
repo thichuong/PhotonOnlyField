@@ -146,7 +146,7 @@ export const TimelineSection: React.FC = () => {
                     {/* Embedded 3D Sim if applicable */}
                     {hasParticleSim && (
                       <div className="flex flex-col gap-2">
-                        <div className="text-[11px] font-semibold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+                        <div className="text-xs font-semibold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
                           <Atom className="w-3.5 h-3.5" />
                           <span>{t.timeline.simNewtonTitle}</span>
                         </div>
@@ -156,7 +156,7 @@ export const TimelineSection: React.FC = () => {
 
                     {hasInterferenceSim && (
                       <div className="flex flex-col gap-2">
-                        <div className="text-[11px] font-semibold text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
+                        <div className="text-xs font-semibold text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
                           <Atom className="w-3.5 h-3.5" />
                           <span>{t.timeline.simDoubleSlitTitle}</span>
                         </div>
@@ -166,7 +166,7 @@ export const TimelineSection: React.FC = () => {
 
                     {hasPlaneWaveSim && (
                       <div className="flex flex-col gap-2">
-                        <div className="text-[11px] font-semibold text-purple-300 uppercase tracking-wider flex items-center gap-1.5">
+                        <div className="text-xs font-semibold text-purple-300 uppercase tracking-wider flex items-center gap-1.5">
                           <Atom className="w-3.5 h-3.5" />
                           <span>{t.timeline.simMaxwellTitle}</span>
                         </div>
@@ -189,14 +189,14 @@ export const TimelineSection: React.FC = () => {
 
                     {/* Core Physical Principle & Mathematical Notation */}
                     <div className="flex flex-col gap-2 bg-slate-900/80 border border-slate-800 rounded-xl p-3.5">
-                      <div className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider">
+                      <div className="text-xs font-bold text-cyan-400 uppercase tracking-wider">
                         {t.timeline.coreFormulaLabel}
                       </div>
                       <div className="text-sm text-slate-200 leading-relaxed font-medium">
                         {item.formulaMeaning}
                       </div>
-                      <div className="mt-1 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400 font-mono">
-                        <span className="text-[10px] text-slate-500 uppercase">Biểu thức toán học:</span>
+                      <div className="mt-1 pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400 font-mono">
+                        <span className="text-xs text-slate-400 uppercase">{t.timeline.mathExpressionLabel}</span>
                         <MathFormula
                           math={item.formulaLatex}
                           className="text-xs text-cyan-300"
