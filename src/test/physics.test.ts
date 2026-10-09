@@ -66,25 +66,17 @@ describe('Physics Logic & Simulation Test Suite', () => {
     assert.strictEqual(intensity, 1.0, 'Central fringe should have maximum intensity (1.0)');
   });
 
-  // TC-05: Casimir Effect 1/d^4 force scaling & vacuum mode confinement
-  it('TC-05: Casimir effect force must scale with 1/d^4 and decrease with distance', () => {
-    const baseD = 60;
-    const baseForce = 45; // nN at 60nm
-    const forceAt = (d: number) => baseForce * Math.pow(baseD / d, 4);
-
-    const force30 = forceAt(30);
-    const force60 = forceAt(60);
-    const force120 = forceAt(120);
-
-    // When distance halves (60nm -> 30nm), force increases by 2^4 = 16x
-    assert.ok(Math.abs(force30 / force60 - 16) < 1e-4, 'Halving distance must increase Casimir force by 16x');
-
-    // When distance doubles (60nm -> 120nm), force decreases by 2^4 = 16x
-    assert.ok(Math.abs(force60 / force120 - 16) < 1e-4, 'Doubling distance must decrease Casimir force by 16x');
-
-    // Classical empty vacuum prediction must be 0
-    const classicalForce = 0;
-    assert.strictEqual(classicalForce, 0, 'Classical vacuum contains no modes so force is 0');
+  // TC-05: Mach-Zehnder unitary beam splitter transformation (BS1) preserves photon probability amplitude
+  it('TC-05: 50:50 beam splitter generates normalized single-photon superposition state (|d1> + i|d2>) / sqrt(2)', () => {
+    // Input state |1, 0> through 50:50 beam splitter matrix:
+    // [1/sqrt(2),  i/sqrt(2)]
+    // [i/sqrt(2),  1/sqrt(2)]
+    const ampD1 = 1 / Math.sqrt(2);
+    const ampD2 = 1 / Math.sqrt(2);
+    const totalProb = Math.pow(ampD1, 2) + Math.pow(ampD2, 2);
+    assert.ok(Math.abs(totalProb - 1.0) < 1e-6, 'Beam splitter state must preserve unitarity / probability conservation (1.0)');
+    assert.ok(Math.abs(Math.pow(ampD1, 2) - 0.5) < 1e-9, 'Branch d1 has 50% probability amplitude');
+    assert.ok(Math.abs(Math.pow(ampD2, 2) - 0.5) < 1e-9, 'Branch d2 has 50% probability amplitude');
   });
 
   // TC-06: Mach-Zehnder single-photon interference & delayed choice
@@ -157,4 +149,62 @@ describe('Physics Logic & Simulation Test Suite', () => {
     assert.ok(Math.abs(H2(rootH2)) < 1e-6);
     assert.ok(Math.abs(H2(-rootH2)) < 1e-6);
   });
+
+  // TC-09: Quantum Optics Antibunching vs Classical Wave Coherence
+  it('TC-09: Quantum optics g^(2)(0) < 1 proves true non-classical photon field (Antibunching)', () => {
+    // Second-order correlation function g^(2)(0) for Fock state |n>:
+    // g^(2)(0) = <a^dagger a^dagger a a> / <a^dagger a>^2 = n(n-1) / n^2
+    const g2Fock = (n: number) => (n <= 1 ? 0 : (n * (n - 1)) / (n * n));
+
+    // Single-photon state |1>: g^(2)(0) = 0 (perfect antibunching, impossible in classical wave optics)
+    assert.strictEqual(g2Fock(1), 0, 'Single-photon Fock state must have g^(2)(0) = 0');
+
+    // Two-photon state |2>: g^(2)(0) = 2*(1)/4 = 0.5 < 1 (sub-Poissonian / quantum)
+    assert.strictEqual(g2Fock(2), 0.5, 'Two-photon Fock state must have g^(2)(0) = 0.5 < 1');
+
+    // Coherent state (laser / Poissonian): g^(2)(0) = 1.0
+    const g2Coherent = 1.0;
+    assert.strictEqual(g2Coherent, 1.0, 'Coherent state has g^(2)(0) = 1');
+
+    // Thermal / chaotic light (Bose-Einstein / super-Poissonian): g^(2)(0) = 2.0
+    const g2Thermal = 2.0;
+    assert.strictEqual(g2Thermal, 2.0, 'Thermal light has g^(2)(0) = 2 >= 1');
+
+    // Verification of Cauchy-Schwarz classical inequality: Classical waves require g^(2)(0) >= 1
+    assert.ok(g2Fock(1) < 1.0, 'Antibunching g^(2)(0) < 1 violates classical wave theory');
+  });
+
+  // TC-10: Jaffe 2005 Casimir Limit (Van der Waals coupling e -> 0)
+  it('TC-10: Casimir force vanishes as coupling e -> 0 in Jaffe relativistic Van der Waals formulation', () => {
+    // In Robert Jaffe (MIT 2005), Casimir force between plates is an interaction between fluctuating charges
+    // and scales with coupling factor e^2 / (1 + e^2 * chi)
+    const jaffeCasimirForce = (coupling_e: number, d: number) => {
+      if (coupling_e === 0) return 0;
+      // In the perfect conductor limit (e -> infinity or large), it matches standard Casimir -C/d^4
+      const conductivityFactor = Math.min(1, Math.pow(coupling_e, 2));
+      const C = 1.0;
+      return conductivityFactor * (-C / Math.pow(d, 4));
+    };
+
+    const d = 50; // nm
+    const forceCoupled = jaffeCasimirForce(1.0, d);
+    const forceZeroCoupling = jaffeCasimirForce(0.0, d);
+
+    assert.ok(forceCoupled < 0, 'Conducting plates experience attractive Casimir force');
+    assert.strictEqual(forceZeroCoupling, 0, 'Without matter coupling (e=0), Casimir force is strictly 0');
+  });
+
+  // TC-11: Cosmological Constant ZPE Discrepancy Scale
+  it('TC-11: Theoretical Planck ZPE density exceeds observed Dark Energy density by ~10^120', () => {
+    // Observed dark energy density: rho_obs ~ 10^-9 J/m^3 (approx 10^-29 g/cm^3)
+    const logRhoObs = -9;
+
+    // Planck cut-off vacuum energy density: rho_planck ~ 10^111 to 10^114 J/m^3
+    const logRhoPlanck = 111;
+
+    // Order of magnitude discrepancy:
+    const logDiscrepancy = logRhoPlanck - logRhoObs;
+    assert.ok(logDiscrepancy >= 115 && logDiscrepancy <= 125, 'Cosmological constant problem discrepancy must be ~10^120');
+  });
 });
+

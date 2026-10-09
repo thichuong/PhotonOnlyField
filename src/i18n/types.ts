@@ -21,6 +21,7 @@ export interface Translations {
     labs: string;
     qftDeepDive: string;
     myths: string;
+    modernPerspectives: string;
     switchLang: string;
   };
   hero: {
@@ -95,7 +96,6 @@ export interface Translations {
     tabDoubleSlit: string;
     tabPhotoelectric: string;
     tabFockState: string;
-    tabCasimir: string;
     tabMachZehnder: string;
     doubleSlit: {
       badge: string;
@@ -168,6 +168,8 @@ export interface Translations {
       quantumTheoryLabel: string;
       classicalExplanation: string;
       quantumExplanation: string;
+      academicCaveatTitle: string;
+      academicCaveatDesc: string;
       planckConstantSlope: string;
       quickGuideTitle: string;
       presetUV: string;
@@ -239,34 +241,6 @@ export interface Translations {
       electricQuad: string;
       magneticQuad: string;
       phaseUncertaintyFormula: string;
-    };
-    casimir: {
-      badge: string;
-      title: string;
-      description: string;
-      guideTitle: string;
-      plateDistanceLabel: string;
-      forceMeasureLabel: string;
-      forceFormulaTitle: string;
-      modeCountInside: string;
-      modeCountOutside: string;
-      vacuumModeTitle: string;
-      classicalVacuumToggle: string;
-      classicalVacuumDesc: string;
-      qftVacuumDesc: string;
-      qftInsightTitle: string;
-      qftInsightBody: string;
-      standingWaveAnalogyTitle: string;
-      standingWaveAnalogyDesc: string;
-      forceScalingTitle: string;
-      forceScalingDesc: string;
-      whyAttractTitle: string;
-      whyAttractDesc: string;
-      allWavelengths: string;
-      strongForceShortDist: string;
-      weakForceLongDist: string;
-      qftVacuumModel: string;
-      classicalVacuumModel: string;
     };
     machZehnder: {
       badge: string;
@@ -426,10 +400,79 @@ export interface Translations {
       actionHint: string;
     }>;
   };
+  modernPerspectives: ModernPerspectivesTranslations;
   footer: {
     title: string;
     sub: string;
     hobsonQuote: string;
+  };
+}
+
+export interface ModernPerspectivesTranslations {
+  headerBadge: string;
+  sectionTitle: string;
+  sectionDescription: string;
+  tabOntology: string;
+  tabVacuumCrisis: string;
+  tabSemiclassical: string;
+  tabBeyondQft: string;
+  pillars: {
+    ontology: {
+      badge: string;
+      title: string;
+      subtitle: string;
+      intro: string;
+      hobsonViewTitle: string;
+      hobsonViewText: string;
+      weinbergViewTitle: string;
+      weinbergViewText: string;
+      haagTheoremTitle: string;
+      haagTheoremText: string;
+      localizationTitle: string;
+      localizationText: string;
+      takeaway: string;
+    };
+    vacuumCrisis: {
+      badge: string;
+      title: string;
+      subtitle: string;
+      intro: string;
+      casimirStandardTitle: string;
+      casimirStandardText: string;
+      jaffeCritiqueTitle: string;
+      jaffeCritiqueText: string;
+      cosmologicalCrisisTitle: string;
+      cosmologicalCrisisText: string;
+      takeaway: string;
+    };
+    semiclassical: {
+      badge: string;
+      title: string;
+      subtitle: string;
+      intro: string;
+      lambScullyTitle: string;
+      lambScullyText: string;
+      antibunchingTitle: string;
+      antibunchingText: string;
+      bellEntanglementTitle: string;
+      bellEntanglementText: string;
+      takeaway: string;
+    };
+    beyondQft: {
+      badge: string;
+      title: string;
+      subtitle: string;
+      intro: string;
+      decoherenceTitle: string;
+      decoherenceText: string;
+      stringTheoryTitle: string;
+      stringTheoryText: string;
+      loopGravityTitle: string;
+      loopGravityText: string;
+      holographyTitle: string;
+      holographyText: string;
+      takeaway: string;
+    };
   };
 }
 

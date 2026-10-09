@@ -105,28 +105,31 @@ function generateLlmsTxt(): string {
 - Bản quyền & Tài nguyên: Tài nguyên giáo dục mở (Open Educational Physics Resource).
 
 ## Các Điểm Truy Cập Dữ Liệu Cho AI Agent & LLM
-- [/llms-full.txt](https://photon-only-field.pages.dev/llms-full.txt): Toàn văn tài liệu lý thuyết song ngữ, công thức toán LaTeX, chi tiết 5 phòng lab, bảng so sánh 3 mô hình, giải mã 4 hiểu lầm, lộ trình 4 bước và biên niên sử 14 mốc.
-- [/docs/theory-vi.md](https://photon-only-field.pages.dev/docs/theory-vi.md): Tài liệu chuyên sâu tiếng Việt (Bản chất trường, Bảng so sánh 3 mô hình, Toán tử sinh hủy Dirac, Hiệu ứng Casimir, Giao thoa kế Mach-Zehnder, Lựa chọn trễ Wheeler).
-- [/docs/theory-en.md](https://photon-only-field.pages.dev/docs/theory-en.md): Comprehensive English Theory Guide (Field reality, 3-paradigm comparison table, Fock state ladder, Casimir ZPE proof, Mach-Zehnder delayed-choice, Chronological milestones).
+- [/llms-full.txt](https://photon-only-field.pages.dev/llms-full.txt): Toàn văn tài liệu lý thuyết song ngữ, công thức toán LaTeX, chi tiết 4 phòng lab photon cốt lõi, bảng so sánh 3 mô hình, giải mã 4 hiểu lầm, lộ trình 4 bước và biên niên sử 14 mốc.
+- [/docs/theory-vi.md](https://photon-only-field.pages.dev/docs/theory-vi.md): Tài liệu chuyên sâu tiếng Việt (Bản chất trường, Bảng so sánh 3 mô hình, Toán tử sinh hủy Dirac, Giao thoa kế Mach-Zehnder, Lựa chọn trễ Wheeler, 4 trụ cột phản biện hiện đại).
+- [/docs/theory-en.md](https://photon-only-field.pages.dev/docs/theory-en.md): Comprehensive English Theory Guide (Field reality, 3-paradigm comparison table, Fock state ladder, Mach-Zehnder delayed-choice, 4 modern critique pillars, Chronological milestones).
 
 ## Các Khái Niệm Vật Lý Cốt Lõi (Core Concepts)
 1. **Bản chất Trường Lượng Tử vs Hạt cơ học**:
    - Không gian không chứa các viên bi ánh sáng. Trường Điện Từ là thực thể vật lý cơ bản tồn tại liên tục khắp không - thời gian.
-   - Photon xuất hiện khi trường bị kích thích một lượng năng lượng $E = \\hbar\\omega$.
+   - Photon xuất hiện khi trường bị kích thích một lượng năng lượng $E = \hbar\omega$.
 2. **Trạng thái Fock |n⟩ & Toán tử Dirac**:
-   - Toán tử Sinh $a^\\dagger$: Bơm 1 lượng tử kích thích vào mode trường ($a^\\dagger|n\\rangle = \\sqrt{n+1}|n+1\\rangle$).
-   - Toán tử Hủy $a$: Rút 1 lượng tử khỏi mode trường ($a|n\\rangle = \\sqrt{n}|n-1\\rangle$).
-   - Năng lượng Điểm Không (ZPE): Tại trạng thái chân không $|0\\rangle$, trường vẫn duy trì năng lượng dao động nội tại $\\frac{1}{2}\\hbar\\omega$.
-3. **Hiệu ứng Casimir & Bằng chứng Chân không Dao động**:
-   - Hai tấm kim loại dẫn điện đặt cực gần nhau trong chân không bị hút vào nhau do sự chênh lệch mật độ mode sóng trường bên trong và bên ngoài ($F/A = -\\frac{\\pi^2 \\hbar c}{240 d^4}$).
-4. **Giao thoa Kế Mach-Zehnder & Lựa chọn Trễ Wheeler**:
-   - Một photon đơn lẻ vẫn tự giao thoa với chính mode trường của nó ($P(D1) = \\cos^2(\\Delta\\phi/2)$).
-   - Bộ tách chùm BS1 không chẻ đôi photon thành 2 viên bi, mà phân nhánh biên độ xác suất $|\\psi\\rangle = (|d_1\\rangle + i|d_2\\rangle)/\\sqrt{2}$.
-5. **Giải mã 4 Hiểu lầm kinh điển**:
+   - Toán tử Sinh $a^\dagger$: Bơm 1 lượng tử kích thích vào mode trường ($a^\dagger|n\rangle = \sqrt{n+1}|n+1\rangle$).
+   - Toán tử Hủy $a$: Rút 1 lượng tử khỏi mode trường ($a|n\rangle = \sqrt{n}|n-1\rangle$).
+   - Năng lượng Điểm Không (ZPE): Tại trạng thái chân không $|0\rangle$, trường vẫn duy trì năng lượng dao động nội tại $\frac{1}{2}\hbar\omega$.
+3. **Giao thoa Kế Mach-Zehnder & Lựa chọn Trễ Wheeler**:
+   - Một photon đơn lẻ vẫn tự giao thoa với chính mode trường của nó ($P(D1) = \cos^2(\Delta\phi/2)$).
+   - Bộ tách chùm BS1 không chẻ đôi photon thành 2 viên bi, mà phân nhánh biên độ xác suất $|\psi\rangle = (|d_1\rangle + i|d_2\rangle)/\sqrt{2}$.
+4. **Giải mã 4 Hiểu lầm kinh điển**:
    - Hiểu lầm 1: "Ánh sáng biến hình: lúc bay là sóng, khi chạm thì thành hạt bi".
    - Hiểu lầm 2: "Photon không khối lượng, tại sao bị lỗ đen bẻ cong?".
    - Hiểu lầm 3: "Chân không hoàn toàn trống rỗng không có gì".
    - Hiểu lầm 4: "Photon có thể dừng lại đứng yên".
+5. **Góc Nhìn Phản Biện & Các Lý Thuyết Mở Rộng (Beyond "Photon: Only Field")**:
+   - Bản thể luận: Trường phái Steven Weinberg (Hạt là xuất phát điểm S-matrix, Trường là công cụ toán học); Cảnh báo từ Định lý Haag (1955); Bài toán định xứ của photon (không có toán tử vị trí chuẩn).
+   - Phản biện Casimir (Robert Jaffe, MIT 2005): Lực Casimir có thể suy ra từ lực Van der Waals tương đối tính mà không bắt buộc có năng lượng điểm không độc lập; Khủng hoảng Hằng số Vũ trụ (sai lệch 10¹²⁰).
+   - Ranh giới Bán cổ điển (Lamb & Scully 1969): Hiệu ứng quang điện có thể giải thích bằng sóng liên tục Maxwell + nguyên tử lượng tử hóa; Bằng chứng lượng tử hóa trường thực thụ là Photon Anti-bunching (g⁽²⁾(0) < 1) và Vi phạm Bất đẳng thức Bell (Nobel 2022).
+   - Bài toán Đo đạc & Vật lý mở rộng: Giải kết hợp lượng tử (Decoherence), Lý thuyết Dây (Photon là mode dao động dây hở), Lượng tử Hấp dẫn Vòng (LQG), Đối ngẫu Toàn ảnh AdS/CFT.
 
 ## Bảng So Sánh 3 Mô Hình Vật Lý Về Ánh Sáng
 | Tiêu chí | 1. Hạt Cổ Điển (Newton) | 2. Sóng Cổ Điển (Maxwell) | 3. Trường Lượng Tử QFT (Chính xác) |
@@ -256,6 +259,8 @@ ${t.labs.photoelectric.description}
   ${t.labs.photoelectric.quantumExplanation}
 - **Hạn chế của mô hình sóng cổ điển:**
   ${t.labs.photoelectric.classicalExplanation}
+- **${t.labs.photoelectric.academicCaveatTitle}:**
+  ${t.labs.photoelectric.academicCaveatDesc}
 
 ### 5.3 Phòng Lab 3: ${t.labs.fockState.title}
 *${t.labs.fockState.badge}*
@@ -274,25 +279,13 @@ ${t.labs.fockState.description}
   $$\\Delta n \\cdot \\Delta\\phi \\ge \\frac{1}{2}$$
   ${t.labs.fockState.phaseUncertaintyDesc}
 
-### 5.4 Phòng Lab 4: ${t.labs.casimir.title}
-*${t.labs.casimir.badge}*
-
-${t.labs.casimir.description}
-
-- **Công thức Lực Casimir:**
-  $$\\frac{F}{A} = -\\frac{\\pi^2 \\hbar c}{240 d^4}$$
-- **Cơ chế sóng dừng:**
-  ${t.labs.casimir.standingWaveAnalogyDesc}
-- **Ý nghĩa triết học QFT:**
-  ${t.labs.casimir.qftInsightBody}
-
-### 5.5 Phòng Lab 5: ${t.labs.machZehnder.title}
+### 5.4 Phòng Lab 4: ${t.labs.machZehnder.title}
 *${t.labs.machZehnder.badge}*
 
 ${t.labs.machZehnder.description}
 
 - **Công thức xác suất ghi nhận:**
-  $$P(D1) = \\cos^2\\left(\\frac{\\Delta\\phi}{2}\\right), \\quad P(D2) = \\sin^2\\left(\\frac{\\Delta\\phi}{2}\\right)$$
+  $$P(D1) = \cos^2\left(\frac{\Delta\phi}{2}\right), \quad P(D2) = \sin^2\left(\frac{\Delta\phi}{2}\right)$$
 - **Cơ chế can nhiễu pha:**
   ${t.labs.machZehnder.howItWorksDesc}
 - **Photon có bị chẻ đôi hạt khi qua bộ tách chùm BS1?**
@@ -315,6 +308,62 @@ ${t.labs.machZehnder.description}
 
 `;
   });
+
+  const mp = t.modernPerspectives;
+  const p = mp.pillars;
+  md += `---
+
+## 7. ${mp.sectionTitle} (${mp.headerBadge})
+
+> *${mp.sectionDescription}*
+
+### 7.1 ${p.ontology.title}
+*${p.ontology.badge} — ${p.ontology.subtitle}*
+
+${p.ontology.intro}
+
+- **${p.ontology.hobsonViewTitle}** ${p.ontology.hobsonViewText}
+- **${p.ontology.weinbergViewTitle}** ${p.ontology.weinbergViewText}
+- **${p.ontology.haagTheoremTitle}** ${p.ontology.haagTheoremText}
+- **${p.ontology.localizationTitle}** ${p.ontology.localizationText}
+
+> **${p.ontology.takeaway}**
+
+### 7.2 ${p.vacuumCrisis.title}
+*${p.vacuumCrisis.badge} — ${p.vacuumCrisis.subtitle}*
+
+${p.vacuumCrisis.intro}
+
+- **${p.vacuumCrisis.casimirStandardTitle}** ${p.vacuumCrisis.casimirStandardText}
+- **${p.vacuumCrisis.jaffeCritiqueTitle}** ${p.vacuumCrisis.jaffeCritiqueText}
+- **${p.vacuumCrisis.cosmologicalCrisisTitle}** ${p.vacuumCrisis.cosmologicalCrisisText}
+
+> **${p.vacuumCrisis.takeaway}**
+
+### 7.3 ${p.semiclassical.title}
+*${p.semiclassical.badge} — ${p.semiclassical.subtitle}*
+
+${p.semiclassical.intro}
+
+- **${p.semiclassical.lambScullyTitle}** ${p.semiclassical.lambScullyText}
+- **${p.semiclassical.antibunchingTitle}** ${p.semiclassical.antibunchingText}
+- **${p.semiclassical.bellEntanglementTitle}** ${p.semiclassical.bellEntanglementText}
+
+> **${p.semiclassical.takeaway}**
+
+### 7.4 ${p.beyondQft.title}
+*${p.beyondQft.badge} — ${p.beyondQft.subtitle}*
+
+${p.beyondQft.intro}
+
+- **${p.beyondQft.decoherenceTitle}** ${p.beyondQft.decoherenceText}
+- **${p.beyondQft.stringTheoryTitle}** ${p.beyondQft.stringTheoryText}
+- **${p.beyondQft.loopGravityTitle}** ${p.beyondQft.loopGravityText}
+- **${p.beyondQft.holographyTitle}** ${p.beyondQft.holographyText}
+
+> **${p.beyondQft.takeaway}**
+
+`;
 
   return md;
 }
@@ -417,6 +466,8 @@ ${t.labs.photoelectric.description}
   ${t.labs.photoelectric.quantumExplanation}
 - **Classical Wave Theory Failure:**
   ${t.labs.photoelectric.classicalExplanation}
+- **${t.labs.photoelectric.academicCaveatTitle}:**
+  ${t.labs.photoelectric.academicCaveatDesc}
 
 ### 5.3 Lab 3: ${t.labs.fockState.title}
 *${t.labs.fockState.badge}*
@@ -432,23 +483,13 @@ ${t.labs.fockState.description}
 - **Number-Phase Uncertainty:**
   ${t.labs.fockState.phaseUncertaintyDesc}
 
-### 5.4 Lab 4: ${t.labs.casimir.title}
-*${t.labs.casimir.badge}*
-
-${t.labs.casimir.description}
-
-- **Casimir Force Formula:**
-  $$\\frac{F}{A} = -\\frac{\\pi^2 \\hbar c}{240 d^4}$$
-- **Physical Insight:**
-  ${t.labs.casimir.qftInsightBody}
-
-### 5.5 Lab 5: ${t.labs.machZehnder.title}
+### 5.4 Lab 4: ${t.labs.machZehnder.title}
 *${t.labs.machZehnder.badge}*
 
 ${t.labs.machZehnder.description}
 
 - **Probability Formulas:**
-  $$P(D1) = \\cos^2\\left(\\frac{\\Delta\\phi}{2}\\right), \\quad P(D2) = \\sin^2\\left(\\frac{\\Delta\\phi}{2}\\right)$$
+  $$P(D1) = \cos^2\left(\frac{\Delta\phi}{2}\right), \quad P(D2) = \sin^2\left(\frac{\Delta\phi}{2}\right)$$
 - **Interference Mechanism:**
   ${t.labs.machZehnder.howItWorksDesc}
 - **Does the photon split into two halves at BS1?**
@@ -471,6 +512,62 @@ ${t.labs.machZehnder.description}
 
 `;
   });
+
+  const mp = t.modernPerspectives;
+  const p = mp.pillars;
+  md += `---
+
+## 7. ${mp.sectionTitle} (${mp.headerBadge})
+
+> *${mp.sectionDescription}*
+
+### 7.1 ${p.ontology.title}
+*${p.ontology.badge} — ${p.ontology.subtitle}*
+
+${p.ontology.intro}
+
+- **${p.ontology.hobsonViewTitle}** ${p.ontology.hobsonViewText}
+- **${p.ontology.weinbergViewTitle}** ${p.ontology.weinbergViewText}
+- **${p.ontology.haagTheoremTitle}** ${p.ontology.haagTheoremText}
+- **${p.ontology.localizationTitle}** ${p.ontology.localizationText}
+
+> **${p.ontology.takeaway}**
+
+### 7.2 ${p.vacuumCrisis.title}
+*${p.vacuumCrisis.badge} — ${p.vacuumCrisis.subtitle}*
+
+${p.vacuumCrisis.intro}
+
+- **${p.vacuumCrisis.casimirStandardTitle}** ${p.vacuumCrisis.casimirStandardText}
+- **${p.vacuumCrisis.jaffeCritiqueTitle}** ${p.vacuumCrisis.jaffeCritiqueText}
+- **${p.vacuumCrisis.cosmologicalCrisisTitle}** ${p.vacuumCrisis.cosmologicalCrisisText}
+
+> **${p.vacuumCrisis.takeaway}**
+
+### 7.3 ${p.semiclassical.title}
+*${p.semiclassical.badge} — ${p.semiclassical.subtitle}*
+
+${p.semiclassical.intro}
+
+- **${p.semiclassical.lambScullyTitle}** ${p.semiclassical.lambScullyText}
+- **${p.semiclassical.antibunchingTitle}** ${p.semiclassical.antibunchingText}
+- **${p.semiclassical.bellEntanglementTitle}** ${p.semiclassical.bellEntanglementText}
+
+> **${p.semiclassical.takeaway}**
+
+### 7.4 ${p.beyondQft.title}
+*${p.beyondQft.badge} — ${p.beyondQft.subtitle}*
+
+${p.beyondQft.intro}
+
+- **${p.beyondQft.decoherenceTitle}** ${p.beyondQft.decoherenceText}
+- **${p.beyondQft.stringTheoryTitle}** ${p.beyondQft.stringTheoryText}
+- **${p.beyondQft.loopGravityTitle}** ${p.beyondQft.loopGravityText}
+- **${p.beyondQft.holographyTitle}** ${p.beyondQft.holographyText}
+
+> **${p.beyondQft.takeaway}**
+
+`;
 
   return md;
 }
@@ -599,7 +696,7 @@ function generateSemanticHtmlFallback(): string {
         </section>
 
         <section id="ai-labs">
-          <h2>3. Năm Phòng Thí Nghiệm & Bằng Chứng Thực Nghiệm</h2>
+          <h2>3. Bốn Phòng Thí Nghiệm & Bằng Chứng Thực Nghiệm</h2>
           <article>
             <h3>${t.labs.doubleSlit.title}</h3>
             <p>${t.labs.doubleSlit.description}</p>
@@ -619,13 +716,6 @@ function generateSemanticHtmlFallback(): string {
             <p>Toán tử Sinh a†: ${t.labs.fockState.creationDesc}</p>
             <p>Toán tử Hủy a: ${t.labs.fockState.annihilationDesc}</p>
             <p>Năng lượng điểm không (ZPE): ${t.labs.fockState.zpeDeepDiveDesc}</p>
-          </article>
-
-          <article>
-            <h3>${t.labs.casimir.title}</h3>
-            <p>${t.labs.casimir.description}</p>
-            <p>Lực hút Casimir: F/A = -(π²·ℏ·c) / (240·d⁴)</p>
-            <p>${t.labs.casimir.qftInsightBody}</p>
           </article>
 
           <article>

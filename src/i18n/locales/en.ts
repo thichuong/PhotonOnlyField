@@ -9,6 +9,7 @@ export const enTranslations: Translations = {
     labs: 'Virtual Labs',
     qftDeepDive: 'QFT Deep Dive',
     myths: 'Myth Busters',
+    modernPerspectives: 'Critiques & Modern Theories',
     switchLang: 'Switch language',
   },
   hero: {
@@ -88,8 +89,7 @@ export const enTranslations: Translations = {
     tabDoubleSlit: '1. Single-Photon Double Slit',
     tabPhotoelectric: '2. Photoelectric Effect & Stopping Voltage',
     tabFockState: '3. Fock State |n⟩ & Wavefunctions',
-    tabCasimir: '4. Casimir Effect (Vacuum Pressure)',
-    tabMachZehnder: '5. Mach-Zehnder Interferometer',
+    tabMachZehnder: '4. Mach-Zehnder Interferometer',
     doubleSlit: {
       badge: 'Virtual Lab 1',
       title: 'Double-Slit Experiment: Probing Quantum Field Nature',
@@ -164,6 +164,8 @@ export const enTranslations: Translations = {
       quantumTheoryLabel: 'Einstein / QFT Reality (Validated)',
       classicalExplanation: 'Classical waves predict electron kinetic energy scales with wave intensity and accumulates gradually. Higher intensity should eject faster electrons.',
       quantumExplanation: 'QFT proves energy is quantized E = hν. Intensity only increases photon flux. Stopping potential V_stop depends strictly on frequency ν.',
+      academicCaveatTitle: 'Semiclassical Perspective (Lamb & Scully 1969)',
+      academicCaveatDesc: 'Willis Lamb and Marlan Scully demonstrated that the photoelectric effect can be completely derived using continuous classical Maxwell electromagnetic waves coupled to quantized atomic electron states, without requiring radiation itself to be quantized into photons! The true necessity of field quantization arises from photon anti-bunching.',
       planckConstantSlope: 'Linear Slope = Planck Constant h',
       quickGuideTitle: 'Quick Interactive Presets (Click to test)',
       presetUV: '1. UV Light (E > Φ: Strong ejection, high kinetic energy)',
@@ -238,38 +240,8 @@ export const enTranslations: Translations = {
       magneticQuad: 'P̂ (Magnetic)',
       phaseUncertaintyFormula: 'Δn = 0 (Exact photon number) ⟹ Δφ = ∞ (Random phase 360°)',
     },
-    casimir: {
-      badge: 'Virtual Lab 4 (ZPE Proof)',
-      title: 'Casimir Effect: Radiation Pressure of the Vacuum',
-      description:
-        'Hendrik Casimir (1948) proved the quantum vacuum is never void. Two uncharged ideal conducting plates placed in vacuum experience an attractive force due to vacuum mode density differences.',
-      guideTitle: 'Casimir Force Nature & Observation Guide',
-      plateDistanceLabel: 'Plate Separation Distance (d):',
-      forceMeasureLabel: 'Measured Casimir Attraction:',
-      forceFormulaTitle: 'Casimir Force Equation:',
-      modeCountInside: 'Allowed Cavity Modes Inside:',
-      modeCountOutside: 'Free Modes Outside:',
-      vacuumModeTitle: 'Electromagnetic Field Modes in Quantum Vacuum',
-      classicalVacuumToggle: 'Theoretical Model Comparison:',
-      classicalVacuumDesc: 'Classical Empty Vacuum: Zero field fluctuations -> Attractive force F = 0',
-      qftVacuumDesc: 'QFT Vacuum: Intrinsic Zero-Point Energy (ZPE). Outer modes outnumber cavity modes, squeezing plates together!',
-      qftInsightTitle: 'Philosophical Significance in QFT:',
-      qftInsightBody:
-        'The Casimir effect provides indisputable empirical proof that the vacuum is filled with zero-point field fluctuations. Photons are merely discrete excitations dancing atop this omnipresent vacuum field substrate.',
-      standingWaveAnalogyTitle: 'Standing Wave Analogy (Guitar String):',
-      standingWaveAnalogyDesc: 'The conducting mirror plates act like the fixed ends of a guitar string: The tangential electric field must vanish at the boundary. Therefore, only specific wavelengths (λ = 2d/n) can fit inside the gap.',
-      forceScalingTitle: 'Super-Scaling Law: Inverse 4th Power (F ∝ 1/d⁴):',
-      forceScalingDesc: 'The attractive force surges exponentially as distance shrinks: Halving the gap (d/2) amplifies attraction by 2⁴ = 16 TIMES! At nanoscale, this force can bind micro-electromechanical components (MEMS).',
-      whyAttractTitle: 'Why is it attractive rather than repulsive?',
-      whyAttractDesc: 'Outside the plates, infinite space accommodates all wavelengths. Inside gap d, long waves cannot fit and are forbidden. The resulting outward pressure inside is lower than the outside inward vacuum pressure, squeezing plates together.',
-      allWavelengths: '(All wavelengths λ)',
-      strongForceShortDist: '20 nm (Extreme force ∝ 1/d⁴)',
-      weakForceLongDist: '180 nm (Force drops towards 0)',
-      qftVacuumModel: 'QFT Vacuum (ZPE)',
-      classicalVacuumModel: 'Classical Vacuum (Empty)',
-    },
     machZehnder: {
-      badge: 'Virtual Lab 5 (Quantum Optics)',
+      badge: 'Virtual Lab 4 (Quantum Optics)',
       title: 'Mach-Zehnder Interferometer: Single Photons & Split Wavepackets',
       description:
         'A cornerstone verification of quantum optics: A single photon encountering a 50:50 beam splitter does not choose "Path A OR Path B" like a ball; its continuous field wavepacket splits across both paths and interferes with itself.',
@@ -511,6 +483,96 @@ export const enTranslations: Translations = {
         actionHint: 'You have completed the walkthrough! Feel free to explore the 3D controls and interactive labs.',
       },
     ],
+  },
+  modernPerspectives: {
+    headerBadge: 'Beyond the title "Photon: Only Field"',
+    sectionTitle: 'Critiques & Modern Theoretical Perspectives',
+    sectionDescription:
+      'The title "Photon: Only Field" originates from Art Hobson\'s influential 2013 paper. However, modern theoretical physics presents a far richer, multi-faceted landscape. Below are 4 critical academic pillars and expanding theories from Nobel laureates and leading physicists.',
+    tabOntology: '1. Ontology & Haag\'s Theorem',
+    tabVacuumCrisis: '2. Casimir Critique & 10¹²⁰ Crisis',
+    tabSemiclassical: '3. Semiclassical vs Anti-Bunching',
+    tabBeyondQft: '4. Measurement & Beyond QFT',
+    pillars: {
+      ontology: {
+        badge: 'Ontology Debate',
+        title: 'Fields vs Particles: The Steven Weinberg Paradigm & Haag\'s Theorem',
+        subtitle: 'Is reality truly "only fields", or are particles the true foundation?',
+        intro:
+          'While Art Hobson and Julian Schwinger champion a field-only ontology, Nobel laureate Steven Weinberg and mathematical physicists present the exact reverse: Particles are the foundational starting concept, and fields are secondary mathematical tools.',
+        hobsonViewTitle: 'Field Ontology (Hobson & Schwinger):',
+        hobsonViewText:
+          'Spacetime is filled solely with continuous fields. Photons do not exist as independent entities; they are merely quantized excitation modes (Fock states) rippling across the field.',
+        weinbergViewTitle: 'Particle-First S-Matrix Foundation (Steven Weinberg):',
+        weinbergViewText:
+          'In his seminal treatise "The Quantum Theory of Fields", Steven Weinberg starts rigorously with relativistic Particles classified under Eugene Wigner\'s Poincaré symmetry representations. Quantum Fields are then constructed downstream as a mathematical necessity to guarantee Lorentz invariance and the Cluster Decomposition Principle (independent distant experiments do not interfere).',
+        haagTheoremTitle: 'Haag\'s Theorem Caveat (1955):',
+        haagTheoremText:
+          'In interacting quantum field theories, free Fock space does not mathematically exist as a unitary representation of interacting physical states. The notion of an isolated single-mode photon Fock state |n⟩ is an asymptotic idealization when particles are infinitely separated.',
+        localizationTitle: 'The Photon Localization Problem:',
+        localizationText:
+          'Because the photon is a massless spin-1 gauge boson, it lacks a standard quantum position operator (no Newton-Wigner localization operator). Consequently, photons have no standard spatial probability wavefunction ψ(r,t), and localized photon wavepackets inevitably feature non-local infinite tails (Hegerfeldt\'s Theorem).',
+        takeaway:
+          'Key Takeaway: The "Only Field" claim is a philosophically compelling interpretation (Field Ontology), not an exclusive mathematical theorem of quantum physics.',
+      },
+      vacuumCrisis: {
+        badge: 'Vacuum Energy Paradoxes',
+        title: 'Robert Jaffe\'s Critique & The 10¹²⁰ Cosmological Constant Crisis',
+        subtitle: 'Does the Casimir effect genuinely prove independent zero-point vacuum energy?',
+        intro:
+          'The Casimir effect is frequently celebrated as the ultimate proof that the quantum vacuum spontaneously seethes with zero-point energy E₀ = ½ℏω. However, theoretical physics reveals two profound challenges.',
+        casimirStandardTitle: 'Standard Textbook Interpretation (Casimir 1948):',
+        casimirStandardText:
+          'Two conducting plates impose boundary conditions on the vacuum field, suppressing long cavity modes and producing an inward net radiation pressure difference due to zero-point energy (ZPE).',
+        jaffeCritiqueTitle: 'Robert Jaffe\'s Foundational Paper (MIT, 2005):',
+        jaffeCritiqueText:
+          'In Phys. Rev. D (2005), Prof. Robert Jaffe proved that the Casimir force can be derived completely as relativistic van der Waals forces between fluctuating electron currents in the plates, WITHOUT ANY NEED for zero-point vacuum energy! When the electromagnetic coupling constant e vanishes, the Casimir force drops strictly to zero.',
+        cosmologicalCrisisTitle: 'The 10¹²⁰ Cosmological Constant Crisis:',
+        cosmologicalCrisisText:
+          'If the zero-point energy E₀ = ½ℏω of every mode existed gravitationally, summing up to the Planck scale yields a vacuum energy density 10¹²⁰ TIMES GREATER than the Dark Energy observed in astronomical cosmology. This discrepancy remains the worst theoretical prediction in physics history!',
+        takeaway:
+          'Key Takeaway: The Casimir effect may merely reflect conductor electrodynamics, and the true physical nature of vacuum energy remains one of physics\' deepest unsolved mysteries.',
+      },
+      semiclassical: {
+        badge: 'Advanced Quantum Optics',
+        title: 'The Photoelectric Effect Without Photons & Antibunching Proof',
+        subtitle: 'Which experiment genuinely forces radiation fields to be quantized?',
+        intro:
+          'Introductory textbooks claim Einstein\'s 1905 photoelectric effect proves light is made of photons and wave theory completely fails. Yet modern quantum optics demonstrates a much richer historical reality.',
+        lambScullyTitle: 'Lamb & Scully Landmark Theorem (1969) - "Photoelectric Effect without Photons":',
+        lambScullyText:
+          'Nobel laureate Willis Lamb and Marlan Scully proved with exact mathematics that the photoelectric effect is completely explainable using SEMICLASSICAL theory: continuous classical Maxwell electromagnetic waves shining onto quantized atomic electron bound states (Schrödinger/Dirac). The discrete energy jumps originate from atomic structure, not from light itself!',
+        antibunchingTitle: 'The True Quantum Proof: Photon Antibunching:',
+        antibunchingText:
+          'Kimble, Dagenais, and Mandel (1977) measured the second-order coherence correlation function g⁽²⁾(0) < 1. Any classical or semiclassical electromagnetic wave mathematically requires g⁽²⁾(0) ≥ 1. Only a genuinely quantized field with single-photon Fock states can yield g⁽²⁾(0) < 1!',
+        bellEntanglementTitle: 'Bell Inequality Violation with Entangled Photons (Nobel 2022):',
+        bellEntanglementText:
+          'Landmark experiments by Alain Aspect, John Clauser, and Anton Zeilinger demonstrated that entangled photon pairs violate Bell\'s inequalities, proving that nature is fundamentally non-local and cannot be accounted for by local classical wave theories.',
+        takeaway:
+          'Key Takeaway: While the photoelectric effect was historically pivotal, Photon Antibunching and Bell Tests are the true undeniable verifications of quantized radiation.',
+      },
+      beyondQft: {
+        badge: 'Frontier Theoretical Physics',
+        title: 'Quantum Decoherence, Measurement & Theories Beyond Standard QFT',
+        subtitle: 'From environmental decoherence to String Theory and Quantum Gravity',
+        intro:
+          'Probing deeper into the foundations of reality reveals that even standard QFT is an effective field theory, seamlessly expanded by modern quantum gravity frameworks.',
+        decoherenceTitle: 'Quantum Decoherence (Zurek & Zeh):',
+        decoherenceText:
+          'Why does a spreading field wave packet produce localized detector clicks? Quantum decoherence reveals that interactions between photon field modes and macro-environmental degrees of freedom destroy quantum phase coherence within 10⁻²⁰ seconds, rapidly diagonalizing the density matrix into localized classical probabilities.',
+        stringTheoryTitle: 'String Theory Perspective:',
+        stringTheoryText:
+          'Photons are not point-like field excitations. Instead, the photon is the fundamental massless spin-1 vibrational mode of an Open Relativistic String with characteristic Planck length l_P ~ 10⁻³⁵ meters vibrating across 10 spacetime dimensions.',
+        loopGravityTitle: 'Loop Quantum Gravity (LQG):',
+        loopGravityText:
+          'Spacetime is not a smooth continuous canvas upon which fields fluctuate. Spacetime geometry itself is quantized into discrete area and volume eigenvalues (Spin Networks). At the Planck scale, continuous electromagnetic fields are discretized by underlying quantum geometry.',
+        holographyTitle: 'The Holographic Principle & AdS/CFT Duality (Maldacena):',
+        holographyText:
+          'A gauge field theory (like electromagnetism) on a lower-dimensional boundary is mathematically dual to a higher-dimensional quantum gravity theory in the bulk. "Gauge fields" and "Spacetime geometry" are holographic dual facets of the same reality!',
+        takeaway:
+          'Key Takeaway: Quantum field theory is not the ultimate end of physics. The future of understanding the photon lies in the ongoing unification of Quantum Mechanics and General Relativity.',
+      },
+    },
   },
   footer: {
     title: 'Photon: Only Field',

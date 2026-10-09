@@ -31,12 +31,18 @@ Hành trình 300 năm lịch sử qua 7 cột mốc vĩ đại:
 
 *Mỗi cột mốc đều có nút kích hoạt ngay trạng thái mô phỏng 3D tương ứng.*
 
-### 3. Phòng Thí Nghiệm Ảo Tương Tác (5 Trạm Thực Nghiệm Toàn Diện)
+### 3. Phòng Thí Nghiệm Ảo Tương Tác (4 Trạm Thực Nghiệm Quang Học Lượng Tử Cốt Lõi)
 * **Lab 1: Khe kép với Photon đơn lẻ:** Mô phỏng buồng lan truyền mặt sóng (Wavefront chamber), chuyển đổi cấu hình mở/đóng từng khe, kích hoạt đầu dò đường đi (*Which-Way detector*) làm sụp đổ vân giao thoa, và hiển thị đường cong mật độ xác suất $|\psi|^2$.
 * **Lab 2: Hiệu ứng quang điện & Điện áp hãm:** Tích hợp biến trở điện áp hãm ($V_{\text{hãm}}$), hiển thị đặc tuyến $I-V$, đồ thị động $K_{\text{max}} - \nu$ xác định hằng số Planck $h$, và bảng đối chiếu trực quan mô hình sóng cổ điển vs QFT.
 * **Lab 3: Trạng thái Fock $|n\rangle$ & Hàm sóng QFT:** Khám phá thang năng lượng dao động tử điều hòa $E = (n + \frac{1}{2})\hbar\omega$, đồ thị hàm sóng Hermite-Gauss động $\psi_n(x)$, mật độ xác suất $|\psi_n(x)|^2$ và không gian pha bất định $(X_1, X_2)$.
-* **Lab 4: Hiệu ứng Casimir (Chân không lượng tử):** Bằng chứng thực nghiệm tối thượng của dao động điểm không ($E_0 = \frac{1}{2}\hbar\omega$), đo lực hút áp suất bức xạ Casimir $F/A \propto 1/d^4$ khi thay đổi khoảng cách giữa 2 tấm gương nano trong chân không.
-* **Lab 5: Giao thoa kế Mach-Zehnder photon đơn:** Kiểm chứng gói sóng kích thích phân tách đồng thời trên 2 nhánh quang học, thay đổi góc lệch pha $\Delta\phi$, và thực hiện thí nghiệm Lựa chọn Trì hoãn của Wheeler (*Delayed-Choice* khi tháo lắp bộ tách chùm BS2).
+* **Lab 4: Giao thoa kế Mach-Zehnder photon đơn:** Kiểm chứng gói sóng kích thích phân tách đồng thời trên 2 nhánh quang học, thay đổi góc lệch pha $\Delta\phi$, và thực hiện thí nghiệm Lựa chọn Trì hoãn của Wheeler (*Delayed-Choice* khi tháo lắp bộ tách chùm BS2).
+
+### 4. Góc Nhìn Phản Biện & Các Lý Thuyết Mở Rộng (Beyond "Photon: Only Field")
+Cuộn dọc liên tục (Vertical Flow với Scroll-Spy & Quick Anchors) khai phá 4 trụ cột phản biện đa chiều của vật lý lý thuyết hiện đại:
+* **Trụ cột 1: Hạt vs Trường (Steven Weinberg, Định lý Haag & Tính Bất Định Xứ):** Quan điểm S-matrix thực dụng của Weinberg coi trường chỉ là công cụ tính toán; Định lý Haag (1955) về sự không tương đương giữa Fock chân không tự do và tương tác; Bài toán không có toán tử vị trí chuẩn của photon theo định lý Newton-Wigner.
+* **Trụ cột 2: Khủng Hoảng Năng Lượng Chân Không & Phản Biện Casimir:** Phản biện của Robert Jaffe (MIT 2005) chứng minh lực Casimir hoàn toàn có thể tính từ lực Van der Waals tương đối tính mà không cần giả định năng lượng chân không độc lập; Nghịch lý Hằng số Vũ trụ $\Lambda$ lệch $10^{120}$ bậc giữa QFT và Thuyết Tương Đối Rộng.
+* **Trụ cột 3: Ranh Giới Bán Cổ Điển vs Thực Nghiệm Lượng Tử Thực Thụ:** Phân tích Lamb-Scully (1969) chỉ ra hiệu ứng quang điện có thể giải thích bằng sóng liên tục Maxwell tương tác với nguyên tử lượng tử; Bằng chứng không thể phủ nhận của trường lượng tử hóa nằm ở Photon Anti-bunching ($g^{(2)}(0) < 1$) và Vi phạm Bất đẳng thức Bell (Nobel Vật lý 2022).
+* **Trụ cột 4: Bài Toán Đo Đạc, Giải Kết Hợp & Chân Trời Lý Thuyết Mới:** Giải kết hợp lượng tử (Decoherence) thay thế giả thuyết sụp đổ sóng cổ điển; Photon trong Lý thuyết Dây (mode dao động dây hở), Lượng tử Hấp dẫn Vòng (LQG), và Nguyên lý Toàn ảnh AdS/CFT.
 
 ---
 

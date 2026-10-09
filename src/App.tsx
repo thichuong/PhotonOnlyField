@@ -6,9 +6,9 @@ import { TimelineSection } from './components/timeline/TimelineSection';
 import { DoubleSlitLab } from './components/experiments/DoubleSlitLab';
 import { PhotoelectricLab } from './components/experiments/PhotoelectricLab';
 import { FockStateLab } from './components/experiments/FockStateLab';
-import { CasimirLab } from './components/experiments/CasimirLab';
 import { MachZehnderLab } from './components/experiments/MachZehnderLab';
 import { QFTDeepDive } from './components/explainer/QFTDeepDive';
+import { ModernPerspectivesSection } from './components/explainer/ModernPerspectivesSection';
 import { MisconceptionsSection } from './components/explainer/MisconceptionsSection';
 import { StoryModeTour } from './components/tour/StoryModeTour';
 import { LanguageProvider, useLanguage } from './i18n';
@@ -22,6 +22,7 @@ import {
   Atom,
   HelpCircle,
   Compass,
+  Scale,
 } from 'lucide-react';
 
 function MainApp() {
@@ -38,7 +39,7 @@ function MainApp() {
     damping: 0.95,
   });
 
-  type LabTabId = 'lab-double-slit' | 'lab-photoelectric' | 'lab-fock-state' | 'lab-casimir' | 'lab-mach-zehnder';
+  type LabTabId = 'lab-double-slit' | 'lab-photoelectric' | 'lab-fock-state' | 'lab-mach-zehnder';
   const [activeLabTab, setActiveLabTab] = useState<LabTabId>('lab-double-slit');
   const [isTourOpen, setIsTourOpen] = useState<boolean>(false);
   const [photonInjectTrigger, setPhotonInjectTrigger] = useState<number>(0);
@@ -57,7 +58,6 @@ function MainApp() {
       'lab-double-slit',
       'lab-photoelectric',
       'lab-fock-state',
-      'lab-casimir',
       'lab-mach-zehnder',
     ];
 
@@ -180,6 +180,13 @@ function MainApp() {
               >
                 <BookOpen className="w-3.5 h-3.5 text-amber-400" />
                 <span>{t.nav.qftDeepDive}</span>
+              </a>
+              <a
+                href="#modern-perspectives-section"
+                className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5"
+              >
+                <Scale className="w-3.5 h-3.5 text-purple-400" />
+                <span>{t.nav.modernPerspectives}</span>
               </a>
             </nav>
 
@@ -304,16 +311,6 @@ function MainApp() {
                 3. {t.labs.tabFockState}
               </button>
               <button
-                onClick={() => scrollToLab('lab-casimir')}
-                className={`px-3 py-1.5 rounded-xl font-medium transition-all cursor-pointer ${
-                  activeLabTab === 'lab-casimir'
-                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                4. {t.labs.tabCasimir}
-              </button>
-              <button
                 onClick={() => scrollToLab('lab-mach-zehnder')}
                 className={`px-3 py-1.5 rounded-xl font-medium transition-all cursor-pointer ${
                   activeLabTab === 'lab-mach-zehnder'
@@ -321,17 +318,16 @@ function MainApp() {
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                5. {t.labs.tabMachZehnder}
+                4. {t.labs.tabMachZehnder}
               </button>
             </div>
           </div>
 
-          {/* Render All 5 Labs in Sequence (Vertical Scroll Flow) */}
+          {/* Render All 4 Labs in Sequence (Vertical Scroll Flow) */}
           <div className="flex flex-col gap-10">
             <DoubleSlitLab />
             <PhotoelectricLab />
             <FockStateLab />
-            <CasimirLab />
             <MachZehnderLab />
           </div>
         </section>
@@ -340,6 +336,9 @@ function MainApp() {
         <section id="qft-deep-dive" className="scroll-mt-24">
           <QFTDeepDive />
         </section>
+
+        {/* 5. Modern Perspectives & Theoretical Critiques */}
+        <ModernPerspectivesSection />
       </main>
 
       {/* Footer */}

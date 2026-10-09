@@ -9,6 +9,7 @@ export const viTranslations: Translations = {
     labs: 'Phòng Thí Nghiệm',
     qftDeepDive: 'Bản Chất QFT',
     myths: 'Giải Mã Hiểu Lầm',
+    modernPerspectives: 'Phản Biện & Lý Thuyết Mới',
     switchLang: 'Đổi ngôn ngữ',
   },
   hero: {
@@ -88,8 +89,7 @@ export const viTranslations: Translations = {
     tabDoubleSlit: '1. Khe Kép Photon Đơn Lẻ',
     tabPhotoelectric: '2. Hiệu Ứng Quang Điện & Điện Áp Hãm',
     tabFockState: '3. Trạng Thái Fock |n⟩ & Hàm Sóng',
-    tabCasimir: '4. Hiệu Ứng Casimir (Chân Không)',
-    tabMachZehnder: '5. Giao Thoa Kế Mach-Zehnder',
+    tabMachZehnder: '4. Giao Thoa Kế Mach-Zehnder',
     doubleSlit: {
       badge: 'Phòng Thí Nghiệm 1',
       title: 'Thí nghiệm Hai Khe: Kiểm Chứng Bản Chất Trường',
@@ -164,6 +164,8 @@ export const viTranslations: Translations = {
       quantumTheoryLabel: 'Thực nghiệm QFT / Einstein (Đúng)',
       classicalExplanation: 'Cổ điển cho rằng năng lượng phụ thuộc vào biên độ (cường độ sáng) và tích lũy dần theo thời gian. Tăng cường độ sẽ làm tăng K_max.',
       quantumExplanation: 'QFT chỉ ra năng lượng lượng tử hóa E = hν. Tăng cường độ chỉ tăng số lượng photon/giây. Điện áp hãm V_stop chỉ phụ thuộc vào tần số ν.',
+      academicCaveatTitle: 'Góc nhìn Bán Cổ Điển (Lamb & Scully 1969)',
+      academicCaveatDesc: 'Willis Lamb và Marlan Scully đã chứng minh: Hiệu ứng quang điện có thể giải thích trọn vẹn bằng sóng điện từ cổ điển liên tục của Maxwell tương tác với electron bị lượng tử hóa trong nguyên tử kim loại, mà KHÔNG bắt buộc trường bức xạ phải lượng tử hóa thành photon! Bằng chứng bắt buộc trường phải lượng tử hóa thực sự là hiện tượng chống chùm photon (Photon Anti-bunching).',
       planckConstantSlope: 'Độ dốc đường thẳng = Hằng số Planck h',
       quickGuideTitle: 'Gợi Ý Thực Nghiệm Nhanh (Bấm để thử ngay)',
       presetUV: '1. Chiếu tia UV (E > Φ: Bứt electron mạnh, vận tốc cao)',
@@ -238,38 +240,8 @@ export const viTranslations: Translations = {
       magneticQuad: 'P̂ (Từ)',
       phaseUncertaintyFormula: 'Δn = 0 (Xác định tuyệt đối số photon) ⟹ Δφ = ∞ (Pha quay ngẫu nhiên 360°)',
     },
-    casimir: {
-      badge: 'Phòng Thí Nghiệm 4 (Bằng Chứng ZPE)',
-      title: 'Hiệu Ứng Casimir: Áp Suất Bức Xạ Chân Không',
-      description:
-        'Hendrik Casimir (1948) đã chứng minh chân không không hề rỗng. Hai tấm gương dẫn điện lý tưởng đặt cực gần nhau trong chân không sẽ hút nhau do sự chênh lệch mật độ các mode dao động trường lượng tử.',
-      guideTitle: 'Bản Chất Lực Casimir & Hướng Dẫn Định Hướng',
-      plateDistanceLabel: 'Khoảng cách giữa hai tấm kim loại (d):',
-      forceMeasureLabel: 'Lực hút Casimir đo được:',
-      forceFormulaTitle: 'Công thức Lực Casimir:',
-      modeCountInside: 'Số mode sóng được phép bên trong:',
-      modeCountOutside: 'Số mode sóng bên ngoài:',
-      vacuumModeTitle: 'Các Mode Sóng Trường Điện Từ Trong Chân Không',
-      classicalVacuumToggle: 'Mô hình so sánh:',
-      classicalVacuumDesc: 'Chân không cổ điển: Không có trường, không có mode sóng -> Lực hút F = 0',
-      qftVacuumDesc: 'Chân không QFT: Trường luôn dao động điểm không (ZPE). Các mode bên ngoài nhiều hơn bên trong ép 2 tấm lại!',
-      qftInsightTitle: 'Ý nghĩa triết học QFT:',
-      qftInsightBody:
-        'Lực Casimir là bằng chứng thực nghiệm trực tiếp và hùng hồn nhất chứng minh: Không gian chân không chứa đầy năng lượng dao động trường nội tại. Hạt photon chỉ là kích thích xuất hiện trên cái nền trường vĩnh cửu này.',
-      standingWaveAnalogyTitle: 'Cơ Chế Sóng Dừng (Như Dây Đàn Guitar):',
-      standingWaveAnalogyDesc: 'Hai bản kim loại đóng vai trò như hai đầu cố định của dây đàn: Trường điện từ tại bề mặt kim loại bắt buộc phải triệt tiêu (bằng 0). Vì vậy, chỉ những bước sóng "vừa vặn" (λ = 2d/n) mới được phép tồn tại bên trong khe hẹp.',
-      forceScalingTitle: 'Quy Luật Tỷ Lệ Nghịch Bậc 4 Siêu Mạnh (F ∝ 1/d⁴):',
-      forceScalingDesc: 'Lực Casimir tăng vọt khủng khiếp khi khoảng cách thu nhỏ: Khi giảm khoảng cách d đi một nửa (d/2), lực hút sẽ tăng vọt lên 2⁴ = 16 LẦN! Ở khoảng cách nano, lực hút này đủ mạnh để làm dính chặt các linh kiện cơ vi mô (MEMS).',
-      whyAttractTitle: 'Tại sao lại là lực hút mà không phải lực đẩy?',
-      whyAttractDesc: 'Bên ngoài hai tấm, không gian vô tận cho phép mọi bước sóng (ngắn lẫn dài) tồn tại. Bên trong khe hẹp d, các sóng dài bị loại bỏ hoàn toàn. Do đó, áp suất dao động chân không từ bên ngoài lớn hơn bên trong, đẩy ép hai tấm dính vào nhau.',
-      allWavelengths: '(Tất cả bước sóng λ)',
-      strongForceShortDist: '20 nm (Lực cực mạnh ∝ 1/d⁴)',
-      weakForceLongDist: '180 nm (Lực yếu dần về 0)',
-      qftVacuumModel: 'Chân Không QFT (ZPE)',
-      classicalVacuumModel: 'Chân Không Cổ Điển (Rỗng)',
-    },
     machZehnder: {
-      badge: 'Phòng Thí Nghiệm 5 (Quang Học Lượng Tử)',
+      badge: 'Phòng Thí Nghiệm 4 (Quang Học Lượng Tử)',
       title: 'Giao Thoa Kế Mach-Zehnder: Photon Đơn & Gói Sóng Chia Đôi',
       description:
         'Thí nghiệm kiểm chứng cốt lõi của quang học lượng tử: Một photon duy nhất đi qua bộ tách chùm 50:50 không chọn "nhánh A hoặc nhánh B", mà gói sóng trường của nó phân tách đồng thời trên cả hai nhánh và tự can nhiễu.',
@@ -511,6 +483,96 @@ export const viTranslations: Translations = {
         actionHint: 'Bạn đã hoàn tất hành trình! Hãy tự do tương tác với mô phỏng 3D và các phòng thí nghiệm.',
       },
     ],
+  },
+  modernPerspectives: {
+    headerBadge: 'Vượt lên tiêu đề "Photon: Only Field"',
+    sectionTitle: 'Góc Nhìn Phản Biện & Các Lý Thuyết Vật Lý Hiện Đại',
+    sectionDescription:
+      'Tiêu đề "Photon: Only Field" dựa theo luận điểm nổi tiếng của Art Hobson (2013). Tuy nhiên, vật lý lý thuyết hiện đại là một bức tranh đa diện sâu sắc hơn nhiều. Dưới đây là 4 trụ cột phản biện học thuật và các lý thuyết mở rộng từ những nhà vật lý hàng đầu thế giới.',
+    tabOntology: '1. Bản Thể Luận & Định Lý Haag',
+    tabVacuumCrisis: '2. Phản Biện Casimir & Khủng Hoảng Vũ Trụ',
+    tabSemiclassical: '3. Ranh Giới Bán Cổ Điển & Anti-Bunching',
+    tabBeyondQft: '4. Bài Toán Đo Đạc & Vật Lý Mở Rộng',
+    pillars: {
+      ontology: {
+        badge: 'Tranh luận Bản thể luận (Ontology Debate)',
+        title: 'Trường vs Hạt: Trường Phái Steven Weinberg & Định Lý Haag',
+        subtitle: 'Liệu vũ trụ có thực sự "chỉ có trường" như tuyên bố của Art Hobson?',
+        intro:
+          'Trong khi Art Hobson và Julian Schwinger cho rằng chỉ có trường tồn tại, nhà vật lý đoạt giải Nobel Steven Weinberg và nhiều nhà toán học lượng tử lại có góc nhìn ngược lại: Hạt mới là khái niệm xuất phát điểm, còn trường chỉ là công cụ tính toán toán học.',
+        hobsonViewTitle: 'Quan điểm "Chỉ Có Trường" (Art Hobson, Schwinger):',
+        hobsonViewText:
+          'Không gian chỉ có trường điện từ liên tục trải rộng. Hạt photon không tồn tại độc lập mà chỉ là lượng tử kích thích (Fock state) của một mode trường.',
+        weinbergViewTitle: 'Quan điểm "Hạt Tương Đối Tính Là Điểm Xuất Phát" (Steven Weinberg):',
+        weinbergViewText:
+          'Trong bộ giáo trình chuẩn mực "The Quantum Theory of Fields", Steven Weinberg bắt đầu từ các HẠT (Particles) tuân theo phân loại đối xứng Poincaré của Eugene Wigner. Trường lượng tử (Field) được xây dựng sau đó như một công cụ toán học bắt buộc để thỏa mãn Nguyên lý Nhân quả Lorentz và Nguyên lý Phân rã Cụm (Cluster Decomposition Principle).',
+        haagTheoremTitle: 'Cảnh báo từ Định lý Haag (Haag\'s Theorem 1955):',
+        haagTheoremText:
+          'Trong lý thuyết trường lượng tử tương tác, không gian Fock tự do không tồn tại một cách toán học nghiêm ngặt. Khái niệm "mode sóng photon đơn lẻ" hay trạng thái Fock |n⟩ thuần túy chỉ là mô hình lý tưởng hóa khi các hạt ở xa nhau vô tận.',
+        localizationTitle: 'Bài toán Định xứ Photon (Photon Localization Problem):',
+        localizationText:
+          'Vì photon có khối lượng nghỉ m=0 và spin 1, photon KHÔNG CÓ toán tử vị trí chuẩn (không có toán tử Newton-Wigner). Do đó, photon không có hàm sóng tọa độ ψ(r,t) thông thường và một gói sóng photon luôn có "đuôi phi định xứ" kéo dài vô tận (Định lý Hegerfeldt).',
+        takeaway:
+          'Cốt lõi: Tuyên bố "Chỉ có trường" là một diễn giải triết học (Field Ontology) đầy sức gợi, chứ không phải một định lý toán học độc tôn đã được chứng minh duy nhất trong QFT.',
+      },
+      vacuumCrisis: {
+        badge: 'Nghịch lý Năng lượng Chân không',
+        title: 'Phản Biện Robert Jaffe & Khủng Hoảng Hằng Số Vũ Trụ 10¹²⁰',
+        subtitle: 'Hiệu ứng Casimir có thực sự chứng minh năng lượng chân không độc lập?',
+        intro:
+          'Hiệu ứng Casimir thường được ca ngợi là bằng chứng tối thượng cho thấy chân không tự thân sôi sục năng lượng điểm không E₀ = ½ℏω. Tuy nhiên, các nhà vật lý lý thuyết đã chỉ ra hai sự thật gây chấn động.',
+        casimirStandardTitle: 'Góc nhìn Truyền thống (Casimir 1948):',
+        casimirStandardText:
+          'Hai tấm kim loại làm thay đổi điều kiện biên của chân không lượng tử, loại bỏ các mode bước sóng dài bên trong, tạo ra chênh lệch mật độ năng lượng điểm không (ZPE) đẩy hai tấm lại gần nhau.',
+        jaffeCritiqueTitle: 'Phản biện kinh điển của Robert Jaffe (MIT, 2005):',
+        jaffeCritiqueText:
+          'Trong bài báo trên Phys. Rev. D (2005), GS. Robert Jaffe chứng minh: Lực Casimir hoàn toàn có thể tính được bằng lực Van der Waals tương đối tính giữa các electron dao động trong kim loại mà KHÔNG CẦN viện dẫn đến năng lượng điểm không của chân không! Khi hằng số ghép cặp e tiến về 0, lực Casimir biến mất hoàn toàn.',
+        cosmologicalCrisisTitle: 'Thảm họa Hằng số Vũ trụ (Sai lệch 10¹²⁰ lần!):',
+        cosmologicalCrisisText:
+          'Nếu năng lượng chân không E₀ = ½ℏω của mọi mode sóng thực sự tồn tại và gây ra lực hấp dẫn, mật độ năng lượng tích phân lên tới thang Planck sẽ lớn hơn Năng lượng Tối (Dark Energy) đo được trong vũ trụ học tới 10¹²⁰ LẦN. Đây là sai số lớn nhất trong lịch sử vật lý lý thuyết!',
+        takeaway:
+          'Cốt lõi: Hiệu ứng Casimir có thể chỉ là động lực học tương tác giữa các vật dẫn, và bản chất thực sự của năng lượng chân không vẫn là bí ẩn chưa được giải quyết.',
+      },
+      semiclassical: {
+        badge: 'Quang học Lượng tử Chuyên sâu',
+        title: 'Hiệu Ứng Quang Điện Không Cần Photon & Hiện Tượng Anti-Bunching',
+        subtitle: 'Thí nghiệm nào mới thực sự chứng minh trường bức xạ bắt buộc phải lượng tử hóa?',
+        intro:
+          'Sách giáo khoa thường khẳng định Hiệu ứng Quang điện của Einstein (1905) chứng minh ánh sáng là photon và sóng cổ điển hoàn toàn thất bại. Tuy nhiên, lịch sử vật lý hiện đại lại có câu trả lời sâu sắc hơn nhiều.',
+        lambScullyTitle: 'Công trình kinh điển Lamb & Scully (1969) - "Photoelectric Effect without Photons":',
+        lambScullyText:
+          'Willis Lamb (Giải Nobel) và Marlan Scully đã chứng minh bằng toán học chặt chẽ: Hiệu ứng quang điện có thể giải thích đầy đủ bằng lý thuyết BÁN CỔ ĐIỂN (Semiclassical) — sóng điện từ cổ điển liên tục của Maxwell chiếu vào các electron nguyên tử bị lượng tử hóa (Schrödinger/Dirac). Tính gián đoạn xuất phát từ nguyên tử, không bắt buộc trường ánh sáng phải là photon!',
+        antibunchingTitle: 'Bằng chứng bắt buộc thực sự: Hiện tượng Chống chùm (Photon Anti-bunching):',
+        antibunchingText:
+          'Thí nghiệm của Kimble, Dagenais và Mandel (1977) đo hàm tương quan bậc hai g⁽²⁾(0) < 1. Bất kỳ sóng điện từ cổ điển hay bán cổ điển nào cũng bắt buộc phải có g⁽²⁾(0) ≥ 1. Chỉ có trường lượng tử với trạng thái photon đơn lẻ mới có thể tạo ra g⁽²⁾(0) < 1!',
+        bellEntanglementTitle: 'Vi phạm Bất đẳng thức Bell với Photon Vướng víu (Nobel 2022):',
+        bellEntanglementText:
+          'Các thí nghiệm của Alain Aspect, John Clauser và Anton Zeilinger chứng minh các cặp photon vướng víu vi phạm bất đẳng thức Bell, khẳng định thực tại lượng tử mang tính phi định xứ (non-local) và không thể mô tả bằng bất kỳ lý thuyết sóng cổ điển cục bộ nào.',
+        takeaway:
+          'Cốt lõi: Hiệu ứng quang điện là bước chuyển lịch sử, nhưng Photon Anti-bunching và Bất đẳng thức Bell mới là bằng chứng không thể bác bỏ của bản chất lượng tử ánh sáng.',
+      },
+      beyondQft: {
+        badge: 'Vật lý Đương đại Mở rộng',
+        title: 'Bài Toán Đo Đạc, Giải Kết Hợp & Vật Lý Vượt Trên QFT Chuẩn',
+        subtitle: 'Từ hiện tượng Decoherence đến Lý thuyết Dây và Hấp dẫn Lượng tử',
+        intro:
+          'Khi ta đi sâu hơn vào nền tảng của tự nhiên, khái niệm "Trường" trong QFT chuẩn cũng bắt đầu bộc lộ các giới hạn và được mở rộng bởi các lý thuyết hiện đại.',
+        decoherenceTitle: 'Giải kết hợp Lượng tử (Quantum Decoherence - Zurek, Zeh):',
+        decoherenceText:
+          'Tại sao sóng trường lan tỏa nhưng máy đo lại chỉ kêu "tạch" một điểm? Lý thuyết Decoherence giải thích: Tương tác cực nhanh giữa trường photon và hàng tỷ bậc tự do của môi trường xung quanh (trong thời gian ~10⁻²⁰ giây) đã tiêu hủy tính kết hợp pha, biến ma trận mật độ lượng tử thành phân bố xác suất cổ điển định xứ.',
+        stringTheoryTitle: 'Góc nhìn Lý thuyết Dây (String Theory):',
+        stringTheoryText:
+          'Photon không phải là trường điểm cơ bản vô hạn. Photon thực chất là mode dao động cơ bản có spin 1, khối lượng 0 của một Dây hở (Open String) siêu vi có chiều dài Planck l_P ~ 10⁻³⁵ mét rung động trong không gian 10 chiều.',
+        loopGravityTitle: 'Lượng tử Hấp dẫn Vòng (Loop Quantum Gravity - LQG):',
+        loopGravityText:
+          'Không-thời gian không phải là nền liên tục trơn tru để trường dao động lên trên. Không-thời gian được tạo thành từ các mắt xích thể tích và diện tích rời rạc (Mạng Spin). Tại thang Planck, trường điện từ cũng bị gián đoạn hóa bởi hình học lượng tử của không gian.',
+        holographyTitle: 'Nguyên lý Toàn ảnh & Đối ngẫu AdS/CFT (Maldacena):',
+        holographyText:
+          'Trường chuẩn điện từ (Gauge field) ở không gian biên (boundary) có thể tương đương toán học hoàn hảo với một lý thuyết hấp dẫn lượng tử nhiều chiều hơn ở không gian khối (bulk). "Trường" và "Hấp dẫn" chỉ là hai mặt của cùng một đồng xu!',
+        takeaway:
+          'Cốt lõi: Trường lượng tử không phải là trạm dừng cuối cùng của vật lý. Tương lai của bức tranh photon gắn liền với sự thống nhất giữa Cơ học Lượng tử và Thuyết Tương Đối Rộng.',
+      },
+    },
   },
   footer: {
     title: 'Photon: Only Field',

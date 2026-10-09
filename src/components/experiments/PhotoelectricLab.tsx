@@ -178,7 +178,7 @@ export const PhotoelectricLab: React.FC = () => {
         )}
 
         {/* Slope label */}
-        <text x={width - 25} y={35} fill="#34d399" fontSize="8" fontFamily="monospace" textAnchor="end">
+        <text x={width - 25} y={35} fill="#34d399" fontSize="12" fontFamily="monospace" textAnchor="end">
           {t.labs.photoelectric.planckConstantSlope}
         </text>
       </svg>
@@ -286,6 +286,17 @@ export const PhotoelectricLab: React.FC = () => {
                 </span>
                 <p className="text-slate-300 leading-relaxed">
                   {t.labs.photoelectric.quantumExplanation}
+                </p>
+              </div>
+
+              {/* Semiclassical Academic Caveat Card */}
+              <div className="p-3.5 rounded-xl bg-purple-950/40 border border-purple-500/30 flex flex-col gap-1.5 md:col-span-2">
+                <span className="font-bold text-purple-300 flex items-center gap-1.5 text-xs">
+                  <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+                  <span>{t.labs.photoelectric.academicCaveatTitle}</span>
+                </span>
+                <p className="text-slate-300 text-xs leading-relaxed">
+                  {t.labs.photoelectric.academicCaveatDesc}
                 </p>
               </div>
             </div>

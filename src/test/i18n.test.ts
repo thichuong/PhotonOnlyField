@@ -76,5 +76,28 @@ describe('i18n & Language Detection Test Suite', () => {
       assert.ok(enTranslations.tour.steps[i].title.length > 5);
     }
   });
+
+  it('TC-I18N-08: Modern perspectives must have 4 detailed pillars with non-empty fields in both languages', () => {
+    const viMP = viTranslations.modernPerspectives;
+    const enMP = enTranslations.modernPerspectives;
+
+    assert.ok(viMP.sectionTitle.length > 0);
+    assert.ok(enMP.sectionTitle.length > 0);
+
+    const pillarKeys = ['ontology', 'vacuumCrisis', 'semiclassical', 'beyondQft'] as const;
+    for (const key of pillarKeys) {
+      assert.ok(viMP.pillars[key].title.length > 5, `VI pillar ${key} must have a non-empty title`);
+      assert.ok(enMP.pillars[key].title.length > 5, `EN pillar ${key} must have a non-empty title`);
+      assert.ok(viMP.pillars[key].takeaway.length > 10, `VI pillar ${key} must have a takeaway`);
+      assert.ok(enMP.pillars[key].takeaway.length > 10, `EN pillar ${key} must have a takeaway`);
+    }
+
+    // Academic caveats in Photoelectric lab and Modern Perspectives
+    assert.ok(viTranslations.labs.photoelectric.academicCaveatTitle.includes('Bán Cổ Điển'));
+    assert.ok(enTranslations.labs.photoelectric.academicCaveatTitle.includes('Semiclassical'));
+    assert.ok(viMP.pillars.vacuumCrisis.jaffeCritiqueTitle.includes('Robert Jaffe'));
+    assert.ok(enMP.pillars.vacuumCrisis.jaffeCritiqueTitle.includes('Robert Jaffe'));
+  });
 });
+
 
