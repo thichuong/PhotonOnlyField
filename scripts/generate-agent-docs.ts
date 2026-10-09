@@ -601,14 +601,48 @@ ${en}
 // 7. Generate Schema.org JSON-LD
 // -------------------------------------------------------------
 function generateJsonLd(): object {
-  const faqItems = viTranslations.myths.items.map((m) => ({
-    '@type': 'Question',
-    name: m.myth,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: `${m.reality} Ẩn dụ trực quan: ${m.analogy} Chân lý cốt lõi QFT: ${m.qftTruth}`,
+  const faqItems = [
+    ...viTranslations.myths.items.map((m) => ({
+      '@type': 'Question',
+      name: m.myth,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: `${m.reality} Ẩn dụ trực quan: ${m.analogy} Chân lý cốt lõi QFT: ${m.qftTruth}`,
+      },
+    })),
+    {
+      '@type': 'Question',
+      name: 'Hiệu ứng quang điện có chứng minh tuyệt đối ánh sáng bắt buộc phải là hạt photon?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Không hoàn toàn! Phản biện nổi tiếng của Willis Lamb & Marlan Scully (1969) chứng minh rằng hiệu ứng quang điện có thể giải thích hoàn hảo bằng mô hình bán cổ điển: sóng điện từ cổ điển liên tục của Maxwell chiếu vào các nguyên tử kim loại có các mức năng lượng lượng tử hóa. Bằng chứng thực nghiệm không thể chối cãi chứng minh bản thân TRƯỜNG ÁNH SÁNG bị lượng tử hóa là hiện tượng Photon Anti-bunching (g⁽²⁾(0) < 1) do Kimble, Dagenais và Mandel đo năm 1977, cùng các thí nghiệm vi phạm bất đẳng thức Bell (Aspect, Clauser, Zeilinger - Giải Nobel Vật lý 2022).',
+      },
     },
-  }));
+    {
+      '@type': 'Question',
+      name: 'Lực Casimir có bắt buộc phải bắt nguồn từ Năng lượng Điểm Không (ZPE) của chân không?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Không bắt buộc! Phản biện của Robert Jaffe (MIT, 2005) chứng minh lực Casimir có thể tính toán tương đương hoàn toàn như lực Van der Waals tương đối tính giữa các electron chuyển động trong hai phiến kim loại mà không cần gán thực tại vật lý độc lập cho dao động điểm không. Hơn nữa, việc tính tổng năng lượng điểm không theo ngưỡng Planck dẫn đến hằng số vũ trụ lớn hơn 10¹²⁰ lần so với đo đạc thiên văn thực tế (Khủng hoảng Hằng số Vũ trụ).',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Vũ trụ là hạt hay là trường? Trường phái Steven Weinberg vs Art Hobson nhìn nhận thế nào?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Đây là tranh luận bản thể học lớn trong vật lý hiện đại. Art Hobson và trường phái QFT khẳng định: Không có hạt cơ học nào, vũ trụ chỉ chứa các trường liên tục, photon chỉ là lượng tử kích thích (Fock state). Ngược lại, Steven Weinberg (Nobel 1979) cho rằng hạt là xuất phát điểm vật lý nền tảng (các biểu diễn không thể phân rã của nhóm Poincaré trong ma trận S), còn các trường lượng tử chỉ là công cụ toán học thuận tiện để xây dựng tương tác cục bộ bất biến Lorentz. Ngoài ra, Định lý Haag (1955) chỉ ra không gian Fock tự do không tương đương đơn nhất với không gian tương tác thực.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Photon có thể định xứ chính xác tại một điểm tọa độ trong không gian như hạt cổ điển không?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Tuyệt đối không! Theo Định lý Newton-Wigner (1949), hạt có khối lượng nghỉ bằng 0 và spin như photon không có toán tử vị trí chuẩn tắc thỏa mãn tính cục bộ tương đối tính. Không tồn tại hàm sóng xác suất vị trí ψ(r) cục bộ cho photon; photon luôn trải rộng theo mode sóng của trường điện từ.',
+      },
+    },
+  ];
 
   return {
     '@context': 'https://schema.org',
@@ -627,7 +661,7 @@ function generateJsonLd(): object {
         '@id': 'https://photon-only-field.pages.dev/#article',
         headline: 'Bản Chất Trường Lượng Tử: Photon Không Phải Hạt Bi',
         description:
-          'Nghiên cứu và mô phỏng trực quan: Trong Thuyết Trường Lượng Tử, không gian ngập tràn Trường Điện Từ. Photon là lượng tử kích thích gián đoạn (Fock state |n>) của mode trường.',
+          'Nghiên cứu và mô phỏng trực quan: Trong Thuyết Trường Lượng Tử, không gian ngập tràn Trường Điện Từ. Photon là lượng tử kích thích gián đoạn (Fock state |n>) của mode trường, kèm các phân tích phản biện hiện đại (Weinberg, Haag, Casimir Jaffe, Lamb-Scully).',
         about: [
           'Quantum Field Theory',
           'Photon',
@@ -635,6 +669,12 @@ function generateJsonLd(): object {
           'Casimir Effect',
           'Mach-Zehnder Interferometer',
           'Photoelectric Effect',
+          'Weinberg S-Matrix',
+          'Haag Theorem',
+          'Photon Antibunching',
+          'Bell Inequality',
+          'Decoherence',
+          'String Theory',
         ],
         educationalLevel: 'Advanced / Undergraduate Physics',
       },
@@ -652,6 +692,10 @@ function generateJsonLd(): object {
 // -------------------------------------------------------------
 function generateSemanticHtmlFallback(): string {
   const t = viTranslations;
+  const mp = t.modernPerspectives;
+  const p = mp.pillars;
+  const qd = t.qftDeepDive;
+
   let html = `
     <!-- Static Semantic Content for AI Model Agents and Web Crawlers (HTTP GET / No-JS fallback) -->
     <noscript>
@@ -701,12 +745,17 @@ function generateSemanticHtmlFallback(): string {
             <h3>${t.labs.doubleSlit.title}</h3>
             <p>${t.labs.doubleSlit.description}</p>
             <p>${t.labs.doubleSlit.qftInsightBody}</p>
+            <p><strong>Kiểm chứng photon đơn:</strong> ${t.labs.doubleSlit.singlePhotonCheck}</p>
+            <p><strong>Đầu dò Which-Way:</strong> ${t.labs.doubleSlit.whichWayCheck}</p>
           </article>
 
           <article>
             <h3>${t.labs.photoelectric.title}</h3>
             <p>${t.labs.photoelectric.description}</p>
             <p>Công thức: K_max = h·ν - Φ = e·V_stop</p>
+            <p><strong>Giải thích lượng tử:</strong> ${t.labs.photoelectric.quantumExplanation}</p>
+            <p><strong>Hạn chế sóng cổ điển:</strong> ${t.labs.photoelectric.classicalExplanation}</p>
+            <p><strong>Lưu ý hàn lâm:</strong> ${t.labs.photoelectric.academicCaveatDesc}</p>
           </article>
 
           <article>
@@ -716,12 +765,14 @@ function generateSemanticHtmlFallback(): string {
             <p>Toán tử Sinh a†: ${t.labs.fockState.creationDesc}</p>
             <p>Toán tử Hủy a: ${t.labs.fockState.annihilationDesc}</p>
             <p>Năng lượng điểm không (ZPE): ${t.labs.fockState.zpeDeepDiveDesc}</p>
+            <p>Bất định số hạt và pha: ${t.labs.fockState.phaseUncertaintyDesc}</p>
           </article>
 
           <article>
             <h3>${t.labs.machZehnder.title}</h3>
             <p>${t.labs.machZehnder.description}</p>
             <p>Xác suất: P(D1) = cos²(Δφ/2), P(D2) = sin²(Δφ/2)</p>
+            <p><strong>Cơ chế hoạt động:</strong> ${t.labs.machZehnder.howItWorksDesc}</p>
             <p>${t.labs.machZehnder.whyWavepacketDesc}</p>
           </article>
         </section>
@@ -739,12 +790,182 @@ function generateSemanticHtmlFallback(): string {
               <p>Công thức: ${m.formulaLatex} — ${m.formulaMeaning}</p>
               <p>Thí nghiệm: ${m.keyExperiment}</p>
               <p>${m.fullExplanation}</p>
+              <p><em>Trích dẫn:</em> "${m.quote}"</p>
             </dd>
     `;
   });
 
   html += `
           </dl>
+        </section>
+
+        <section id="ai-deep-dive">
+          <h2>5. Khám Phá Chuyên Sâu QFT & Bảng Đối Chiếu 3 Mô Hình</h2>
+          <p>${qd.description}</p>
+
+          <table border="1" style="border-collapse: collapse; width: 100%; margin: 16px 0;">
+            <thead>
+              <tr>
+                <th>${qd.thCriteria}</th>
+                <th>${qd.thNewton}</th>
+                <th>${qd.thMaxwell}</th>
+                <th>${qd.thQft}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>${qd.row1Criteria}</strong></td>
+                <td>${qd.row1Newton}</td>
+                <td>${qd.row1Maxwell}</td>
+                <td>${qd.row1Qft}</td>
+              </tr>
+              <tr>
+                <td><strong>${qd.row2Criteria}</strong></td>
+                <td>${qd.row2Newton}</td>
+                <td>${qd.row2Maxwell}</td>
+                <td>${qd.row2Qft}</td>
+              </tr>
+              <tr>
+                <td><strong>${qd.row3Criteria}</strong></td>
+                <td>${qd.row3Newton}</td>
+                <td>${qd.row3Maxwell}</td>
+                <td>${qd.row3Qft}</td>
+              </tr>
+              <tr>
+                <td><strong>${qd.row4Criteria}</strong></td>
+                <td>${qd.row4Newton}</td>
+                <td>${qd.row4Maxwell}</td>
+                <td>${qd.row4Qft}</td>
+              </tr>
+              <tr>
+                <td><strong>${qd.row5Criteria}</strong></td>
+                <td>${qd.row5Newton}</td>
+                <td>${qd.row5Maxwell}</td>
+                <td>${qd.row5Qft}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <article>
+            <h3>${qd.fieldNatureTitle}</h3>
+            <p>${qd.fieldNatureIntro}</p>
+            <ul>
+              <li><strong>${qd.fieldPoint1Title}:</strong> ${qd.fieldPoint1Text}</li>
+              <li><strong>${qd.fieldPoint2Title}:</strong> ${qd.fieldPoint2Text}</li>
+              <li><strong>${qd.fieldPoint3Title}:</strong> ${qd.fieldPoint3Text}</li>
+            </ul>
+          </article>
+
+          <article>
+            <h3>${qd.detectorQuestionTitle}</h3>
+            <p>${qd.detectorRuleText}</p>
+            <blockquote>${qd.detectorConclusion}</blockquote>
+          </article>
+
+          <article>
+            <h3>${qd.dualityResolutionTitle}</h3>
+            <p>${qd.dualityResolutionText}</p>
+          </article>
+
+          <article>
+            <h3>${qd.vacuumFluctuationsTitle}</h3>
+            <p>${qd.vacuumFluctuationsIntro}</p>
+            <ul>
+              <li><strong>${qd.vacuumPoint1Title}:</strong> ${qd.vacuumPoint1Text}</li>
+              <li><strong>${qd.vacuumPoint2Title}:</strong> ${qd.vacuumPoint2Text}</li>
+              <li><strong>${qd.vacuumPoint3Title}:</strong> ${qd.vacuumPoint3Text}</li>
+            </ul>
+          </article>
+        </section>
+
+        <section id="ai-modern-perspectives">
+          <h2>6. Bốn Trụ Cột Phản Biện Hiện Đại & Góc Nhìn Mở Rộng (Modern Perspectives & Critiques)</h2>
+          <p>${mp.sectionDescription}</p>
+
+          <article id="ai-perspective-ontology">
+            <h3>6.1 ${p.ontology.title} (${p.ontology.badge})</h3>
+            <p><strong>${p.ontology.subtitle}</strong></p>
+            <p>${p.ontology.intro}</p>
+            <ul>
+              <li><strong>${p.ontology.hobsonViewTitle}:</strong> ${p.ontology.hobsonViewText}</li>
+              <li><strong>${p.ontology.weinbergViewTitle}:</strong> ${p.ontology.weinbergViewText}</li>
+              <li><strong>${p.ontology.haagTheoremTitle}:</strong> ${p.ontology.haagTheoremText}</li>
+              <li><strong>${p.ontology.localizationTitle}:</strong> ${p.ontology.localizationText}</li>
+            </ul>
+            <blockquote>${p.ontology.takeaway}</blockquote>
+          </article>
+
+          <article id="ai-perspective-vacuum">
+            <h3>6.2 ${p.vacuumCrisis.title} (${p.vacuumCrisis.badge})</h3>
+            <p><strong>${p.vacuumCrisis.subtitle}</strong></p>
+            <p>${p.vacuumCrisis.intro}</p>
+            <ul>
+              <li><strong>${p.vacuumCrisis.casimirStandardTitle}:</strong> ${p.vacuumCrisis.casimirStandardText}</li>
+              <li><strong>${p.vacuumCrisis.jaffeCritiqueTitle}:</strong> ${p.vacuumCrisis.jaffeCritiqueText}</li>
+              <li><strong>${p.vacuumCrisis.cosmologicalCrisisTitle}:</strong> ${p.vacuumCrisis.cosmologicalCrisisText}</li>
+            </ul>
+            <blockquote>${p.vacuumCrisis.takeaway}</blockquote>
+          </article>
+
+          <article id="ai-perspective-semiclassical">
+            <h3>6.3 ${p.semiclassical.title} (${p.semiclassical.badge})</h3>
+            <p><strong>${p.semiclassical.subtitle}</strong></p>
+            <p>${p.semiclassical.intro}</p>
+            <ul>
+              <li><strong>${p.semiclassical.lambScullyTitle}:</strong> ${p.semiclassical.lambScullyText}</li>
+              <li><strong>${p.semiclassical.antibunchingTitle}:</strong> ${p.semiclassical.antibunchingText}</li>
+              <li><strong>${p.semiclassical.bellEntanglementTitle}:</strong> ${p.semiclassical.bellEntanglementText}</li>
+            </ul>
+            <blockquote>${p.semiclassical.takeaway}</blockquote>
+          </article>
+
+          <article id="ai-perspective-beyond">
+            <h3>6.4 ${p.beyondQft.title} (${p.beyondQft.badge})</h3>
+            <p><strong>${p.beyondQft.subtitle}</strong></p>
+            <p>${p.beyondQft.intro}</p>
+            <ul>
+              <li><strong>${p.beyondQft.decoherenceTitle}:</strong> ${p.beyondQft.decoherenceText}</li>
+              <li><strong>${p.beyondQft.stringTheoryTitle}:</strong> ${p.beyondQft.stringTheoryText}</li>
+              <li><strong>${p.beyondQft.loopGravityTitle}:</strong> ${p.beyondQft.loopGravityText}</li>
+              <li><strong>${p.beyondQft.holographyTitle}:</strong> ${p.beyondQft.holographyText}</li>
+            </ul>
+            <blockquote>${p.beyondQft.takeaway}</blockquote>
+          </article>
+        </section>
+
+        <section id="ai-tour">
+          <h2>7. Lộ Trình 4 Bước Khám Phá Nhận Thức (Story Mode Tour)</h2>
+  `;
+
+  t.tour.steps.forEach((s) => {
+    html += `
+          <article>
+            <h3>Bước ${s.step}: ${s.title} (${s.badge})</h3>
+            <p>${s.description}</p>
+            <p><strong>${t.tour.takeawayLabel}:</strong> ${s.takeaway}</p>
+          </article>
+    `;
+  });
+
+  html += `
+        </section>
+
+        <section id="ai-english-summary" lang="en">
+          <h2>8. English Comprehensive Summary for Autonomous AI Reasoners</h2>
+          <p><strong>Core Axiom:</strong> "There are no particles, there are only fields." — Art Hobson</p>
+          <p>In Quantum Field Theory (QFT), light is not composed of miniature mechanical billiard balls traversing empty space. The Electromagnetic Field is a continuous fundamental physical entity spanning all space-time. A photon is a localized discrete excitation (Fock state |n⟩) of a field normal mode with energy E = ℏω.</p>
+          
+          <h3>Key Theoretical Sections Available:</h3>
+          <ul>
+            <li><strong>Virtual Laboratories:</strong> Double-Slit field propagation, Photoelectric stopping potential (Einstein 1905), Fock State Ladder (|0⟩ to |4⟩) with Zero-Point Energy (½ℏω), and Mach-Zehnder single-photon interference.</li>
+            <li><strong>4 Classical Misconceptions Debunked:</strong> Wave-particle morphing debunked, gravitational deflection without rest mass (geodesics in curved spacetime), quantum vacuum non-emptiness, and impossibility of stationary photons.</li>
+            <li><strong>4 Pillars of Modern Critiques:</strong>
+              1. Field vs Particle Ontology (Hobson vs Weinberg S-matrix, Haag's theorem, Newton-Wigner localization limit).
+              2. Casimir & Vacuum Energy Reality (Jaffe 2005 relativistic Van der Waals formulation, Cosmological Constant 120-order-of-magnitude discrepancy).
+              3. Semiclassical Frontiers (Lamb & Scully 1969 photoelectric explanation vs definitive photon antibunching g⁽²⁾(0) &lt; 1 and Bell inequality violations).
+              4. Measurement Problem & Beyond QFT (Quantum Decoherence, Open String vibrational modes, Loop Quantum Gravity spin networks, AdS/CFT holographic duality).
+            </li>
+          </ul>
         </section>
       </main>
     </div>
@@ -764,21 +985,34 @@ function patchHtmlFile(filePath: string) {
   const jsonLdScript = `\n    <script type="application/ld+json">\n${JSON.stringify(generateJsonLd(), null, 2)}\n    </script>`;
   const altLinks = `\n    <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM Summary Documentation" />\n    <link rel="alternate" type="text/markdown" href="/llms-full.txt" title="Full Theoretical Documentation" />\n    <link rel="alternate" type="text/markdown" href="/docs/theory-vi.md" title="Vietnamese Theoretical Guide" />\n    <link rel="alternate" type="text/markdown" href="/docs/theory-en.md" title="English Theoretical Guide" />`;
 
-  // Inject into <head> if not already present
-  if (!content.includes('rel="alternate" type="text/markdown"')) {
-    content = content.replace('</head>', `${altLinks}${jsonLdScript}\n  </head>`);
-  } else if (!content.includes('application/ld+json')) {
+  // 1. Inject or update JSON-LD into <head>
+  if (content.includes('<script type="application/ld+json">')) {
+    content = content.replace(
+      /<script type="application\/ld\+json">[\s\S]*?<\/script>/,
+      `<script type="application/ld+json">\n${JSON.stringify(generateJsonLd(), null, 2)}\n    </script>`
+    );
+  } else {
     content = content.replace('</head>', `${jsonLdScript}\n  </head>`);
   }
 
-  // Inject semantic fallback inside <div id="root">
+  // Ensure alternate links exist in <head>
+  if (!content.includes('rel="alternate" type="text/markdown"')) {
+    content = content.replace('</head>', `${altLinks}\n  </head>`);
+  }
+
+  // 2. Inject or update semantic fallback inside <div id="root">
   const semanticFallback = generateSemanticHtmlFallback();
-  if (content.includes('<div id="root"></div>')) {
+  if (content.includes('ai-agent-readable-layer')) {
+    content = content.replace(
+      /<div id="root">[\s\S]*?<\/div>\s*(?=<script type="module"|<\/body>)/,
+      `<div id="root">\n${semanticFallback}\n    </div>\n    `
+    );
+  } else if (content.includes('<div id="root"></div>')) {
     content = content.replace(
       '<div id="root"></div>',
       `<div id="root">\n${semanticFallback}\n    </div>`
     );
-  } else if (content.includes('<div id="root">') && !content.includes('ai-agent-readable-layer')) {
+  } else if (content.includes('<div id="root">')) {
     content = content.replace(
       '<div id="root">',
       `<div id="root">\n${semanticFallback}`
