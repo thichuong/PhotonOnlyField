@@ -31,10 +31,10 @@ function MainApp() {
   const [fieldSettings, setFieldSettings] = useState<FieldSettings>({
     mode: 'qft-field',
     vacuumFluctuations: true,
-    waveFrequency: 1.2,
+    waveFrequency: 0.6,
     amplitude: 1.0,
     speed: 1.0,
-    photonEnergy: 1.5,
+    photonEnergy: 2.48,
     showWireframe: false,
     colorScheme: 'quantum-cyan',
     damping: 0.95,
@@ -105,7 +105,7 @@ function MainApp() {
         ...prev,
         mode: 'qft-field',
         vacuumFluctuations: true,
-        waveFrequency: 1.2,
+        waveFrequency: 0.6,
         amplitude: 1.0,
       }));
     } else if (stepIndex === 2) {

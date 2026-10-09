@@ -66,6 +66,12 @@ export interface Translations {
     neonCyan: string;
     ultraviolet: string;
     amberEnergy: string;
+    energySpectrumTitle: string;
+    energySpectrumDesc: string;
+    spectrumAmber: string;
+    spectrumCyan: string;
+    spectrumViolet: string;
+    spectrumUV: string;
     photonEnergyFormula: string;
     vacuumFluctuationsExplainer: string;
   };

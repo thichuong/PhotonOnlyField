@@ -1,7 +1,7 @@
 import React from 'react';
 import type { FieldSettings } from '../../types/physics';
 import { MathFormula } from '../common/MathFormula';
-import { Zap, Activity, Waves, Sparkles, Palette, ShieldCheck, Eye } from 'lucide-react';
+import { Zap, Activity, Waves, Sparkles, ShieldCheck, Eye } from 'lucide-react';
 import { useLanguage } from '../../i18n';
 
 interface FieldControlsProps {
@@ -58,40 +58,81 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
       )}
 
       {/* Numerical Sliders & Parameters */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-1">
-        {/* Frequency & Energy */}
-        <div className="flex flex-col gap-1.5">
-          <div className="flex justify-between text-xs">
-            <span className="text-slate-400 flex items-center gap-1">
-              <Activity className="w-3.5 h-3.5 text-cyan-400" />
-              <span>{t.controls.excitationFreq}</span>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 pt-1">
+        {/* Unified: Excitation Frequency (ν) & Dynamic Energy Spectrum (E = hν) */}
+        <div className="lg:col-span-7 flex flex-col justify-between gap-3 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800/80">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+            <span className="text-slate-300 flex items-center gap-1.5 font-medium">
+              <Activity className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              <span>{t.controls.excitationFreq} & {t.controls.energySpectrumTitle}</span>
             </span>
-            <span className="font-mono text-cyan-300 font-bold">{settings.waveFrequency.toFixed(1)} GHz</span>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-cyan-300 font-bold">{settings.waveFrequency.toFixed(1)} PHz</span>
+              <span className={`px-2 py-0.5 rounded-md text-xs font-mono font-semibold border ${
+                settings.waveFrequency < 0.5
+                  ? 'text-amber-300 bg-amber-500/20 border-amber-500/40'
+                  : settings.waveFrequency < 0.75
+                  ? 'text-cyan-300 bg-cyan-500/20 border-cyan-500/40'
+                  : settings.waveFrequency < 1.1
+                  ? 'text-purple-300 bg-purple-500/20 border-purple-500/40'
+                  : 'text-fuchsia-300 bg-fuchsia-500/20 border-fuchsia-500/40'
+              }`}>
+                {settings.waveFrequency < 0.5
+                  ? t.controls.spectrumAmber
+                  : settings.waveFrequency < 0.75
+                  ? t.controls.spectrumCyan
+                  : settings.waveFrequency < 1.1
+                  ? t.controls.spectrumViolet
+                  : t.controls.spectrumUV}
+              </span>
+            </div>
           </div>
-          <input
-            type="range"
-            min="0.4"
-            max="3.0"
-            step="0.1"
-            value={settings.waveFrequency}
-            onChange={(e) => onChange({ waveFrequency: parseFloat(e.target.value) })}
-            className="w-full accent-cyan-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
-          />
-          <div className="flex justify-between text-xs text-slate-400">
-            <span>{t.controls.lowEnergyWave}</span>
-            <span>{t.controls.highEnergyWave}</span>
+
+          {/* Integrated Spectrum Slider */}
+          <div className="relative flex items-center my-0.5">
+            <div className="absolute inset-x-0 h-2.5 rounded-full bg-gradient-to-r from-amber-500 via-cyan-400 via-purple-500 to-fuchsia-500 opacity-90 shadow-inner pointer-events-none" />
+            <input
+              type="range"
+              min="0.4"
+              max="3.0"
+              step="0.1"
+              value={settings.waveFrequency}
+              onChange={(e) => onChange({ waveFrequency: parseFloat(e.target.value) })}
+              className="relative w-full h-2.5 bg-transparent appearance-none cursor-pointer z-10 accent-white"
+            />
+          </div>
+
+          <div className="flex justify-between text-xs text-slate-400 font-mono">
+            <span>0.4 PHz ({t.controls.lowEnergyWave})</span>
+            <span className="hidden sm:inline">0.6 PHz (Cyan ~ 500 nm)</span>
+            <span>3.0 PHz ({t.controls.highEnergyWave})</span>
           </div>
         </div>
 
-        {/* Amplitude */}
-        <div className="flex flex-col gap-1.5">
-          <div className="flex justify-between text-xs">
-            <span className="text-slate-400 flex items-center gap-1">
-              <Waves className="w-3.5 h-3.5 text-purple-400" />
+        {/* Amplitude & Wireframe Toggle */}
+        <div className="lg:col-span-5 flex flex-col justify-between gap-3 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800/80">
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-slate-300 flex items-center gap-1.5 font-medium">
+              <Waves className="w-3.5 h-3.5 text-purple-400 shrink-0" />
               <span>{t.controls.fieldAmplitude}</span>
             </span>
-            <span className="font-mono text-purple-300 font-bold">{settings.amplitude.toFixed(1)} a.u.</span>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-purple-300 font-bold">{settings.amplitude.toFixed(1)} a.u.</span>
+              <button
+                onClick={() => onChange({ showWireframe: !settings.showWireframe })}
+                className={`text-xs font-mono flex items-center gap-1 px-2.5 py-0.5 rounded border transition-colors ${
+                  settings.showWireframe
+                    ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300'
+                    : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200'
+                }`}
+                title={t.controls.wireframe3D}
+              >
+                <Eye className="w-3 h-3" />
+                <span>{t.controls.wireframe3D}</span>
+              </button>
+            </div>
           </div>
+
           <input
             type="range"
             min="0.3"
@@ -99,64 +140,12 @@ export const FieldControls: React.FC<FieldControlsProps> = ({ settings, onChange
             step="0.1"
             value={settings.amplitude}
             onChange={(e) => onChange({ amplitude: parseFloat(e.target.value) })}
-            className="w-full accent-purple-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
+            className="w-full accent-purple-400 h-2 bg-slate-800 rounded-lg cursor-pointer my-0.5"
           />
+
           <div className="flex justify-between text-xs text-slate-400">
             <span>{t.controls.gentleRipple}</span>
             <span>{t.controls.strongExcitation}</span>
-          </div>
-        </div>
-
-        {/* Color Scheme & Wireframe */}
-        <div className="flex flex-col gap-1.5">
-          <div className="flex justify-between text-xs">
-            <span className="text-slate-400 flex items-center gap-1">
-              <Palette className="w-3.5 h-3.5 text-amber-400" />
-              <span>{t.controls.fieldAppearance}</span>
-            </span>
-            <button
-              onClick={() => onChange({ showWireframe: !settings.showWireframe })}
-              className={`text-xs font-mono flex items-center gap-1 px-2.5 py-0.5 rounded border transition-colors ${
-                settings.showWireframe
-                  ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300'
-                  : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Eye className="w-3 h-3" />
-              <span>{t.controls.wireframe3D}</span>
-            </button>
-          </div>
-          <div className="grid grid-cols-3 gap-1.5">
-            <button
-              onClick={() => onChange({ colorScheme: 'quantum-cyan' })}
-              className={`py-1.5 px-2 text-xs rounded-lg border font-medium transition-all ${
-                settings.colorScheme === 'quantum-cyan'
-                  ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300'
-                  : 'bg-slate-800/80 border-slate-700 text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              {t.controls.neonCyan}
-            </button>
-            <button
-              onClick={() => onChange({ colorScheme: 'electric-violet' })}
-              className={`py-1.5 px-2 text-xs rounded-lg border font-medium transition-all ${
-                settings.colorScheme === 'electric-violet'
-                  ? 'bg-purple-500/20 border-purple-400 text-purple-300'
-                  : 'bg-slate-800/80 border-slate-700 text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              {t.controls.ultraviolet}
-            </button>
-            <button
-              onClick={() => onChange({ colorScheme: 'energy-amber' })}
-              className={`py-1.5 px-2 text-xs rounded-lg border font-medium transition-all ${
-                settings.colorScheme === 'energy-amber'
-                  ? 'bg-amber-500/20 border-amber-400 text-amber-300'
-                  : 'bg-slate-800/80 border-slate-700 text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              {t.controls.amberEnergy}
-            </button>
           </div>
         </div>
       </div>

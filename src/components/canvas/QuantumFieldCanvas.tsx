@@ -36,6 +36,39 @@ interface RippleMarker {
   maxScale: number;
 }
 
+export function getFieldSpectrumColors(freq: number) {
+  const f = Math.max(0.4, Math.min(3.0, freq || 0.6));
+  let crest: [number, number, number];
+  let mid: [number, number, number];
+  let trough: [number, number, number];
+  let ringColor: number;
+
+  if (f <= 0.6) {
+    // 0.4 PHz (Amber/Red, ~1.66 eV) to 0.6 PHz (Quantum Cyan, ~2.48 eV)
+    const t = (f - 0.4) / 0.2;
+    crest = [1.0 - t * 0.8, 0.85 + t * 0.1, 0.2 + t * 0.8];
+    mid = [0.95 - t * 0.9, 0.45 + t * 0.2, 0.05 + t * 0.9];
+    trough = [0.6 - t * 0.15, 0.1 + t * 0.05, 0.05 + t * 0.9];
+    ringColor = t < 0.5 ? 0xfbbf24 : 0x38bdf8;
+  } else if (f <= 0.9) {
+    // 0.6 PHz (Quantum Cyan, ~2.48 eV) to 0.9 PHz (Electric Violet, ~3.72 eV)
+    const t = (f - 0.6) / 0.3;
+    crest = [0.2 + t * 0.65, 0.95 - t * 0.45, 1.0];
+    mid = [0.05 + t * 0.55, 0.65 - t * 0.5, 0.95 + t * 0.03];
+    trough = [0.45 - t * 0.15, 0.15 - t * 0.1, 0.95 - t * 0.25];
+    ringColor = t < 0.5 ? 0x38bdf8 : 0xa855f7;
+  } else {
+    // 0.9 PHz (Electric Violet) to 3.0 PHz (Extreme Ultraviolet / Magenta, ~12.4 eV)
+    const t = Math.min(1, (f - 0.9) / 2.1);
+    crest = [0.85 + t * 0.13, 0.5 - t * 0.15, 1.0 - t * 0.05];
+    mid = [0.6 + t * 0.15, 0.15 - t * 0.07, 0.98];
+    trough = [0.3 + t * 0.05, 0.05 - t * 0.03, 0.7 - t * 0.05];
+    ringColor = t < 0.5 ? 0xa855f7 : 0xd946ef;
+  }
+
+  return { crest, mid, trough, ringColor };
+}
+
 export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
   settings,
   onSettingsChange,
@@ -136,8 +169,9 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
     // Visual ripple ring feedback on grid
     if (planeMeshRef.current) {
       const ringGeo = new THREE.RingGeometry(0.15, 0.4, 32);
+      const { ringColor } = getFieldSpectrumColors(curSettings.waveFrequency || 0.6);
       const ringMat = new THREE.MeshBasicMaterial({
-        color: curSettings.colorScheme === 'energy-amber' ? 0xfbbf24 : 0x38bdf8,
+        color: ringColor,
         transparent: true,
         opacity: 0.95,
         side: THREE.DoubleSide,
@@ -519,8 +553,8 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
         }
 
         const hasVacuum = isQftMode && curSettings.vacuumFluctuations;
-        const colorScheme = curSettings.colorScheme;
         const invNormZFactor = 1 / (baseAmp * 2.2 + 0.1);
+        const { crest, mid, trough } = getFieldSpectrumColors(curSettings.waveFrequency || 0.6);
 
         // Highly-optimized hot loop across all vertices using direct typed arrays
         for (let i = 0; i < count; i++) {
@@ -571,45 +605,23 @@ export const QuantumFieldCanvas: React.FC<QuantumFieldCanvasProps> = ({
             totalCenterEnergy += Math.abs(z);
           }
 
-          // Dynamic vertex color grading
+          // Dynamic spectral vertex color grading matching excitation energy level
           const normZ = Math.max(-1, Math.min(1, z * invNormZFactor));
           const intensity = Math.abs(normZ);
           const cIndex = i * 3;
 
-          if (colorScheme === 'quantum-cyan') {
-            if (z > 0.4) {
-              colArray[cIndex] = 0.2 + intensity * 0.75;
-              colArray[cIndex + 1] = 0.85 + intensity * 0.15;
-              colArray[cIndex + 2] = 1.0;
-            } else if (z < -0.3) {
-              colArray[cIndex] = 0.55 + intensity * 0.45;
-              colArray[cIndex + 1] = 0.15;
-              colArray[cIndex + 2] = 0.95;
-            } else {
-              colArray[cIndex] = 0.05 + intensity * 0.2;
-              colArray[cIndex + 1] = 0.65 + (1 - intensity) * 0.25;
-              colArray[cIndex + 2] = 0.95;
-            }
-          } else if (colorScheme === 'energy-amber') {
-            if (z > 0.4) {
-              colArray[cIndex] = 1.0;
-              colArray[cIndex + 1] = 0.9;
-              colArray[cIndex + 2] = 0.3 + intensity * 0.5;
-            } else {
-              colArray[cIndex] = 0.95;
-              colArray[cIndex + 1] = 0.45 + (1 - intensity) * 0.35;
-              colArray[cIndex + 2] = 0.05 + intensity * 0.2;
-            }
+          if (z > 0.4) {
+            colArray[cIndex] = Math.min(1, crest[0] + intensity * (1 - crest[0]) * 0.5);
+            colArray[cIndex + 1] = Math.min(1, crest[1] + intensity * (1 - crest[1]) * 0.5);
+            colArray[cIndex + 2] = Math.min(1, crest[2] + intensity * (1 - crest[2]) * 0.5);
+          } else if (z < -0.3) {
+            colArray[cIndex] = trough[0] * (1 - intensity * 0.2);
+            colArray[cIndex + 1] = trough[1] * (1 - intensity * 0.2);
+            colArray[cIndex + 2] = trough[2] * (1 - intensity * 0.2);
           } else {
-            if (z > 0.4) {
-              colArray[cIndex] = 0.95;
-              colArray[cIndex + 1] = 0.6;
-              colArray[cIndex + 2] = 1.0;
-            } else {
-              colArray[cIndex] = 0.65 + intensity * 0.35;
-              colArray[cIndex + 1] = 0.15 + (1 - intensity) * 0.25;
-              colArray[cIndex + 2] = 0.98;
-            }
+            colArray[cIndex] = mid[0] * 0.85 + intensity * 0.15;
+            colArray[cIndex + 1] = mid[1] * 0.85 + (1 - intensity) * 0.15;
+            colArray[cIndex + 2] = mid[2] * 0.85 + intensity * 0.15;
           }
         }
 
