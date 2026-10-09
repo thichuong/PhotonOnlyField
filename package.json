@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && npm run build:agent-docs",
+    "build:agent-docs": "node --experimental-strip-types scripts/generate-agent-docs.ts",
     "deploy": "npm run build && wrangler pages deploy dist --project-name=photon-only-field",
     "test": "node --experimental-strip-types --test src/test/*.test.ts",
     "lint": "oxlint",

@@ -1,0 +1,27 @@
+# Robots.txt for Photon: Only Field
+User-agent: *
+Allow: /
+
+# LLM & AI Model Agent Endpoints
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /docs/
+Allow: /sitemap.xml
+
+# Explicit authorization for AI Model crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://photon-only-field.pages.dev/sitemap.xml
