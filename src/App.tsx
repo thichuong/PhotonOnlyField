@@ -7,6 +7,7 @@ import { DoubleSlitLab } from './components/experiments/DoubleSlitLab';
 import { PhotoelectricLab } from './components/experiments/PhotoelectricLab';
 import { FockStateLab } from './components/experiments/FockStateLab';
 import { MachZehnderLab } from './components/experiments/MachZehnderLab';
+import { HBTLab } from './components/experiments/HBTLab';
 import { QFTDeepDive } from './components/explainer/QFTDeepDive';
 import { ModernPerspectivesSection } from './components/explainer/ModernPerspectivesSection';
 import { MisconceptionsSection } from './components/explainer/MisconceptionsSection';
@@ -39,7 +40,7 @@ function MainApp() {
     damping: 0.95,
   });
 
-  type LabTabId = 'lab-double-slit' | 'lab-photoelectric' | 'lab-fock-state' | 'lab-mach-zehnder';
+  type LabTabId = 'lab-double-slit' | 'lab-photoelectric' | 'lab-fock-state' | 'lab-mach-zehnder' | 'lab-hbt';
   const [activeLabTab, setActiveLabTab] = useState<LabTabId>('lab-double-slit');
   const [isTourOpen, setIsTourOpen] = useState<boolean>(false);
   const [photonInjectTrigger, setPhotonInjectTrigger] = useState<number>(0);
@@ -59,6 +60,7 @@ function MainApp() {
       'lab-photoelectric',
       'lab-fock-state',
       'lab-mach-zehnder',
+      'lab-hbt',
     ];
 
     if (!('IntersectionObserver' in window)) return;
@@ -320,15 +322,26 @@ function MainApp() {
               >
                 4. {t.labs.tabMachZehnder}
               </button>
+              <button
+                onClick={() => scrollToLab('lab-hbt')}
+                className={`px-3 py-1.5 rounded-xl font-medium transition-all cursor-pointer ${
+                  activeLabTab === 'lab-hbt'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                5. {t.labs.tabHBT}
+              </button>
             </div>
           </div>
 
-          {/* Render All 4 Labs in Sequence (Vertical Scroll Flow) */}
+          {/* Render All 5 Labs in Sequence (Vertical Scroll Flow) */}
           <div className="flex flex-col gap-10">
             <DoubleSlitLab />
             <PhotoelectricLab />
             <FockStateLab />
             <MachZehnderLab />
+            <HBTLab />
           </div>
         </section>
 

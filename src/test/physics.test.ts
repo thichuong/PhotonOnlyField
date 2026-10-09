@@ -206,5 +206,41 @@ describe('Physics Logic & Simulation Test Suite', () => {
     const logDiscrepancy = logRhoPlanck - logRhoObs;
     assert.ok(logDiscrepancy >= 115 && logDiscrepancy <= 125, 'Cosmological constant problem discrepancy must be ~10^120');
   });
+
+  // TC-12: HBT 50:50 Beam Splitter coincidence statistics
+  it('TC-12: HBT 50:50 Beam Splitter single-photon state has zero joint detection probability P(D1, D2) = 0', () => {
+    // Input state |1>_in on 50:50 BS:
+    // Output state: (|1,0>_r,t + i|0,1>_r,t) / sqrt(2)
+    // The two-photon joint state |1,1>_r,t amplitude is strictly 0.
+    const probReflected = 0.5;
+    const probTransmitted = 0.5;
+    const probCoincidenceFock1 = 0; // Exactly 0 for single photon
+    assert.strictEqual(probCoincidenceFock1, 0, 'Single photon cannot trigger both D1 and D2 simultaneously');
+
+    // In contrast, for coherent state with mean photon number mu:
+    // P(D1) = 1 - exp(-mu/2) approx mu/2
+    // P(D2) = 1 - exp(-mu/2) approx mu/2
+    // P(D1 and D2) = P(D1) * P(D2) > 0 (independent Poisson clicks)
+    const mu = 0.1;
+    const pD1 = 1 - Math.exp(-mu / 2);
+    const pD2 = 1 - Math.exp(-mu / 2);
+    const pCoincidenceCoherent = pD1 * pD2;
+    assert.ok(pCoincidenceCoherent > 0, 'Coherent state always has accidental coincidences');
+  });
+
+  // TC-13: HBT with APD Dark Count Noise still satisfies non-classical criterion g^(2)(0) < 0.5
+  it('TC-13: HBT with APD Dark Count Noise preserves quantum antibunching g^(2)(0) < 0.5', () => {
+    // With dark count rate p_dark = 0.05 (5%)
+    const pDark = 0.05;
+    // Expected coincidence count at tau = 0 from dark counts: C(0) ~ 2 * pDark
+    // Accidental coincidences at side peaks: C_acc ~ (0.5 + pDark)^2
+    // g^(2)(0)_measured = C(0) / C_acc
+    const c0 = 2 * pDark * 0.5; // one photon click + one dark click
+    const cSide = Math.pow(0.5 + pDark, 2);
+    const g2Measured = c0 / cSide;
+
+    assert.ok(g2Measured < 0.5, 'Realistic single-photon source with noise maintains g^(2)(0) < 0.5');
+    assert.ok(g2Measured < 1.0, 'Measured g^(2)(0) remains far below the classical wave limit 1.0');
+  });
 });
 

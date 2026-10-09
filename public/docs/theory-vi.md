@@ -178,6 +178,20 @@ Thí nghiệm kiểm chứng cốt lõi của quang học lượng tử: Một p
 - **Photon có bị chẻ đôi hạt khi qua bộ tách chùm BS1?**
   Tuyệt đối KHÔNG! Photon là một lượng tử bất khả phân chia (E = hν). Thứ phân nhánh tại BS₁ là BIÊN ĐỘ XÁC SUẤT của gói sóng |ψ⟩ = (|d₁⟩ + i|d₂⟩)/√2. Trên cả 2 nhánh chỉ là 50% biên độ sóng mờ; chỉ khi tới đầu dò, hàm sóng sụp đổ tức thời và toàn bộ năng lượng hν được hấp thụ tại duy nhất 1 đầu dò.
 
+### 5.5 Phòng Lab 5: Thí Nghiệm Hanbury Brown - Twiss: Đo Chống Chùm Photon
+*Phòng Thí Nghiệm 5*
+
+Bằng chứng thực nghiệm tối hậu chứng minh bức xạ điện từ bắt buộc phải lượng tử hóa: Đo hàm tương quan bậc hai g⁽²⁾(τ). Khi g⁽²⁾(0) < 1, hiện tượng Chống Chùm (Antibunching) vi phạm giới hạn sóng cổ điển Cauchy-Schwarz.
+
+- **Hàm tương quan bậc hai chuẩn hóa:**
+  $$g^{(2)}(\tau) = \frac{\langle : \hat{I}(t) \hat{I}(t+\tau) : \rangle}{\langle \hat{I}(t) \rangle^2} = \frac{\langle \hat{a}^\dagger(t) \hat{a}^\dagger(t+\tau) \hat{a}(t+\tau) \hat{a}(t) \rangle}{\langle \hat{a}^\dagger(t) \hat{a}(t) \rangle^2}$$
+- **Trạng thái Fock $|1\rangle$ đơn photon:**
+  $$g^{(2)}(0) = \frac{1(1-1)}{1^2} = 0 < 1$$
+- **Vi phạm bất đẳng thức Cauchy-Schwarz cổ điển:**
+  Trong quang học sóng cổ điển của Maxwell, cường độ sáng I(t) là một đại lượng vô hướng thực không âm. Theo bất đẳng thức Cauchy-Schwarz, hàm tương quan cường độ bắt buộc phải thỏa mãn: ⟨I(t) I(t+τ)⟩ ≤ ⟨I(t)²⟩, dẫn đến g⁽²⁾(0) ≥ 1 và g⁽²⁾(0) ≥ g⁽²⁾(τ). Khi thí nghiệm đo được g⁽²⁾(0) < 1, điều đó khẳng định sóng điện từ cổ điển hoàn toàn thất bại: ánh sáng không thể là sóng liên tục!
+- **Bằng chứng bắt buộc trường phải lượng tử hóa:**
+  Năm 1969, Willis Lamb và Marlan Scully đã làm rúng động giới vật lý khi chứng minh: Hiệu ứng quang điện hoàn toàn có thể giải thích bằng sóng điện từ cổ điển liên tục tương tác với electron lượng tử hóa của nguyên tử (mô hình bán cổ điển). Hiệu ứng quang điện KHÔNG chứng minh trường điện từ bị lượng tử hóa! Thí nghiệm HBT đo chống chùm photon (g⁽²⁾(0) < 1) mới chính là bằng chứng đầu tiên không thể giải thích bằng bất kỳ mô hình bán cổ điển nào.
+
 ---
 
 ## 6. Biên Niên Sử Khái Niệm Photon (1704 - Nay)

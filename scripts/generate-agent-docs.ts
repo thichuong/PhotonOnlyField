@@ -291,6 +291,20 @@ ${t.labs.machZehnder.description}
 - **Photon có bị chẻ đôi hạt khi qua bộ tách chùm BS1?**
   ${t.labs.machZehnder.whyWavepacketDesc}
 
+### 5.5 Phòng Lab 5: ${t.labs.hbt.title}
+*${t.labs.hbt.badge}*
+
+${t.labs.hbt.description}
+
+- **Hàm tương quan bậc hai chuẩn hóa:**
+  $$g^{(2)}(\\tau) = \\frac{\\langle : \\hat{I}(t) \\hat{I}(t+\\tau) : \\rangle}{\\langle \\hat{I}(t) \\rangle^2} = \\frac{\\langle \\hat{a}^\\dagger(t) \\hat{a}^\\dagger(t+\\tau) \\hat{a}(t+\\tau) \\hat{a}(t) \\rangle}{\\langle \\hat{a}^\\dagger(t) \\hat{a}(t) \\rangle^2}$$
+- **Trạng thái Fock $|1\\rangle$ đơn photon:**
+  $$g^{(2)}(0) = \\frac{1(1-1)}{1^2} = 0 < 1$$
+- **Vi phạm bất đẳng thức Cauchy-Schwarz cổ điển:**
+  ${t.labs.hbt.cauchySchwarzDesc}
+- **Bằng chứng bắt buộc trường phải lượng tử hóa:**
+  ${t.labs.hbt.semiclassicalContrastDesc}
+
 ---
 
 ## 6. Biên Niên Sử Khái Niệm Photon (1704 - Nay)
@@ -494,6 +508,20 @@ ${t.labs.machZehnder.description}
   ${t.labs.machZehnder.howItWorksDesc}
 - **Does the photon split into two halves at BS1?**
   ${t.labs.machZehnder.whyWavepacketDesc}
+
+### 5.5 Lab 5: ${t.labs.hbt.title}
+*${t.labs.hbt.badge}*
+
+${t.labs.hbt.description}
+
+- **Normalized Second-Order Correlation Function:**
+  $$g^{(2)}(\\tau) = \\frac{\\langle : \\hat{I}(t) \\hat{I}(t+\\tau) : \\rangle}{\\langle \\hat{I}(t) \\rangle^2} = \\frac{\\langle \\hat{a}^\\dagger(t) \\hat{a}^\\dagger(t+\\tau) \\hat{a}(t+\\tau) \\hat{a}(t) \\rangle}{\\langle \\hat{a}^\\dagger(t) \\hat{a}(t) \\rangle^2}$$
+- **Single-Photon Fock State $|1\\rangle$ Antibunching:**
+  $$g^{(2)}(0) = \\frac{1(1-1)}{1^2} = 0 < 1$$
+- **Classical Cauchy-Schwarz Wave Violation:**
+  ${t.labs.hbt.cauchySchwarzDesc}
+- **Proof Mandating Quantized Radiation:**
+  ${t.labs.hbt.semiclassicalContrastDesc}
 
 ---
 
@@ -774,6 +802,14 @@ function generateSemanticHtmlFallback(): string {
             <p>Xác suất: P(D1) = cos²(Δφ/2), P(D2) = sin²(Δφ/2)</p>
             <p><strong>Cơ chế hoạt động:</strong> ${t.labs.machZehnder.howItWorksDesc}</p>
             <p>${t.labs.machZehnder.whyWavepacketDesc}</p>
+          </article>
+
+          <article>
+            <h3>${t.labs.hbt.title}</h3>
+            <p>${t.labs.hbt.description}</p>
+            <p>Hàm tương quan bậc 2: g⁽²⁾(0) = &lt;a†a†aa&gt; / &lt;a†a&gt;² = 0 (trạng thái Fock |1⟩)</p>
+            <p><strong>Vi phạm Cauchy-Schwarz:</strong> ${t.labs.hbt.cauchySchwarzDesc}</p>
+            <p><strong>Bằng chứng trường lượng tử hóa:</strong> ${t.labs.hbt.semiclassicalContrastDesc}</p>
           </article>
         </section>
 

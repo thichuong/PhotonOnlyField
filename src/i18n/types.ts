@@ -97,6 +97,7 @@ export interface Translations {
     tabPhotoelectric: string;
     tabFockState: string;
     tabMachZehnder: string;
+    tabHBT: string;
     doubleSlit: {
       badge: string;
       title: string;
@@ -309,6 +310,73 @@ export interface Translations {
       removeBS2Btn: string;
       insertBS2Btn: string;
       delayedChoiceInstruction: string;
+    };
+    hbt: {
+      badge: string;
+      title: string;
+      description: string;
+      // Controls
+      sourceSelectLabel: string;
+      sourceSinglePhoton: string;
+      sourceLaser: string;
+      sourceThermal: string;
+      sourceSinglePhotonDesc: string;
+      sourceLaserDesc: string;
+      sourceThermalDesc: string;
+      emissionModeLabel: string;
+      modePulsed: string;
+      modeCW: string;
+      rateLabel: string;
+      darkCountLabel: string;
+      fireSinglePulse: string;
+      continuousFire: string;
+      pauseFire: string;
+      clearData: string;
+      // Metrics & Indicators
+      statTotalEmissions: string;
+      statDetector1Hits: string;
+      statDetector2Hits: string;
+      statCoincidencesZero: string;
+      statG2ZeroCalculated: string;
+      statQuantumRegime: string;
+      nonClassicalVerdict: string;
+      classicalVerdict: string;
+      bunchingVerdict: string;
+      classicalLimitLegend: string;
+      // Presets
+      presetsTitle: string;
+      presetIdealQuantum: string;
+      presetRealLab: string;
+      presetPoissonLaser: string;
+      presetThermalBunching: string;
+      // Graph
+      graphTitle: string;
+      graphSubtitle: string;
+      tauAxisLabel: string;
+      coincidenceCountLabel: string;
+      theoreticalG2Curve: string;
+      measuredDataLegend: string;
+      nonClassicalZone: string;
+      // Schematic labels
+      benchTitle: string;
+      emitterLabel: string;
+      filterLabel: string;
+      beamSplitterLabel: string;
+      detector1Label: string;
+      detector2Label: string;
+      tcspcTimerLabel: string;
+      reflectedArm: string;
+      transmittedArm: string;
+      // Educational Insights
+      theorySectionTitle: string;
+      cauchySchwarzTitle: string;
+      cauchySchwarzDesc: string;
+      qftFockTitle: string;
+      qftFockDesc: string;
+      semiclassicalContrastTitle: string;
+      semiclassicalContrastDesc: string;
+      historyTitle: string;
+      historyDesc: string;
     };
   };
   qftDeepDive: {

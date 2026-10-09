@@ -156,6 +156,20 @@ A cornerstone verification of quantum optics: A single photon encountering a 50:
 - **Does the photon split into two halves at BS1?**
   Definitely NOT! A photon is an indivisible quantum of energy (E = hν). What splits at BS₁ is the PROBABILITY AMPLITUDE of the wavepacket |ψ⟩ = (|d₁⟩ + i|d₂⟩)/√2. Only 50% amplitude propagates along each arm; upon reaching a detector, the wavefunction collapses instantaneously and the full quantum hν is absorbed at a single detector.
 
+### 5.5 Lab 5: Hanbury Brown - Twiss Experiment: Photon Antibunching
+*Virtual Lab 5*
+
+The definitive empirical proof mandating electromagnetic field quantization: Measuring the second-order correlation function g⁽²⁾(τ). When g⁽²⁾(0) < 1, Photon Antibunching violates the classical Cauchy-Schwarz wave inequality.
+
+- **Normalized Second-Order Correlation Function:**
+  $$g^{(2)}(\tau) = \frac{\langle : \hat{I}(t) \hat{I}(t+\tau) : \rangle}{\langle \hat{I}(t) \rangle^2} = \frac{\langle \hat{a}^\dagger(t) \hat{a}^\dagger(t+\tau) \hat{a}(t+\tau) \hat{a}(t) \rangle}{\langle \hat{a}^\dagger(t) \hat{a}(t) \rangle^2}$$
+- **Single-Photon Fock State $|1\rangle$ Antibunching:**
+  $$g^{(2)}(0) = \frac{1(1-1)}{1^2} = 0 < 1$$
+- **Classical Cauchy-Schwarz Wave Violation:**
+  In Maxwell classical wave optics, intensity I(t) is a non-negative real scalar. The Cauchy-Schwarz inequality dictates: ⟨I(t) I(t+τ)⟩ ≤ ⟨I(t)²⟩, which mathematically enforces g⁽²⁾(0) ≥ 1 and g⁽²⁾(0) ≥ g⁽²⁾(τ). When an experiment measures g⁽²⁾(0) < 1, classical continuous wave optics fails completely: light cannot be a continuous electromagnetic wave!
+- **Proof Mandating Quantized Radiation:**
+  In 1969, Willis Lamb and Marlan Scully proved that the photoelectric effect can be completely derived using continuous classical Maxwell electromagnetic waves interacting with quantized atomic electron states. The photoelectric effect DOES NOT prove that the radiation field itself is quantized! The HBT measurement of photon antibunching (g⁽²⁾(0) < 1) remains the definitive experiment that no semiclassical model can explain.
+
 ---
 
 ## 6. Chronological Timeline of the Photon Concept (1704 - Present)

@@ -31,11 +31,12 @@ Hành trình 300 năm lịch sử qua 7 cột mốc vĩ đại:
 
 *Mỗi cột mốc đều có nút kích hoạt ngay trạng thái mô phỏng 3D tương ứng.*
 
-### 3. Phòng Thí Nghiệm Ảo Tương Tác (4 Trạm Thực Nghiệm Quang Học Lượng Tử Cốt Lõi)
+### 3. Phòng Thí Nghiệm Ảo Tương Tác (5 Trạm Thực Nghiệm Quang Học Lượng Tử Cốt Lõi)
 * **Lab 1: Khe kép với Photon đơn lẻ:** Mô phỏng buồng lan truyền mặt sóng (Wavefront chamber), chuyển đổi cấu hình mở/đóng từng khe, kích hoạt đầu dò đường đi (*Which-Way detector*) làm sụp đổ vân giao thoa, và hiển thị đường cong mật độ xác suất $|\psi|^2$.
 * **Lab 2: Hiệu ứng quang điện & Điện áp hãm:** Tích hợp biến trở điện áp hãm ($V_{\text{hãm}}$), hiển thị đặc tuyến $I-V$, đồ thị động $K_{\text{max}} - \nu$ xác định hằng số Planck $h$, và bảng đối chiếu trực quan mô hình sóng cổ điển vs QFT.
 * **Lab 3: Trạng thái Fock $|n\rangle$ & Hàm sóng QFT:** Khám phá thang năng lượng dao động tử điều hòa $E = (n + \frac{1}{2})\hbar\omega$, đồ thị hàm sóng Hermite-Gauss động $\psi_n(x)$, mật độ xác suất $|\psi_n(x)|^2$ và không gian pha bất định $(X_1, X_2)$.
 * **Lab 4: Giao thoa kế Mach-Zehnder photon đơn:** Kiểm chứng gói sóng kích thích phân tách đồng thời trên 2 nhánh quang học, thay đổi góc lệch pha $\Delta\phi$, và thực hiện thí nghiệm Lựa chọn Trì hoãn của Wheeler (*Delayed-Choice* khi tháo lắp bộ tách chùm BS2).
+* **Lab 5: Giao thoa kế Hanbury Brown - Twiss (HBT) & Đo Chống chùm photon:** Bằng chứng thực nghiệm tối hậu chứng minh trường bức xạ bị lượng tử hóa: đo hàm tương quan bậc 2 $g^{(2)}(\tau)$ qua bộ tách chùm 50:50 và mạch đo trễ thời gian TCSPC; xác nhận hiện tượng chống chùm $g^{(2)}(0) < 1$ vi phạm bất đẳng thức Cauchy-Schwarz cổ điển.
 
 ### 4. Góc Nhìn Phản Biện & Các Lý Thuyết Mở Rộng (Beyond "Photon: Only Field")
 Cuộn dọc liên tục (Vertical Flow với Scroll-Spy & Quick Anchors) khai phá 4 trụ cột phản biện đa chiều của vật lý lý thuyết hiện đại:
