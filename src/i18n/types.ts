@@ -411,6 +411,7 @@ export interface Translations {
   tour: {
     tourBadge: string;
     tourTitle: string;
+    takeawayLabel: string;
     closeBtn: string;
     prevBtn: string;
     nextBtn: string;

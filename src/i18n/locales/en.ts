@@ -463,6 +463,7 @@ export const enTranslations: Translations = {
   tour: {
     tourBadge: 'Guided Walkthrough',
     tourTitle: '3-Minute Guided Tour: Understanding Photons via QFT',
+    takeawayLabel: 'Key Realization',
     closeBtn: 'Close',
     prevBtn: 'Back',
     nextBtn: 'Next Step',

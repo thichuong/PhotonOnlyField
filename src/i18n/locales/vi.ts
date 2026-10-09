@@ -463,6 +463,7 @@ export const viTranslations: Translations = {
   tour: {
     tourBadge: 'Lộ Trình Trải Nghiệm',
     tourTitle: 'Khám Phá 3 Phút: Bản Chất Photon Dưới Góc Nhìn QFT',
+    takeawayLabel: 'Kết Luận Cốt Lõi',
     closeBtn: 'Đóng',
     prevBtn: 'Quay lại',
     nextBtn: 'Bước tiếp theo',

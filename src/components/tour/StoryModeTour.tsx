@@ -112,7 +112,7 @@ export const StoryModeTour: React.FC<StoryModeTourProps> = ({
           <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col gap-2 text-sm text-cyan-200">
             <span className="font-semibold text-cyan-400 flex items-center gap-1.5 uppercase font-mono text-xs tracking-wider">
               <CheckCircle className="w-4 h-4" />
-              Kết Luận Cốt Lõi (Key Realization)
+              {t.tour.takeawayLabel}
             </span>
             <p className="leading-relaxed text-slate-100 font-medium text-sm">
               {currentStep.takeaway}
